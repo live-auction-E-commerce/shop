@@ -1,7 +1,7 @@
-
-import mongoose from mongoose;
+import mongoose from "mongoose";
 
 const addressSchema = new mongoose.addressSchema({
+
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
@@ -35,6 +35,6 @@ const addressSchema = new mongoose.addressSchema({
     }
 });
 
-const Address = mongoose.model('Address' , addressSchema);
+const Address = mongoose.model("Address", addressSchema);
 
-export default Address;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+export default Address;
