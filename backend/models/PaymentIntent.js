@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const paymentintentSchema = new mongoose.paymentintentSchema({
+const paymentIntentSchema = new mongoose.paymentIntentSchema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: [true, "userId is required"],
@@ -11,25 +11,25 @@ const paymentintentSchema = new mongoose.paymentintentSchema({
     required: [true, "bidId is required"],
     ref: "Bid",
   },
-  paymentmethodId: {
+  paymentMethodId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: [true, "paymentmethodId is required"],
+    required: [true, "paymentMethodId is required"],
     ref: "PaymentMethod",
   },
-  stripePaymentIntent: {
+  stripePaymentIntentId: {
     type: String,
-    required: [true, "stripePaymentIntent is required"],
+    required: [true, "stripePaymentIntentID is required"],
   },
   amount: {
     type: number,
     required: [true, "amount is required"],
   },
-  confirmAt:{
+  confirmedAt:{
     type: Date,
     default: Date.now
 }
 
 });
 
-const PaymentIntent = mongoose.model("PaymentIntent", paymentintentSchema);
+const PaymentIntent = mongoose.model("PaymentIntent", paymentIntentSchema);
 export default PaymentIntent;

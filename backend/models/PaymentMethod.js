@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const paymentmethodSchema = new mongoose.paymentmethodSchema({
+const paymentMethodSchema = new mongoose.paymentMethodSchema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: [true, "userId is required"],
@@ -43,5 +43,5 @@ const paymentmethodSchema = new mongoose.paymentmethodSchema({
 
 });
 
-const PaymentMethod = mongoose.model("PaymentMethod", paymentmethodSchema);
+const PaymentMethod = mongoose.model("PaymentMethod", paymentMethodSchema);
 export default PaymentMethod;
