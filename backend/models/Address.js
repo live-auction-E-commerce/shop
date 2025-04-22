@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const addressSchema = new mongoose.addressSchema({
 
+
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
@@ -15,11 +16,10 @@ const addressSchema = new mongoose.addressSchema({
     street:{
         type: String,
         required: [true, "Street is required"],
-
     },
     city:{
         type: String,
-        required:[true, "City is required"],
+        required:[true,"city is required],
     },
     country: {
         type: String,
