@@ -5,25 +5,25 @@ const addressSchema = new mongoose.addressSchema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        requred: true
+        required: true
     },
     fullName:{
         type: String,
-        required: true,
+        required: [true, "Full name is required"],
         lowercase: true,
     },
     street:{
         type: String,
-        required: true,
+        required: [true, "Street is required"],
 
     },
     city:{
         type: String,
-        required:true,
+        required:[true, "City is required"],
     },
     country: {
         type: String,
-        required: true,
+        required: [true, "Country is required"],
     },
     isDefault: {
         type: Boolean,

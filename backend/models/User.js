@@ -4,15 +4,15 @@ import mongoose from mongoose
 const userSchema = new mongoose.userSchema({
     email: {
         type: String,
-        required: true,
-        unique: true,
+        required: [true, "Email is required"],
+        unique: [true, "Email already in use"],
         lowercase: true,
         trim: true
 
     },
     password: {
         type: String,
-        required: true,
+        required: [true, "Password is required"],
         minLength: 6
     },
     role: {

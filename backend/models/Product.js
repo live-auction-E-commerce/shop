@@ -8,11 +8,11 @@ const productSchema = new mongoose.productSchema({
     },
     name: {
         type: String,
-        required: true,
+        required: [true, "Product name is required"],
     },
     description:{
         type: String,
-       
+        required: [true, "Product description is required"],
     },
     images: {
         type: [String]
@@ -20,20 +20,20 @@ const productSchema = new mongoose.productSchema({
     category: {
         type: String,
         enum: ['T-Shirt', 'Jeans','Sweatshirts'],
-        required:true,
+        required: [true, "Product category is required"],
       },
     brand: {
         type: String,
-        required: true,
+        required: [true, "Product brand is required"],
     },
     condition:{
         type: String,
         enum: ['New', 'Like New','Used'],
-        required:true
+        required: [true, "Product cindition is required"]
     },
     size:{
         type: String,
-        required:true,
+        required: [true, "Product size is required"],
     },
     createdAt:{
         type: Date,
