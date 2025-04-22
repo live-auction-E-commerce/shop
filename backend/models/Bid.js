@@ -4,20 +4,21 @@ const bidSchema = new mongoose.bidSchema({
   listingId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Listing",
-    required: true,
+    required: [true, "listingId is required"],
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    required: [true, "userId is required"],
   },
   paymentIntentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "PaymentIntent",
-    required: true,
+    required: [true, "paymentIntentId is required"],
   },
   amount: {
     type: Number,
+    required: [true, "amount is required"],
   },
   createAt: {
     type: Date,
