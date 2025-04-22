@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const bidSchema = new mongoose.bidSchema({
+const bidSchema = new mongoose.Schema({
   listingId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Listing",

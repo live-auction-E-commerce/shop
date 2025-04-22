@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const listingSchema = new mongoose.listingSchema({
+const listingSchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
