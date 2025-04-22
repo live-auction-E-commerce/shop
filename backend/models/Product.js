@@ -4,11 +4,11 @@ const productSchema = new mongoose.productSchema({
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    required: [true, "ownerId is required"],
   },
   name: {
     type: String,
-    required: true,
+    required: [true, "name is required"],
   },
   description: {
     type: String,
@@ -19,20 +19,20 @@ const productSchema = new mongoose.productSchema({
   category: {
     type: String,
     enum: ["T-Shirt", "Jeans", "Sweatshirts"],
-    required: true,
+    required: [true, "category is required choose from our ENUM"],
   },
   brand: {
     type: String,
-    required: true,
+    required: [true, "brand is required"],
   },
   condition: {
     type: String,
     enum: ["New", "Like New", "Used"],
-    required: true,
+    required: [true, "condition is required, choose from our ENUM"],
   },
   size: {
     type: String,
-    required: true,
+    required: [true, "size is required"],
   },
   listing: {
     type: mongoose.Schema.Types.ObjectId,
