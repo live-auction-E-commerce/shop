@@ -14,7 +14,8 @@ const listingSchema = new mongoose.listingSchema({
     },
     saleType:{
         type: String,
-         enum: ['auction', 'now'],
+        enum: ['auction', 'now'],
+        required: [true, "Sale type is required"]
     },
     price:{
         type: Number
