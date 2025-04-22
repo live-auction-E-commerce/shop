@@ -2,19 +2,19 @@ import mongoose from mongoose
 
 const bidSchema = new mongoose.bidSchema({
     listingId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Listing",
-            required: true
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Listing",
+        required: [true, "Not associated with a listing"]
+    },
     userId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true
+        required: [true, "Not associated with a user"]
     },
     paymentIntentId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "PaymentIntent",
-        required: true
+        required: [true, "Not associated with a payment intent"]
     },
     amount:{
         type: Number

@@ -3,8 +3,8 @@ import mongoose from mongoose
 const productSchema = new mongoose.productSchema({
     ownerId: {
         type: mongoose.Schema.Types.ObjectId,
-                    ref: "User",
-                    required: true
+        ref: "User",
+        required: [true, "Not associated with a user"]
     },
     name: {
         type: String,
@@ -15,7 +15,8 @@ const productSchema = new mongoose.productSchema({
         required: [true, "Product description is required"],
     },
     images: {
-        type: [String]
+        type: [String],
+        required: [true, "Product image is required"],
     },
     category: {
         type: String,
