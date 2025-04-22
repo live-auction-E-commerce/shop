@@ -35,6 +35,10 @@ const productSchema = new mongoose.productSchema({
         type: String,
         required:true,
     },
+    listing:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Listing",
+    },
     createdAt:{
         type: Date,
         default: Date.now
