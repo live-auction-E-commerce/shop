@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
 const addressSchema = new mongoose.addressSchema({
+
+
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
@@ -8,21 +10,20 @@ const addressSchema = new mongoose.addressSchema({
     },
     fullName:{
         type: String,
-        required: [true,"Full name is required"],
+        required: [true, "Full name is required"],
         lowercase: true,
     },
     street:{
         type: String,
-        required: true,
-
+        required: [true, "Street is required"],
     },
     city:{
         type: String,
-        required:true,
+        required:[true,"city is required],
     },
     country: {
         type: String,
-        required: true,
+        required: [true, "Country is required"],
     },
     isDefault: {
         type: Boolean,
