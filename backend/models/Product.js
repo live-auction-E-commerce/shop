@@ -1,48 +1,49 @@
-import mongoose from mongoose
+import mongoose from "mongoose";
 
 const productSchema = new mongoose.productSchema({
-    ownerId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: [true, "Not associated with a user"]
-    },
-    name: {
-        type: String,
-        required: [true, "Product name is required"],
-    },
-    description:{
-        type: String,
-        required: [true, "Product description is required"],
-    },
-    images: {
-        type: [String],
-        required: [true, "Product image is required"],
-    },
-    category: {
-        type: String,
-        enum: ['T-Shirt', 'Jeans','Sweatshirts'],
-        required: [true, "Product category is required"],
-      },
-    brand: {
-        type: String,
-        required: [true, "Product brand is required"],
-    },
-    condition:{
-        type: String,
-        enum: ['New', 'Like New','Used'],
-        required: [true, "Product cindition is required"]
-    },
-    size:{
-        type: String,
-        required: [true, "Product size is required"],
-    },
-    createdAt:{
-        type: Date,
-        default: Date.now
-    },
-
+  ownerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: [true, "ownerId is required"],
+  },
+  name: {
+    type: String,
+    required: [true, "name is required"],
+  },
+  description: {
+    type: String,
+  },
+  images: {
+    type: [String],
+  },
+  category: {
+    type: String,
+    enum: ["T-Shirt", "Jeans", "Sweatshirts"],
+    required: [true, "category is required choose from our ENUM"],
+  },
+  brand: {
+    type: String,
+    required: [true, "brand is required"],
+  },
+  condition: {
+    type: String,
+    enum: ["New", "Like New", "Used"],
+    required: [true, "condition is required, choose from our ENUM"],
+  },
+  size: {
+    type: String,
+    required: [true, "size is required"],
+  },
+  listing: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Listing",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-const Product = mongoose.model('Product', productSchema);
+const Product = mongoose.model("Product", productSchema);
 
 export default Product;
