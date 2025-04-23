@@ -1,9 +1,10 @@
-import mongoose from 'monogoose';
+import mongoose from 'mongoose';
 import Product from '../models/Product';
 import { CategoryEnum, ConditionEnum, AllowedExtensions } from '../constants/enum';
 
 export const createProduct = async (data) => {
-  if (!CategoryEnum.includes(data.category?.toLowerCase())) {
+  const category = data.category?.toLowerCase();
+  if (!CategoryEnum.includes(category)) {
     throw new Error(`Invalid category. valid categories are: ${CategoryEnum.join(', ')}`);
   }
 
@@ -32,7 +33,7 @@ export const createProduct = async (data) => {
   // End of stuff related to images
 
   if (!mongoose.Types.ObjectId.isValid(data.ownerId)) {
-    throw new Error('Invalid owner ID, make sure the type of this object is mongoose objectId');
+    throw new Error('Invalid ownerId: must be a valid MongoDB ObjectId.');
   }
 
   const newProduct = new Product({
@@ -40,7 +41,7 @@ export const createProduct = async (data) => {
     name: data.name,
     description: data.description || '',
     images: data.images || [],
-    category: data.category.toLowerCase(), // since your enum is lowercase
+    category: data.category,
     brand: data.brand,
     condition: data.condition,
     size: data.size,
