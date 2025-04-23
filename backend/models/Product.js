@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { CategoryEnum, ConditionEnum } from "../constants/enum";
 
 const productSchema = new mongoose.Schema({
   ownerId: {
@@ -18,7 +19,7 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ["T-Shirt", "Jeans", "Sweatshirts"],
+    enum: CategoryEnum,
     required: [true, "category is required choose from our ENUM"],
   },
   brand: {
@@ -27,7 +28,7 @@ const productSchema = new mongoose.Schema({
   },
   condition: {
     type: String,
-    enum: ["New", "Like New", "Used"],
+    enum: ConditionEnum,
     required: [true, "condition is required, choose from our ENUM"],
   },
   size: {
