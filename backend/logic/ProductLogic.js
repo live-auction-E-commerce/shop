@@ -51,3 +51,84 @@ export const createProduct = async (data) => {
   const savedProduct = await newProduct.save();
   return savedProduct;
 };
+
+export const getProductById = async (productId) => {
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    throw new Error('Invalid product ID');
+  }
+
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new Error('Invalid productId: must be a valid MongoDB ObjectId.');
+  }
+
+  return product;
+};
+
+export const getAllProducts = async () => {
+  const products = await Product.find();
+  return products;
+};
+
+export const getAllCategoryProducts = async (category) => {
+  if (!CategoryEnum.includes(category.toLowerCase())) {
+    throw new Error(`Invalid category. Valid categories are: ${CategoryEnum.join(', ')}`);
+  }
+
+  const products = await Product.find({ category: category.toLowerCase() });
+
+  if (products.length === 0) {
+    throw new Error('No products found for this category');
+  }
+
+  return products;
+};
+
+export const updateProduct = async (productId, updateData) => {
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    throw new Error('Invalid productId: must be a valid MongoDB ObjectId.');
+  }
+
+  const category = updateData.category?.toLowerCase();
+  if (!CategoryEnum.includes(category)) {
+    throw new Error(`Invalid category. valid categories are: ${CategoryEnum.join(', ')}`);
+  }
+
+  if (!ConditionEnum.includes(updateData.condition)) {
+    throw new Error(`Invalid condition. valid conditions are: ${ConditionEnum.join(',')}`);
+  }
+
+  //Stuff related to images
+
+  if (updateData.images && !Array.isArray(updateData.images)) {
+    throw new Error('Images must be an array');
+  }
+
+  for (const image of updateData.images) {
+    const ext = image.slice(image.lastIndexOf('.')).toLowerCase();
+    if (!AllowedExtensions.includes(ext)) {
+      throw new Error(
+        `Invalid image format: ${image}. Allowed formats are: ${AllowedExtensions.join(', ')}`
+      );
+    }
+  }
+
+  if (updateData.images && updateData.images.length === 0) {
+    throw new Error('At least one image is required');
+  }
+  // End of stuff related to images
+
+  const updatedProduct = await Product.findByIdAndUpdate(
+    productId,
+    {
+      ...updateData,
+    },
+    { new: true, runValidators: true }
+  );
+
+  if (!updatedProduct) {
+    throw new Error('Problem with creating an updated product');
+  }
+
+  return updatedProduct;
+};
