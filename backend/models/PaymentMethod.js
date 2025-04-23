@@ -1,47 +1,46 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const paymentMethodSchema = new mongoose.paymentMethodSchema({
+const paymentMethodSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: [true, "userId is required"],
-    ref: "User",
+    required: [true, 'userId is required'],
+    ref: 'User',
   },
   cardLast4: {
     type: String,
-    required: [true, "cardLast4 is required"],
+    required: [true, 'cardLast4 is required'],
   },
   cardBrand: {
     type: String,
-    enum: ['Visa', 'Mastercard','Diners', 'American Express'],
-    required: [true, "cardBrand is required"],
+    enum: ['Visa', 'Mastercard', 'Diners', 'American Express'],
+    required: [true, 'cardBrand is required'],
   },
   expirationMonth: {
     type: Number,
-    required: [true, "expirationMonth is required"],
+    required: [true, 'expirationMonth is required'],
   },
   expirationYear: {
     type: Number,
-    required: [true, "expirationYear is required"],
+    required: [true, 'expirationYear is required'],
   },
   billingAddress: {
     type: mongoose.Schema.Types.ObjectId,
-    required: [true, "billingAddress is required"],
-    ref: "Address",
+    required: [true, 'billingAddress is required'],
+    ref: 'Address',
   },
   token: {
     type: String,
-    required: [true, "token is required"],
+    required: [true, 'token is required'],
   },
   isDefault: {
     type: Boolean,
-    default: false
+    default: false,
   },
-  createdAt:{
+  createdAt: {
     type: Date,
-    default: Date.now
-}
-
+    default: Date.now,
+  },
 });
 
-const PaymentMethod = mongoose.model("PaymentMethod", paymentMethodSchema);
+const PaymentMethod = mongoose.model('PaymentMethod', paymentMethodSchema);
 export default PaymentMethod;
