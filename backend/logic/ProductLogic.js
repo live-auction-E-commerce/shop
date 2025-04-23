@@ -1,4 +1,4 @@
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 import Product from '../models/Product';
 import { CategoryEnum, ConditionEnum, AllowedExtensions } from '../constants/enum';
 
