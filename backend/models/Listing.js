@@ -1,20 +1,20 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const listingSchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
+    ref: 'Product',
     required: true,
   },
   sellerId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   saleType: {
     type: String,
-    enum: ["auction", "now"],
-    required: [true, "Sale type is required"],
+    enum: ['auction', 'now'],
+    required: [true, 'Sale type is required'],
   },
   price: {
     type: Number,
@@ -24,7 +24,7 @@ const listingSchema = new mongoose.Schema({
   },
   currentBid: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Bid",
+    ref: 'Bid',
   },
   expiredAt: {
     type: Date,
@@ -39,6 +39,6 @@ const listingSchema = new mongoose.Schema({
   },
 });
 
-const Listing = mongoose.model("Listing", listingSchema);
+const Listing = mongoose.model('Listing', listingSchema);
 
 export default Listing;
