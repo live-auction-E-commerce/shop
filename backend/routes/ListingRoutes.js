@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.post('/listings', ListingController.createListing);
 router.put('/listings/:id', ListingController.editListing);
+router.delete('/listings/:id', ListingController.deleteListing);
 
 export default router;
