@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import productRoutes from './routes/ProductRoutes.js';
+import ProductRoutes from './routes/ProductRoutes.js';
+import ListingRoutes from './routes/ListingRoutes.js';
 import connectDB from './lib/db.js';
 
 dotenv.config();
@@ -11,7 +12,8 @@ connectDB();
 
 app.use(express.json());
 
-app.use('/api', productRoutes);
+app.use('/api', ProductRoutes);
+app.use('/api', ListingRoutes);
 
 app.listen(5000, () => {
   console.log('Server is running on http://localhost:5000');

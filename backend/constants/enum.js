@@ -3,3 +3,5 @@ export const CategoryEnum = ['shirts', 'jeans', 'swimwear', 'shoes', 'bags', 'su
 export const ConditionEnum = ['new', 'like new', 'used'];
 
 export const AllowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+
+export const SaleTypes = ['auction', 'now'];

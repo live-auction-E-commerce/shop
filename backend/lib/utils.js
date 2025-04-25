@@ -22,6 +22,9 @@ export const validateImages = (images) => {
 
 export const validateEnum = (value, validEnum, name) => {
   if (!value || !validEnum.includes(value.toLowerCase())) {
+    console.log('Value:', value);
+    console.log('Normalized:', value?.toLowerCase());
+    console.log('Enum:', validEnum);
     throw new Error(`Invalid ${name}, Valid ${name}s are: ${validEnum.join(',')} `);
   }
 };
