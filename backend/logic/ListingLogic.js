@@ -77,3 +77,19 @@ export const editListing = async (listingId, updates) => {
   await listing.save();
   return listing;
 };
+
+export const deleteListing = async (listingId) => {
+  validateObjectId(listingId);
+  const listing = await Listing.findById(listingId);
+  if (!listing) {
+    throw new Error('Could not find listing with id: ${listingId}');
+  }
+
+  if (listing.isSold) {
+    throw new Error('Cannot delete a sold listing');
+  }
+
+  await Listing.findByIdAndDelete(listingId);
+
+  return { message: 'Listing deleted successfully' };
+};
