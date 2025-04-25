@@ -30,7 +30,30 @@ export const validateEnum = (value, validEnum, name) => {
 };
 
 export const validateObjectId = (id) => {
+  if (!id) {
+    throw new Error('ID cannot be null or undefined');
+  }
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error(`${id.toString()} is not a valid MongoDB ObjectId.`);
+  }
+};
+
+export const validateAuctionUpdates = (listing, updates) => {
+  if (updates.expiredAt && new Date(updates.expiredAt) <= new Date(listing.expiredAt)) {
+    throw new Error('New expiredAt must be later than the current one');
+  }
+
+  if (updates.isSold && listing.isSold) {
+    throw new Error('Listing is already sold and cannot be updated');
+  }
+
+  if (updates.currentBid) {
+    validateObjectId(updates.currentBid);
+  }
+};
+
+export const validateBuyNowUpdates = (listing, updates) => {
+  if (updates.isSold && listing.isSold) {
+    throw new Error('Listing is already sold and cannot be updated');
   }
 };
