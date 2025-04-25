@@ -1,0 +1,9 @@
+import express from 'express';
+import * as ListingController from '../controllers/ListingController.js';
+
+const router = express.Router();
+
+router.post('/listings', ListingController.createListing);
+router.put('/listings/:id', ListingController.editListing);
+
+export default router;
