@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import Product from '../models/Product';
 import { CategoryEnum, ConditionEnum } from '../constants/enum';
 import { validateEnum, validateImages, validateObjectId } from '../lib/utils.js';
