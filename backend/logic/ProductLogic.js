@@ -1,49 +1,21 @@
-import mongoose from 'mongoose';
-import Product from '../models/Product';
-import { CategoryEnum, ConditionEnum, AllowedExtensions } from '../constants/enum';
+import Product from '../models/Product.js';
+import { CategoryEnum, ConditionEnum } from '../constants/enum.js';
+import { validateEnum, validateImages, validateObjectId } from '../lib/utils.js';
 
 export const createProduct = async (data) => {
-  const category = data.category?.toLowerCase();
-  if (!CategoryEnum.includes(category)) {
-    throw new Error(`Invalid category. valid categories are: ${CategoryEnum.join(', ')}`);
-  }
-
-  if (!ConditionEnum.includes(data.condition)) {
-    throw new Error(`Invalid condition. valid conditions are: ${ConditionEnum.join(',')}`);
-  }
-
-  //Stuff related to images
-
-  if (data.images && !Array.isArray(data.images)) {
-    throw new Error('Images must be an array');
-  }
-
-  for (const image of data.images) {
-    const ext = image.slice(image.lastIndexOf('.')).toLowerCase();
-    if (!AllowedExtensions.includes(ext)) {
-      throw new Error(
-        `Invalid image format: ${image}. Allowed formats are: ${AllowedExtensions.join(', ')}`
-      );
-    }
-  }
-
-  if (data.images && data.images.length === 0) {
-    throw new Error('At least one image is required');
-  }
-  // End of stuff related to images
-
-  if (!mongoose.Types.ObjectId.isValid(data.ownerId)) {
-    throw new Error('Invalid ownerId: must be a valid MongoDB ObjectId.');
-  }
+  validateEnum(data.category, CategoryEnum, 'category');
+  validateEnum(data.condition, ConditionEnum, 'condition');
+  validateImages(data.images);
+  validateObjectId(data.ownerId);
 
   const newProduct = new Product({
     ownerId: data.ownerId,
     name: data.name,
     description: data.description || '',
     images: data.images || [],
-    category: data.category,
-    brand: data.brand,
-    condition: data.condition,
+    category: data.category.toLowerCase(),
+    brand: data.brand.toLowerCase(),
+    condition: data.condition.toLowerCase(),
     size: data.size,
     listing: data.listing || null,
   });
@@ -53,13 +25,11 @@ export const createProduct = async (data) => {
 };
 
 export const getProductById = async (productId) => {
-  if (!mongoose.Types.ObjectId.isValid(productId)) {
-    throw new Error('Invalid product ID');
-  }
+  validateObjectId(productId);
 
   const product = await Product.findById(productId);
   if (!product) {
-    throw new Error('Invalid productId: must be a valid MongoDB ObjectId.');
+    throw new Error('Couldn`t find a product with the specific ID.');
   }
 
   return product;
@@ -71,9 +41,7 @@ export const getAllProducts = async () => {
 };
 
 export const getAllCategoryProducts = async (category) => {
-  if (!CategoryEnum.includes(category.toLowerCase())) {
-    throw new Error(`Invalid category. Valid categories are: ${CategoryEnum.join(', ')}`);
-  }
+  validateEnum(category, CategoryEnum, 'category');
 
   const products = await Product.find({ category: category.toLowerCase() });
 
@@ -84,39 +52,12 @@ export const getAllCategoryProducts = async (category) => {
   return products;
 };
 
+/* todo: see if theres a better way of only passing the updated fields instead of the whole object again but then we need to make some conditionally validations*/
 export const updateProduct = async (productId, updateData) => {
-  if (!mongoose.Types.ObjectId.isValid(productId)) {
-    throw new Error('Invalid productId: must be a valid MongoDB ObjectId.');
-  }
-
-  const category = updateData.category?.toLowerCase();
-  if (!CategoryEnum.includes(category)) {
-    throw new Error(`Invalid category. valid categories are: ${CategoryEnum.join(', ')}`);
-  }
-
-  if (!ConditionEnum.includes(updateData.condition)) {
-    throw new Error(`Invalid condition. valid conditions are: ${ConditionEnum.join(',')}`);
-  }
-
-  //Stuff related to images
-
-  if (updateData.images && !Array.isArray(updateData.images)) {
-    throw new Error('Images must be an array');
-  }
-
-  for (const image of updateData.images) {
-    const ext = image.slice(image.lastIndexOf('.')).toLowerCase();
-    if (!AllowedExtensions.includes(ext)) {
-      throw new Error(
-        `Invalid image format: ${image}. Allowed formats are: ${AllowedExtensions.join(', ')}`
-      );
-    }
-  }
-
-  if (updateData.images && updateData.images.length === 0) {
-    throw new Error('At least one image is required');
-  }
-  // End of stuff related to images
+  validateObjectId(productId);
+  validateEnum(updateData.category, CategoryEnum, 'category');
+  validateEnum(updateData.condition, ConditionEnum, 'condition');
+  validateImages(updateData.images);
 
   const updatedProduct = await Product.findByIdAndUpdate(
     productId,
