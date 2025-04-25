@@ -1,4 +1,4 @@
-import * as ProductLogic from '../logic/ProductLogic';
+import * as ProductLogic from '../logic/ProductLogic.js';
 
 export const createProduct = async (req, res) => {
   try {

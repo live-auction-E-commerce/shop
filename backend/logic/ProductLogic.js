@@ -1,5 +1,5 @@
-import Product from '../models/Product';
-import { CategoryEnum, ConditionEnum } from '../constants/enum';
+import Product from '../models/Product.js';
+import { CategoryEnum, ConditionEnum } from '../constants/enum.js';
 import { validateEnum, validateImages, validateObjectId } from '../lib/utils.js';
 
 export const createProduct = async (data) => {

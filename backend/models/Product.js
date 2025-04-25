@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { CategoryEnum, ConditionEnum } from '../constants/enum';
+import { CategoryEnum, ConditionEnum } from '../constants/enum.js';
 
 const productSchema = new mongoose.Schema({
   ownerId: {
