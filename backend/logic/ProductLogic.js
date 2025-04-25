@@ -13,9 +13,9 @@ export const createProduct = async (data) => {
     name: data.name,
     description: data.description || '',
     images: data.images || [],
-    category: data.category,
-    brand: data.brand,
-    condition: data.condition,
+    category: data.category.toLowerCase(),
+    brand: data.brand.toLowerCase(),
+    condition: data.condition.toLowerCase(),
     size: data.size,
     listing: data.listing || null,
   });
@@ -52,11 +52,12 @@ export const getAllCategoryProducts = async (category) => {
   return products;
 };
 
+/* todo: see if theres a better way of only passing the updated fields instead of the whole object again but then we need to make some conditionally validations*/
 export const updateProduct = async (productId, updateData) => {
   validateObjectId(productId);
   validateEnum(updateData.category, CategoryEnum, 'category');
   validateEnum(updateData.condition, ConditionEnum, 'condition');
-  validateImages();
+  validateImages(updateData.images);
 
   const updatedProduct = await Product.findByIdAndUpdate(
     productId,

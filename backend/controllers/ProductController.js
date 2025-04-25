@@ -20,7 +20,7 @@ export const getProductById = async (req, res) => {
 
 export const getAllProducts = async (_req, res) => {
   try {
-    const products = ProductLogic.getAllProducts();
+    const products = await ProductLogic.getAllProducts();
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ error: error.message });
