@@ -52,7 +52,8 @@ export const getAllCategoryProducts = async (category) => {
   return products;
 };
 
-/* todo: see if theres a better way of only passing the updated fields instead of the whole object again but then we need to make some conditionally validations*/
+/* TODO: see if theres a better way of only passing the updated fields instead of the whole 
+object again but then we need to make some conditionally validations*/
 export const updateProduct = async (productId, updateData) => {
   validateObjectId(productId);
   validateEnum(updateData.category, CategoryEnum, 'category');
