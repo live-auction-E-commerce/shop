@@ -28,9 +28,10 @@ const paymentMethodSchema = new mongoose.Schema({
     required: [true, 'billingAddress is required'],
     ref: 'Address',
   },
-  token: {
+  stripePaymentMethodId: {
+    
     type: String,
-    required: [true, 'token is required'],
+    required: [true, 'Stripe PaymentMethod ID is required'],
   },
   isDefault: {
     type: Boolean,
