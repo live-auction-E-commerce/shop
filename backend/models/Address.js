@@ -6,14 +6,18 @@ const addressSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'userId is required'],
   },
-  fullName: {
+  description: {
     type: String,
-    required: [true, 'Full name is required'],
+    required: [true, 'description is required'],
     lowercase: true,
   },
   street: {
     type: String,
     required: [true, 'Street is required'],
+  },
+  number:{
+    type: Number,
+    required: [true,'number is required'],
   },
   city: {
     type: String,
