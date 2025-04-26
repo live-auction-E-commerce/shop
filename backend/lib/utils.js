@@ -57,4 +57,3 @@ export const validateBuyNowUpdates = (listing, updates) => {
     throw new Error('Listing is already sold and cannot be updated');
   }
 };
-

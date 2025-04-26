@@ -1,22 +1,15 @@
-
 import Address from '../models/Address.js';
 import { validateObjectId } from '../lib/utils.js';
 
 export const createAddress = async (data) => {
-  if(!data.userId){
-    throw new Error("userId is required");
-  }
   validateObjectId(data.userId);
 
-  if (data.isDefault) {    
-    await Address.updateMany(
-      { userId: data.userId }, 
-      { $set: { isDefault: false } }
-    );
+  if (data.isDefault) {
+    await Address.updateMany({ userId: data.userId }, { $set: { isDefault: false } });
   }
 
   const address = new Address({
-    userId: data.userId,        
+    userId: data.userId,
     description: data.description,
     street: data.street,
     number: data.number,
@@ -24,22 +17,19 @@ export const createAddress = async (data) => {
     country: data.country,
     isDefault: data.isDefault || false,
   });
-  
+
   await address.save();
-  
+
   return address;
 };
 
-
 export const getAllAddressByUser = async (userId) => {
- validateObjectId(userId);
+  validateObjectId(userId);
 
-  const addresses = await Address.find({userId}).sort({isDefault: -1, createdAt: -1});
-  
+  const addresses = await Address.find({ userId }).sort({ isDefault: -1, createdAt: -1 });
+
   return addresses;
-}
-
-
+};
 
 export const updateAddress = async (addressId, data) => {
   validateObjectId(addressId);
@@ -51,11 +41,8 @@ export const updateAddress = async (addressId, data) => {
     if (!address) {
       throw new Error('Address not found');
     }
-    
-    await Address.updateMany(
-      { userId: address.userId },
-      { $set: { isDefault: false } }
-    );
+
+    await Address.updateMany({ userId: address.userId }, { $set: { isDefault: false } });
   }
 
   const updatedAddress = await Address.findByIdAndUpdate(
@@ -70,4 +57,3 @@ export const updateAddress = async (addressId, data) => {
 
   return updatedAddress;
 };
-
