@@ -7,15 +7,15 @@ import PaymentIntent from '../models/PaymentIntent';
 export const createBid = async (data) => {
     //const { listingId, userId, paymentIntentId, amount } = data;
 
-  if (!mongoose.Types.ObjectId.isValid(data.listingId)) {
+  if (!validateObjectId(data.listingId)) {
     throw new Error('Invalid listingId: must be a valid MongoDB ObjectId.');
   }
 
-  if (!mongoose.Types.ObjectId.isValid(data.userId)) {
+  if (!validateObjectId(data.userId)) {
     throw new Error('Invalid userId: must be a valid MongoDB ObjectId.');
   }
 
-  if (!mongoose.Types.ObjectId.isValid(data.paymentIntentId)) {
+  if (!validateObjectId(data.paymentIntentId)) {
     throw new Error('Invalid paymentIntentId: must be a valid MongoDB ObjectId.');
   }
 
@@ -68,7 +68,7 @@ export const createBid = async (data) => {
 };
 
 export const getAllBidsByListing = async (listingId) => {
-    if (!mongoose.Types.ObjectId.isValid(listingId)) {
+    if (!validateObjectId(listingId)) {
       throw new Error('Invalid listingId: must be a valid MongoDB ObjectId.');
     }
   
@@ -79,7 +79,7 @@ export const getAllBidsByListing = async (listingId) => {
   };
 
   export const getAllBidsByUser = async (userId) => {
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!validateObjectId(userId)) {
       throw new Error('Invalid userId: must be a valid MongoDB ObjectId.');
     }
   
@@ -90,11 +90,11 @@ export const getAllBidsByListing = async (listingId) => {
   };  
 
   export const getAllBidsByUserAndListing = async (userId, listingId) => {
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!validateObjectId(userId)) {
       throw new Error('Invalid userId: must be a valid MongoDB ObjectId.');
     }
   
-    if (!mongoose.Types.ObjectId.isValid(listingId)) {
+    if (!validateObjectId(listingId)) {
       throw new Error('Invalid listingId: must be a valid MongoDB ObjectId.');
     }
   
