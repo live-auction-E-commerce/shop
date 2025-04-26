@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
-import Bid from '../models/Bid';
-import Listing from '../models/Listing';
-import User from '../models/User';
-import PaymentIntent from '../models/PaymentIntent';
+import Bid from '../models/Bid.js';
+import Listing from '../models/Listing.js';
+import User from '../models/User.js';
+import PaymentIntent from '../models/PaymentIntent.js';
+import { validateObjectId } from '../lib/utils.js';
 
 export const createBid = async (data) => {
     //const { listingId, userId, paymentIntentId, amount } = data;
