@@ -25,6 +25,10 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Price is required'],
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Order = mongoose.model('Order', orderSchema);
