@@ -8,9 +8,9 @@ import { validateObjectId } from '../lib/utils.js';
 export const createBid = async (data) => {
     //const { listingId, userId, paymentIntentId, amount } = data;
 
-  !validateObjectId(data.listingId)
-  !validateObjectId(data.userId)
-  !validateObjectId(data.paymentIntentId)
+  validateObjectId(data.listingId)
+  validateObjectId(data.userId)
+  validateObjectId(data.paymentIntentId)
 
   if (typeof data.amount !== 'number' || data.amount <= 0) {
     throw new Error('Invalid amount: must be a positive number.');
