@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import ProductRoutes from './routes/ProductRoutes.js';
 import ListingRoutes from './routes/ListingRoutes.js';
 import BidRoutes from './routes/BidRoutes.js';
@@ -10,6 +11,7 @@ dotenv.config();
 const app = express();
 
 connectDB();
+app.use(cors());  // <-- enable CORS for all routes
 
 app.use(express.json());
 
