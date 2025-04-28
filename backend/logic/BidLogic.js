@@ -8,9 +8,9 @@ import { validateObjectId } from '../lib/utils.js';
 export const createBid = async (data) => {
     //const { listingId, userId, paymentIntentId, amount } = data;
 
-  !validateObjectId(data.listingId)
-  !validateObjectId(data.userId)
-  !validateObjectId(data.paymentIntentId)
+  validateObjectId(data.listingId)
+  validateObjectId(data.userId)
+  validateObjectId(data.paymentIntentId)
 
   if (typeof data.amount !== 'number' || data.amount <= 0) {
     throw new Error('Invalid amount: must be a positive number.');
@@ -61,39 +61,36 @@ export const createBid = async (data) => {
 };
 
 export const getAllBidsByListing = async (listingId) => {
-    if (!validateObjectId(listingId)) {
-      throw new Error('Invalid listingId: must be a valid MongoDB ObjectId.');
-    }
-  
+    validateObjectId(listingId)
+
     const bids = await Bid.find({ listingId })
       .sort({ createAt: -1 });
-  
+      if (!bids) {
+        throw new Error('Couldn`t find a bids with the specific ID.');
+      }
     return bids;
   };
 
   export const getAllBidsByUser = async (userId) => {
-    if (!validateObjectId(userId)) {
-      throw new Error('Invalid userId: must be a valid MongoDB ObjectId.');
-    }
+    validateObjectId(userId)
   
     const bids = await Bid.find({ userId })
       .sort({ createAt: -1 });
-  
+      if (!bids) {
+        throw new Error('Couldn`t find a bids with the specific ID.');
+      }
     return bids;
   };  
 
   export const getAllBidsByUserAndListing = async (userId, listingId) => {
-    if (!validateObjectId(userId)) {
-      throw new Error('Invalid userId: must be a valid MongoDB ObjectId.');
-    }
-  
-    if (!validateObjectId(listingId)) {
-      throw new Error('Invalid listingId: must be a valid MongoDB ObjectId.');
-    }
+    validateObjectId(userId)
+    validateObjectId(listingId)
   
     const bids = await Bid.find({ userId, listingId })
       .sort({ createAt: -1 });
-  
+      if (!bids) {
+        throw new Error('Couldn`t find a bids with the specific ID.');
+      }
     return bids;
   };
   
