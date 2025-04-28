@@ -56,9 +56,14 @@ export const getAllCategoryProducts = async (category) => {
 object again but then we need to make some conditionally validations*/
 export const updateProduct = async (productId, updateData) => {
   validateObjectId(productId);
+
+  //Only validate fields that are passed in updateData (i.e., check if (updateData.category) { validateEnum(...) }
+  
   validateEnum(updateData.category, CategoryEnum, 'category');
   validateEnum(updateData.condition, ConditionEnum, 'condition');
   validateImages(updateData.images);
+
+  //you update without checking if the product exists first (you're updating + returning null check later). Technically safe but not best practice.
 
   const updatedProduct = await Product.findByIdAndUpdate(
     productId,

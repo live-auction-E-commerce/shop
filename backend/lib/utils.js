@@ -1,5 +1,6 @@
+//I would call this validations.js
 import mongoose from 'mongoose';
-import { AllowedExtensions } from '../constants/enum.js';
+import { AllowedExtensions } from '../constants/enum.js'; 
 
 export const validateImages = (images) => {
   if (!images || !Array.isArray(images)) {
