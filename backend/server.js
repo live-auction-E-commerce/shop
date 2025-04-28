@@ -4,6 +4,7 @@ import ProductRoutes from './routes/ProductRoutes.js';
 import ListingRoutes from './routes/ListingRoutes.js';
 import AddressRoutes from './routes/AddressRoutes.js';
 import PaymentMethodRoutes from './routes/PaymentMethodRoutes.js';
+import BidRoutes from './routes/BidRoutes.js';
 import OrderRoutes from './routes/OrderRoutes.js';
 import connectDB from './lib/db.js';
 
@@ -19,6 +20,7 @@ app.use('/api', ProductRoutes);
 app.use('/api', ListingRoutes);
 app.use('/api', AddressRoutes);
 app.use('/api', PaymentMethodRoutes);
+app.use('/api', BidRoutes);
 app.use('/api', OrderRoutes);
 
 app.listen(5000, () => {
