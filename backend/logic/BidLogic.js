@@ -8,9 +8,9 @@ import { validateObjectId } from '../lib/utils.js';
 export const createBid = async (data) => {
     //const { listingId, userId, paymentIntentId, amount } = data;
 
-  validateObjectId(data.listingId)
-  validateObjectId(data.userId)
-  validateObjectId(data.paymentIntentId)
+  validateObjectId(data.listingId);
+  validateObjectId(data.userId);
+  validateObjectId(data.paymentIntentId);
 
   if (typeof data.amount !== 'number' || data.amount <= 0) {
     throw new Error('Invalid amount: must be a positive number.');
@@ -61,7 +61,7 @@ export const createBid = async (data) => {
 };
 
 export const getAllBidsByListing = async (listingId) => {
-    validateObjectId(listingId)
+    validateObjectId(listingId);
 
     const bids = await Bid.find({ listingId })
       .sort({ createAt: -1 });
@@ -72,7 +72,7 @@ export const getAllBidsByListing = async (listingId) => {
   };
 
   export const getAllBidsByUser = async (userId) => {
-    validateObjectId(userId)
+    validateObjectId(userId);
   
     const bids = await Bid.find({ userId })
       .sort({ createAt: -1 });
@@ -83,8 +83,8 @@ export const getAllBidsByListing = async (listingId) => {
   };  
 
   export const getAllBidsByUserAndListing = async (userId, listingId) => {
-    validateObjectId(userId)
-    validateObjectId(listingId)
+    validateObjectId(userId);
+    validateObjectId(listingId);
   
     const bids = await Bid.find({ userId, listingId })
       .sort({ createAt: -1 });
