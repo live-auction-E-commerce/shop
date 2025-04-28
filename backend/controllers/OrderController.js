@@ -35,24 +35,27 @@ export const getAllOrdersByBuyer = async (req, res) => {
      }
  };
 
- export const getAllOrdersByUser = async (req, res) => {
-    try {
-        const orders = await OrderLogic.getAllOrdersByUser(req.params.userId);
-        res.status(200).json(orders);
-    } catch (error) {
-       res.status(500).json({ error: error.message });
-    }
-};
  
 
-export const getAllOrdersOfUserBySaleType = async (req, res) => {
+export const getAllOrdersOfBuyerBySaleType = async (req, res) => {
     try{
-        const {userId, saleType} = req.params;
-        const orders = await OrderLogic.getAllOrdersOfUserBySaleType(userId,saleType);
+        const {buyerId, saleType} = req.params;
+        const orders = await OrderLogic.getAllOrdersOfBuyerBySaleType(buyerId,saleType);
         res.status(200).json(orders);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
+};
+
+
+export const getAllOrdersOfSellerBySaleType = async (req, res) => {
+  try{
+      const {sellerId, saleType} = req.params;
+      const orders = await OrderLogic.getAllOrdersOfSellerBySaleType(sellerId,saleType);
+      res.status(200).json(orders);
+} catch (error) {
+  res.status(404).json({ error: error.message });
+}
 };
 
  

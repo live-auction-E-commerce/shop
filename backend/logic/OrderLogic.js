@@ -45,18 +45,6 @@ export const getAllOrdersByBuyer = async (buyerId) => {
     return Orders;
 }
 
-export const getAllOrdersByUser = async (userId) => {
-    validateObjectId(userId);
-
-    const orders = await Order.find ({
-        $or: [
-            { buyerId: userId },  
-            { sellerId: userId }   
-        ]
-    }).sort({createdAt: -1});
-
-    return orders; //might be null if user doesnt have any orders
-}
 
 export const getOrderById = async (orderId) =>{
     validateObjectId(orderId);
@@ -69,16 +57,22 @@ export const getOrderById = async (orderId) =>{
     return order;
 };
 
-export const getAllOrdersOfUserBySaleType = async (userId,saleType) => {
-    validateObjectId(userId);
+export const getAllOrdersOfBuyerBySaleType = async (buyerId,saleType) => {
+    validateObjectId(buyerId);
     validateEnum(saleType, SaleTypes, 'Sale Type');
 
-    const orders = await Order.find({
-        $or: [
-            { buyerId: userId },  
-            { sellerId: userId }   
-        ]
-    })
+    const orders = await Order.find({buyerId})
+        .populate('listingId')  // Populate the listingId field to get the Listing data
+        .then((orders) => 
+            orders.filter(order => order.listingId.saleType === saleType)
+        );
+    return orders;//might be null if the user doesn't has order in the selected saleType
+}
+export const getAllOrdersOfSellerBySaleType = async (sellerId,saleType) => {
+    validateObjectId(sellerId);
+    validateEnum(saleType, SaleTypes, 'Sale Type');
+
+    const orders = await Order.find({sellerId})
         .populate('listingId')  // Populate the listingId field to get the Listing data
         .then((orders) => 
             orders.filter(order => order.listingId.saleType === saleType)
