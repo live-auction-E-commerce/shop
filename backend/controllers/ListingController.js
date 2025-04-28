@@ -26,3 +26,12 @@ export const deleteListing = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+export const getListingById = async (req, res) => {
+  try {
+    const listing = await ListingLogic.getListingById(req.params.id);
+    res.status(201).json(listing);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+};
