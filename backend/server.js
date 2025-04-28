@@ -1,12 +1,12 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import ProductRoutes from './routes/ProductRoutes.js';
-import ListingRoutes from './routes/ListingRoutes.js';
-import AddressRoutes from './routes/AddressRoutes.js';
-import PaymentMethodRoutes from './routes/PaymentMethodRoutes.js';
-import BidRoutes from './routes/BidRoutes.js';
-import OrderRoutes from './routes/OrderRoutes.js';
-import connectDB from './lib/db.js';
+import ProductRoutes from './src/routes/ProductRoutes.js';
+import ListingRoutes from './src/routes/ListingRoutes.js';
+import AddressRoutes from './src/routes/AddressRoutes.js';
+import PaymentMethodRoutes from './src/routes/PaymentMethodRoutes.js';
+import BidRoutes from './src/routes/BidRoutes.js';
+import OrderRoutes from './src/routes/OrderRoutes.js';
+import connectDB from './src/lib/db.js';
 
 dotenv.config();
 
