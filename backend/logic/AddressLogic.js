@@ -57,3 +57,34 @@ export const updateAddress = async (addressId, data) => {
 
   return updatedAddress;
 };
+
+export const setDefaultAddress = async (addressId,userId) => {
+  validateObjectId (userId);
+  validateObjectId (addressId);
+
+  //unset previos addresses
+  await Address.updateMany({userId}, { $set: { isDefault: false } });
+
+  const updatedAddress = await Address.findByIdAndUpdate(
+    { _id: addressId, userId },
+    { $set: { isDefault: true } },
+    { new: true }
+  );
+
+  if (!updatedAddress){
+    throw new Error('address not found or not authorized');
+  }
+
+  return updatedAddress;
+};
+
+export const getDefaultAddress = async (userId) => {
+    validateObjectId (userId);
+
+    const defaultAddress = await Address.findOne ({
+      userId,
+      isDefault:true
+    });
+
+    return defaultAddress; //might be null if none is default
+}

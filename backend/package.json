@@ -8,6 +8,12 @@
     "@eslint/js": "^9.25.1",
     "eslint": "^9.25.1",
     "globals": "^16.0.0",
-    "dotenv": "^16.5.0"
+    "dotenv": "^16.5.0",
+    "prettier": "^3.2.5"
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2
   }
 }
