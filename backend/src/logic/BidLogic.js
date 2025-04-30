@@ -3,10 +3,10 @@ import Bid from '../models/Bid.js';
 import Listing from '../models/Listing.js';
 import User from '../models/User.js';
 import PaymentIntent from '../models/PaymentIntent.js';
-import { validateObjectId } from '../lib/utils.js';
+import { validateObjectId } from '../lib/validations.js';
 
 export const createBid = async (data) => {
-    //const { listingId, userId, paymentIntentId, amount } = data;
+  //const { listingId, userId, paymentIntentId, amount } = data;
 
   validateObjectId(data.listingId);
   validateObjectId(data.userId);
@@ -61,37 +61,32 @@ export const createBid = async (data) => {
 };
 
 export const getAllBidsByListing = async (listingId) => {
-    validateObjectId(listingId);
+  validateObjectId(listingId);
 
-    const bids = await Bid.find({ listingId })
-      .sort({ createAt: -1 });
-      if (!bids) {
-        throw new Error('Couldn`t find a bids with the specific ID.');
-      }
-    return bids;
-  };
+  const bids = await Bid.find({ listingId }).sort({ createAt: -1 });
+  if (!bids) {
+    throw new Error('Couldn`t find a bids with the specific ID.');
+  }
+  return bids;
+};
 
-  export const getAllBidsByUser = async (userId) => {
-    validateObjectId(userId);
-  
-    const bids = await Bid.find({ userId })
-      .sort({ createAt: -1 });
-      if (!bids) {
-        throw new Error('Couldn`t find a bids with the specific ID.');
-      }
-    return bids;
-  };  
+export const getAllBidsByUser = async (userId) => {
+  validateObjectId(userId);
 
-  export const getAllBidsByUserAndListing = async (userId, listingId) => {
-    validateObjectId(userId);
-    validateObjectId(listingId);
-  
-    const bids = await Bid.find({ userId, listingId })
-      .sort({ createAt: -1 });
-      if (!bids) {
-        throw new Error('Couldn`t find a bids with the specific ID.');
-      }
-    return bids;
-  };
-  
-  
+  const bids = await Bid.find({ userId }).sort({ createAt: -1 });
+  if (!bids) {
+    throw new Error('Couldn`t find a bids with the specific ID.');
+  }
+  return bids;
+};
+
+export const getAllBidsByUserAndListing = async (userId, listingId) => {
+  validateObjectId(userId);
+  validateObjectId(listingId);
+
+  const bids = await Bid.find({ userId, listingId }).sort({ createAt: -1 });
+  if (!bids) {
+    throw new Error('Couldn`t find a bids with the specific ID.');
+  }
+  return bids;
+};
