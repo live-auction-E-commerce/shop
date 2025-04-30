@@ -4,7 +4,7 @@ import {
   validateEnum,
   validateImages,
   validateObjectId,
-} from '../lib/utils.js';
+} from '../lib/validations.js';
 
 export const createProduct = async (data) => {
   validateEnum(data.category, CategoryEnum, 'category');

@@ -1,5 +1,5 @@
 import Address from '../models/Address.js';
-import { validateObjectId } from '../lib/utils.js';
+import { validateObjectId } from '../lib/validations.js';
 
 export const createAddress = async (data) => {
   validateObjectId(data.userId);
