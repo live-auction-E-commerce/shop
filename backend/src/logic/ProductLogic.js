@@ -9,8 +9,8 @@ import {
 export const createProduct = async (data) => {
   validateEnum(data.category, CategoryEnum, 'category');
   validateEnum(data.condition, ConditionEnum, 'condition');
-  validateImages(data.images);
   validateObjectId(data.ownerId);
+  validateImages(data.images);
 
   const newProduct = new Product({
     ownerId: data.ownerId,
