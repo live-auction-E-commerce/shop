@@ -19,10 +19,16 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) cb(null, true);
-  else cb(new Error('Only image files are allowed'), false);
-};
+  if (!file) {
+    return cb(new Error('No file provided'), false);
+  }
 
+  if (file.mimetype && file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type. Only image files are allowed.'), false);
+  }
+};
 export const upload = multer({ storage, fileFilter });
 
 export const getImagePath = (filename) => {

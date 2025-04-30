@@ -17,9 +17,9 @@ export const createProduct = async (data) => {
     name: data.name,
     description: data.description || '',
     images: data.images || [],
-    category: data.category.toLowerCase(),
-    brand: data.brand.toLowerCase(),
-    condition: data.condition.toLowerCase(),
+    category: data.category?.toLowerCase(),
+    brand: data.brand?.toLowerCase(),
+    condition: data.condition?.toLowerCase(),
     size: data.size,
     listing: data.listing || null,
   });

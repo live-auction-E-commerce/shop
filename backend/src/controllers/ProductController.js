@@ -2,10 +2,27 @@ import * as ProductLogic from '../logic/ProductLogic.js';
 
 export const createProduct = async (req, res) => {
   try {
-    const imageUrls = req.files.map((file) => `/Images/${file.filename}`);
+    const {
+      category,
+      condition,
+      name,
+      brand,
+      description,
+      size,
+      listing,
+      ownerId,
+    } = req.body;
+    const images = req.files.map((file) => `/Images/${file.filename}`);
     const productData = {
-      ...req.body,
-      images: imageUrls,
+      category,
+      condition,
+      name,
+      brand,
+      description,
+      size,
+      listing,
+      ownerId,
+      images,
     };
     const product = await ProductLogic.createProduct(productData);
     res.status(201).json(product);
