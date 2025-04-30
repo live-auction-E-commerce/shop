@@ -20,7 +20,34 @@ export const getAllAddressByUser = async (req, res) => {
 
 export const updateAddress = async (req, res) => {
   try {
-    const updatedAddress = await AddressLogic.updateAddress(req.params.id, req.body);
+    const updatedAddress = await AddressLogic.updateAddress(
+      req.params.id,
+      req.body,
+    );
+    res.status(200).json(updatedAddress);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const setDefaultAddress = async (req, res) => {
+  try {
+    const { addressId, userId } = req.params;
+    const updateAddress = await AddressLogic.setDefaultAddress(
+      addressId,
+      userId,
+    );
+    res.status(200).json(updateAddress);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const getDefaultAddress = async (req, res) => {
+  try {
+    const updatedAddress = await AddressLogic.getDefaultAddress(
+      req.params.userId,
+    );
     res.status(200).json(updatedAddress);
   } catch (error) {
     res.status(400).json({ error: error.message });

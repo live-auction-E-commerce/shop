@@ -93,3 +93,14 @@ export const deleteListing = async (listingId) => {
 
   return { message: 'Listing deleted successfully' };
 };
+
+export const getListingById = async (listingId) => {
+  validateObjectId(listingId);
+
+  const listing = await Listing.findById(listingId);
+  if (!listing) {
+    throw new Error('Could not find listing with id: ${listingId}');
+  }
+
+  return listing;
+};

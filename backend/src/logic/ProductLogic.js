@@ -1,6 +1,10 @@
 import Product from '../models/Product.js';
 import { CategoryEnum, ConditionEnum } from '../constants/enum.js';
-import { validateEnum, validateImages, validateObjectId } from '../lib/utils.js';
+import {
+  validateEnum,
+  validateImages,
+  validateObjectId,
+} from '../lib/utils.js';
 
 export const createProduct = async (data) => {
   validateEnum(data.category, CategoryEnum, 'category');
@@ -65,7 +69,7 @@ export const updateProduct = async (productId, updateData) => {
     {
       ...updateData,
     },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   if (!updatedProduct) {
