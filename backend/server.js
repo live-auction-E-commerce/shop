@@ -7,7 +7,7 @@ import PaymentMethodRoutes from './src/routes/PaymentMethodRoutes.js';
 import BidRoutes from './src/routes/BidRoutes.js';
 import OrderRoutes from './src/routes/OrderRoutes.js';
 import connectDB from './src/lib/db.js';
-import { multerErrorHandler } from './middlewares/ErrorHandlers.js';
+import { multerErrorHandler } from './src/middlewares/ErrorHandlers.js';
 
 dotenv.config();
 
