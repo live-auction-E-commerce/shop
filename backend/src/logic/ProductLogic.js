@@ -9,17 +9,17 @@ import {
 export const createProduct = async (data) => {
   validateEnum(data.category, CategoryEnum, 'category');
   validateEnum(data.condition, ConditionEnum, 'condition');
-  validateImages(data.images);
   validateObjectId(data.ownerId);
+  validateImages(data.images);
 
   const newProduct = new Product({
     ownerId: data.ownerId,
     name: data.name,
     description: data.description || '',
     images: data.images || [],
-    category: data.category.toLowerCase(),
-    brand: data.brand.toLowerCase(),
-    condition: data.condition.toLowerCase(),
+    category: data.category?.toLowerCase(),
+    brand: data.brand?.toLowerCase(),
+    condition: data.condition?.toLowerCase(),
     size: data.size,
     listing: data.listing || null,
   });
@@ -58,6 +58,10 @@ export const getAllCategoryProducts = async (category) => {
 
 /* TODO: see if theres a better way of only passing the updated fields instead of the whole 
 object again but then we need to make some conditionally validations*/
+/*
+  Currently no specific behavior on updating images even tho we will need it
+  We need to handle the case where the data being sent are files
+*/
 export const updateProduct = async (productId, updateData) => {
   validateObjectId(productId);
   validateEnum(updateData.category, CategoryEnum, 'category');
