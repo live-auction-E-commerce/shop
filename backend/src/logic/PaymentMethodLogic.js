@@ -1,5 +1,5 @@
 import PaymentMethod from '../models/PaymentMethod.js';
-import { validateObjectId } from '../lib/utils.js';
+import { validateObjectId } from '../lib/validations.js';
 
 export const addPaymentMethod = async (data) => {
   const {
@@ -36,7 +36,10 @@ export const addPaymentMethod = async (data) => {
 
 export const getUserPaymentMethods = async (userId) => {
   validateObjectId(userId);
-  const methods = await PaymentMethod.find({ userId }).sort({ isDefault: -1, createdAt: -1 });
+  const methods = await PaymentMethod.find({ userId }).sort({
+    isDefault: -1,
+    createdAt: -1,
+  });
   return methods;
 };
 
@@ -51,7 +54,7 @@ export const setDefaultPaymentMethod = async (paymentMethodId, userId) => {
   const updatedPaymentMethod = await PaymentMethod.findOneAndUpdate(
     { _id: paymentMethodId, userId },
     { $set: { isDefault: true } },
-    { new: true }
+    { new: true },
   );
 
   if (!updatedPaymentMethod) {
