@@ -1,5 +1,13 @@
 import { ListingCard } from './components/ui/listing-card';
-import { buyNowListing, auctionListing, soldListing, sampleProduct } from './constants/constants';
+import { ListingGrid } from './components/ui/listing-grid';
+import {
+  buyNowListing,
+  auctionListing,
+  soldListing,
+  sampleProduct,
+  sampleListings,
+  sampleProducts,
+} from './constants/constants';
 
 const handleBidClick = (listingId) => {
   console.log(`Placing bid on listing: ${listingId}`);
@@ -12,18 +20,14 @@ const handleBuyNowClick = (listingId) => {
 function App() {
   return (
     <main className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Marketplace Listings</h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <ListingCard listing={auctionListing} product={sampleProduct} onBidClick={handleBidClick} />
-        <ListingCard
-          listing={buyNowListing}
-          product={sampleProduct}
-          onBuyNowClick={handleBuyNowClick}
-        />
-        <ListingCard listing={soldListing} product={sampleProduct} />
-        <ListingCard listing={soldListing} product={sampleProduct} isLoading={true} />
-      </div>
+      <ListingGrid
+        listings={sampleListings}
+        products={sampleProducts}
+        title="Featured Listings"
+        onBidClick={handleBidClick}
+        onBuyNowClick={handleBuyNowClick}
+        itemsPerRow={{ sm: 1, md: 2, lg: 3, xl: 4 }}
+      />
     </main>
   );
 }
