@@ -19,7 +19,7 @@ export const sampleProducts = [
   {
     _id: '101',
     name: 'Vintage Camera',
-    description: 'A beautiful vintage film camera in excellent condition',
+    description: '',
     category: 'Electronics',
     brand: 'Canon',
     condition: 'Used',

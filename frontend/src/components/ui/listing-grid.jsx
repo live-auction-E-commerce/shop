@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ListingCard } from '@/components/listing-card';
+import { ListingCard } from '@/components/ui/listing-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
@@ -30,6 +30,9 @@ export function ListingGrid({
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [showFilterPanel, setShowFilterPanel] = useState(false);
+
+  // Generate loading skeletons based on screen size
+  const loadingItems = Array(itemsPerRow.lg).fill(null);
 
   // Filter and sort listings
   const filteredListings = listings.filter((listing) => {
@@ -76,6 +79,26 @@ export function ListingGrid({
   // Determine grid columns based on itemsPerRow
   const gridCols = `grid-cols-1 sm:grid-cols-${itemsPerRow.sm} md:grid-cols-${itemsPerRow.md} lg:grid-cols-${itemsPerRow.lg} xl:grid-cols-${itemsPerRow.xl}`;
 
+  // Get the appropriate grid class based on columns prop
+  const getGridClass = () => {
+    let gridClass = 'grid grid-cols-1 gap-4';
+
+    if (itemsPerRow.sm === 2) gridClass += ' sm:grid-cols-2';
+    if (itemsPerRow.md === 2) gridClass += ' md:grid-cols-2';
+    if (itemsPerRow.md === 3) gridClass += ' md:grid-cols-3';
+    if (itemsPerRow.lg === 2) gridClass += ' lg:grid-cols-2';
+    if (itemsPerRow.lg === 3) gridClass += ' lg:grid-cols-3';
+    if (itemsPerRow.lg === 4) gridClass += ' lg:grid-cols-4';
+    if (itemsPerRow.xl === 2) gridClass += ' xl:grid-cols-2';
+    if (itemsPerRow.xl === 3) gridClass += ' xl:grid-cols-3';
+    if (itemsPerRow.xl === 4) gridClass += ' xl:grid-cols-4';
+    if (itemsPerRow.xl === 5) gridClass += ' xl:grid-cols-5';
+    if (itemsPerRow.xl === 6) gridClass += ' xl:grid-cols-6';
+
+    return gridClass;
+  };
+
+  const gridClass = getGridClass();
   return (
     <Card className={cn('w-full', className)}>
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -168,7 +191,7 @@ export function ListingGrid({
         )}
 
         {isLoading ? (
-          <div className={cn('grid gap-4', gridCols, gridClassName)}>
+          <div className={cn('grid gap-4', gridClass, gridClassName)}>
             {loadingItems.map((_, index) => (
               <ListingCard
                 key={`skeleton-${index}`}
@@ -180,7 +203,7 @@ export function ListingGrid({
             ))}
           </div>
         ) : sortedListings.length > 0 ? (
-          <div className={cn('grid gap-4', gridCols, gridClassName)}>
+          <div className={cn('grid gap-4', gridClass, gridClassName)}>
             {sortedListings.map((listing) => {
               const product = products.find((p) => p._id === listing.productId);
               return (
