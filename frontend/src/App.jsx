@@ -24,6 +24,7 @@ function App() {
         listings={sampleListings}
         products={sampleProducts}
         title="Featured Listings"
+        variant="compact"
         onBidClick={handleBidClick}
         onBuyNowClick={handleBuyNowClick}
         itemsPerRow={{ sm: 1, md: 2, lg: 3, xl: 4 }}

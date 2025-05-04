@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { Clock, ArrowUp, Tag, ShoppingCart } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -44,9 +46,153 @@ export function ListingCard({
   // Return skeleton if loading or if listing/product is undefined
   if (isLoading) return <ListingCardSkeleton variant={variant} />;
   if (!listing || !product) return null;
+
+  // Compact variant
+  if (variant === 'compact') {
+    return (
+      <Card
+        className={`flex flex-col h-full overflow-hidden transition-all duration-200 ${
+          isHovered ? 'shadow-md' : ''
+        } ${className}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="relative">
+          <div className="aspect-square overflow-hidden">
+            <img
+              src={
+                product.images && product.images.length > 0
+                  ? product.images[currentImageIndex]
+                  : '/placeholder.svg?height=300&width=300'
+              }
+              alt={product.name}
+              width={300}
+              height={300}
+              className={`object-cover w-full h-full transition-transform duration-300 ${
+                isHovered ? 'scale-105' : 'scale-100'
+              }`}
+            />
+
+            {/* Image navigation dots for multiple images */}
+            {product.images && product.images.length > 1 && (
+              <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
+                {product.images.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCurrentImageIndex(index);
+                    }}
+                    className={`w-1.5 h-1.5 rounded-full ${currentImageIndex === index ? 'bg-white' : 'bg-white/50'}`}
+                    aria-label={`View image ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Status badge */}
+          <div className="absolute top-2 right-2">
+            <Badge
+              variant={
+                status === 'expired' ? 'destructive' : status === 'sold' ? 'secondary' : 'default'
+              }
+              className="text-xs px-1.5 py-0"
+            >
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </Badge>
+          </div>
+
+          {/* Sale type badge */}
+          <div className="absolute top-2 left-2">
+            <Badge
+              variant="outline"
+              className="bg-background/80 backdrop-blur-sm text-xs px-1.5 py-0"
+            >
+              {listing.saleType === 'auction' ? 'Auction' : 'Buy Now'}
+            </Badge>
+          </div>
+        </div>
+
+        <div className="p-3 flex-grow flex flex-col">
+          <div className="mb-1">
+            <h3 className="font-medium text-sm line-clamp-1">{product.name}</h3>
+            <div className="flex justify-between items-center mt-1">
+              <Badge variant="outline" className="flex items-center gap-0.5 text-xs px-1.5 py-0">
+                <Tag className="h-2.5 w-2.5" />
+                {product.category}
+              </Badge>
+              {product.brand && (
+                <Badge variant="secondary" className="text-xs px-1.5 py-0">
+                  {product.brand}
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-auto">
+            {listing.saleType === 'auction' ? (
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted-foreground">
+                    {listing.currentBid ? 'Current bid' : 'Starting bid'}
+                  </span>
+                  <span className="font-medium">
+                    ${(listing.currentBid?.amount || listing.startingBid || 0).toFixed(2)}
+                  </span>
+                </div>
+
+                {progressPercentage > 0 && <Progress value={progressPercentage} className="h-1" />}
+
+                {timeRemaining && (
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Clock className="h-2.5 w-2.5" />
+                    <span>{timeRemaining}</span>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-muted-foreground">Price</span>
+                <span className="font-medium">${(listing.price || 0).toFixed(2)}</span>
+              </div>
+            )}
+
+            {status === 'active' && (
+              <div className="mt-2">
+                {listing.saleType === 'auction' ? (
+                  <Button
+                    size="sm"
+                    className="w-full h-7 text-xs"
+                    onClick={() => onBidClick?.(listing._id)}
+                    disabled={isExpired || isSold}
+                  >
+                    <ArrowUp className="h-3 w-3 mr-1" />
+                    Bid
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    className="w-full h-7 text-xs"
+                    onClick={() => onBuyNowClick?.(listing._id)}
+                    disabled={isSold}
+                  >
+                    <ShoppingCart className="h-3 w-3 mr-1" />
+                    Buy
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  // Default variant
   return (
     <Card
-      className={`overflow-hidden transition-all duration-200 ${isHovered ? 'shadow-md' : ''} ${className}`}
+      className={`flex flex-col h-full overflow-hidden transition-all duration-200 ${isHovered ? 'shadow-md' : ''} ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -125,7 +271,7 @@ export function ListingCard({
         )}
       </CardHeader>
 
-      <CardContent className="p-4">
+      <CardContent className="p-4 flex-grow">
         <div className="space-y-3">
           {listing.saleType === 'auction' ? (
             <>
@@ -157,7 +303,7 @@ export function ListingCard({
       </CardContent>
 
       {status === 'active' && variant === 'default' && (
-        <CardFooter className="p-4 pt-0">
+        <CardFooter className="p-4 pt-0 mt-auto">
           {listing.saleType === 'auction' ? (
             <Button
               className="w-full"
@@ -184,14 +330,17 @@ export function ListingCard({
 }
 
 function ListingCardSkeleton({ variant = 'default' }) {
+  const isCompact = variant === 'compact';
+
   return (
-    <Card className="overflow-hidden">
+    <Card className={`flex flex-col h-full overflow-hidden ${isCompact ? 'text-sm' : ''}`}>
       <div className="aspect-square">
         <Skeleton className="h-full w-full" />
       </div>
-      <div className="p-4 space-y-3">
-        <Skeleton className="h-6 w-3/4" />
-        {variant === 'default' && (
+      <div className={`p-${isCompact ? '3' : '4'} space-y-${isCompact ? '2' : '3'}`}>
+        <Skeleton className={`h-${isCompact ? '4' : '6'} w-3/4`} />
+
+        {!isCompact && variant === 'default' && (
           <>
             <Skeleton className="h-4 w-full" />
             <div className="flex gap-2">
@@ -201,13 +350,25 @@ function ListingCardSkeleton({ variant = 'default' }) {
             </div>
           </>
         )}
+
+        {isCompact && (
+          <div className="flex justify-between">
+            <Skeleton className="h-3 w-16" />
+            <Skeleton className="h-3 w-16" />
+          </div>
+        )}
+
         <div className="flex justify-between">
-          <Skeleton className="h-4 w-1/3" />
-          <Skeleton className="h-4 w-1/4" />
+          <Skeleton className={`h-${isCompact ? '3' : '4'} w-1/3`} />
+          <Skeleton className={`h-${isCompact ? '3' : '4'} w-1/4`} />
         </div>
+
         <Skeleton className="h-1 w-full" />
-        <Skeleton className="h-4 w-1/2" />
-        {variant === 'default' && <Skeleton className="h-10 w-full mt-2" />}
+        <Skeleton className={`h-${isCompact ? '3' : '4'} w-1/2`} />
+
+        {(variant === 'default' || isCompact) && (
+          <Skeleton className={`h-${isCompact ? '7' : '10'} w-full mt-2`} />
+        )}
       </div>
     </Card>
   );
