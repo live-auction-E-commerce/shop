@@ -1,0 +1,204 @@
+import { useState } from 'react';
+import { ListingCard } from '@/components/listing-card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Search, SlidersHorizontal } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+export function ListingGrid({
+  listings = [],
+  products = [],
+  title = '',
+  isLoading = false,
+  onBidClick,
+  onBuyNowClick,
+  className = '',
+  variant = 'default',
+  showFilters = true,
+  emptyMessage = 'Nothing found...',
+  gridClassName = '',
+  itemsPerRow = { sm: 1, md: 2, lg: 3, xl: 4 },
+}) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('newest');
+  const [showFilterPanel, setShowFilterPanel] = useState(false);
+
+  // Filter and sort listings
+  const filteredListings = listings.filter((listing) => {
+    const product = products.find((p) => p._id === listing.productId);
+    if (!product) return false;
+    if (!searchTerm) return true;
+
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      product.name?.toLowerCase().includes(searchLower) ||
+      product.description?.toLowerCase().includes(searchLower) ||
+      product.category?.toLowerCase().includes(searchLower) ||
+      product.brand?.toLowerCase().includes(searchLower)
+    );
+  });
+
+  // Sort listings
+  const sortedListings = [...filteredListings].sort((a, b) => {
+    switch (sortBy) {
+      case 'newest':
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+      case 'oldest':
+        return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+      case 'price-high':
+        return (
+          (b.price || b.currentBid?.amount || b.startingBid || 0) -
+          (a.price || a.currentBid?.amount || a.startingBid || 0)
+        );
+      case 'price-low':
+        return (
+          (a.price || a.currentBid?.amount || a.startingBid || 0) -
+          (b.price || b.currentBid?.amount || b.startingBid || 0)
+        );
+      case 'ending-soon':
+        return (
+          new Date(a.expiredAt || Number.POSITIVE_INFINITY) -
+          new Date(b.expiredAt || Number.POSITIVE_INFINITY)
+        );
+      default:
+        return 0;
+    }
+  });
+
+  // Determine grid columns based on itemsPerRow
+  const gridCols = `grid-cols-1 sm:grid-cols-${itemsPerRow.sm} md:grid-cols-${itemsPerRow.md} lg:grid-cols-${itemsPerRow.lg} xl:grid-cols-${itemsPerRow.xl}`;
+
+  return (
+    <Card className={cn('w-full', className)}>
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <CardTitle>{title}</CardTitle>
+
+        {showFilters && (
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-64">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search listings..."
+                className="pl-8"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            <div className="flex gap-2">
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-full sm:w-40">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="newest">Newest</SelectItem>
+                  <SelectItem value="oldest">Oldest</SelectItem>
+                  <SelectItem value="price-high">Price: High to Low</SelectItem>
+                  <SelectItem value="price-low">Price: Low to High</SelectItem>
+                  <SelectItem value="ending-soon">Ending Soon</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setShowFilterPanel(!showFilterPanel)}
+                aria-label="Toggle filters"
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
+      </CardHeader>
+
+      <CardContent>
+        {/* Filter panel - can be expanded with more filter options */}
+        {showFilters && showFilterPanel && (
+          <div className="mb-4 p-4 border rounded-md">
+            <h3 className="font-medium mb-2">Filters</h3>
+            {/* Additional filters can be added here */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sale Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="auction">Auction</SelectItem>
+                    <SelectItem value="buy-now">Buy Now</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    {/* Categories would be dynamically populated */}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="sold">Sold</SelectItem>
+                    <SelectItem value="expired">Expired</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isLoading ? (
+          <div className={cn('grid gap-4', gridCols, gridClassName)}>
+            {loadingItems.map((_, index) => (
+              <ListingCard
+                key={`skeleton-${index}`}
+                listing={null}
+                product={null}
+                isLoading={true}
+                variant={variant}
+              />
+            ))}
+          </div>
+        ) : sortedListings.length > 0 ? (
+          <div className={cn('grid gap-4', gridCols, gridClassName)}>
+            {sortedListings.map((listing) => {
+              const product = products.find((p) => p._id === listing.productId);
+              return (
+                <ListingCard
+                  key={listing._id}
+                  listing={listing}
+                  product={product}
+                  onBidClick={onBidClick}
+                  onBuyNowClick={onBuyNowClick}
+                  variant={variant}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="py-12 text-center text-muted-foreground">{emptyMessage}</div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
