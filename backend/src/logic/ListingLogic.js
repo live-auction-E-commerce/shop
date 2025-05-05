@@ -5,7 +5,7 @@ import {
   validateObjectId,
   validateAuctionUpdates,
   validateBuyNowUpdates,
-} from '../lib/utils.js';
+} from '../lib/validations.js';
 
 export const createListing = async (body) => {
   const { saleType, price, startingBid, expiredAt, productId, sellerId } = body;

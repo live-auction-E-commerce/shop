@@ -2,7 +2,29 @@ import * as ProductLogic from '../logic/ProductLogic.js';
 
 export const createProduct = async (req, res) => {
   try {
-    const product = await ProductLogic.createProduct(req.body);
+    const {
+      category,
+      condition,
+      name,
+      brand,
+      description,
+      size,
+      listing,
+      ownerId,
+    } = req.body;
+    const images = req.files.map((file) => `/Images/${file.filename}`);
+    const productData = {
+      category,
+      condition,
+      name,
+      brand,
+      description,
+      size,
+      listing,
+      ownerId,
+      images,
+    };
+    const product = await ProductLogic.createProduct(productData);
     res.status(201).json(product);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -29,7 +51,9 @@ export const getAllProducts = async (_req, res) => {
 
 export const getAllCategoryProducts = async (req, res) => {
   try {
-    const products = await ProductLogic.getAllCategoryProducts(req.params.category);
+    const products = await ProductLogic.getAllCategoryProducts(
+      req.params.category,
+    );
     res.status(200).json(products);
   } catch (error) {
     res.status(404).json({ error: error.message });
@@ -38,7 +62,10 @@ export const getAllCategoryProducts = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   try {
-    const updatedProduct = await ProductLogic.updateProduct(req.params.id, req.body);
+    const updatedProduct = await ProductLogic.updateProduct(
+      req.params.id,
+      req.body,
+    );
     res.status(200).json(updatedProduct);
   } catch (error) {
     res.status(400).json({ error: error.message });
