@@ -42,7 +42,7 @@ export const createListing = async (body) => {
 export const editListing = async (listingId, updates) => {
   validateObjectId(listingId);
 
-  const listing = await Listing.findById(listingId);
+  const listing = await Listing.findById(listingId).populate('productId');
   if (!listing) {
     throw new Error(`Could not find listing with id: ${listingId}`);
   }
@@ -80,7 +80,7 @@ export const editListing = async (listingId, updates) => {
 
 export const deleteListing = async (listingId) => {
   validateObjectId(listingId);
-  const listing = await Listing.findById(listingId);
+  const listing = await Listing.findById(listingId).populate('productId');
   if (!listing) {
     throw new Error('Could not find listing with id: ${listingId}');
   }
@@ -97,10 +97,16 @@ export const deleteListing = async (listingId) => {
 export const getListingById = async (listingId) => {
   validateObjectId(listingId);
 
-  const listing = await Listing.findById(listingId);
+  const listing = await Listing.findById(listingId).populate('productId');
   if (!listing) {
     throw new Error('Could not find listing with id: ${listingId}');
   }
 
   return listing;
+};
+
+export const getAllListings = async (queryParams) => {
+  const listings = await Listing.find().populate('productId');
+
+  return listings;
 };

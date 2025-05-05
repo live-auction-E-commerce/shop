@@ -11,7 +11,10 @@ export const createListing = async (req, res) => {
 
 export const editListing = async (req, res) => {
   try {
-    const editedListing = await ListingLogic.editListing(req.params.id, req.body);
+    const editedListing = await ListingLogic.editListing(
+      req.params.id,
+      req.body,
+    );
     res.status(201).json(editedListing);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -31,6 +34,15 @@ export const getListingById = async (req, res) => {
   try {
     const listing = await ListingLogic.getListingById(req.params.id);
     res.status(201).json(listing);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+};
+
+export const getAllListings = async (req, res) => {
+  try {
+    const listings = await ListingLogic.getAllListings();
+    res.status(201).json(listings);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
