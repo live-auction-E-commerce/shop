@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import ProductRoutes from './routes/ProductRoutes.js';
+import AuthRoutes from './routes/AuthRoutes.js';
 import ListingRoutes from './routes/ListingRoutes.js';
 import AddressRoutes from './routes/AddressRoutes.js';
 import PaymentMethodRoutes from './routes/PaymentMethodRoutes.js';
@@ -16,6 +17,7 @@ connectDB();
 app.use(express.json());
 
 app.use('/api', ProductRoutes);
+app.use('/api', AuthRoutes);
 app.use('/api', ListingRoutes);
 app.use('/api', AddressRoutes);
 app.use('/api', PaymentMethodRoutes);
