@@ -163,7 +163,7 @@ export function ListingCard({
                 {listing.saleType === 'auction' ? (
                   <Button
                     size="sm"
-                    className="w-full h-7 text-xs"
+                    className="w-full h-7 text-xs cursor-pointer"
                     onClick={() => onBidClick?.(listing._id)}
                     disabled={isExpired || isSold}
                   >
@@ -173,7 +173,7 @@ export function ListingCard({
                 ) : (
                   <Button
                     size="sm"
-                    className="w-full h-7 text-xs"
+                    className="w-full h-7 text-xs cursor-pointer"
                     onClick={() => onBuyNowClick?.(listing._id)}
                     disabled={isSold}
                   >
@@ -306,7 +306,7 @@ export function ListingCard({
         <CardFooter className="p-4 pt-0 mt-auto">
           {listing.saleType === 'auction' ? (
             <Button
-              className="w-full"
+              className="w-full cursor-pointer"
               onClick={() => onBidClick?.(listing._id)}
               disabled={isExpired || isSold}
             >
@@ -315,7 +315,7 @@ export function ListingCard({
             </Button>
           ) : (
             <Button
-              className="w-full"
+              className="w-full cursor-pointer"
               onClick={() => onBuyNowClick?.(listing._id)}
               disabled={isSold}
             >
