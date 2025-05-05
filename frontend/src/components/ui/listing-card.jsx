@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { Clock, ArrowUp, Tag, ShoppingCart } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -11,13 +9,13 @@ import { getBidProgress, getListingStatus, getTimeRemaining } from '@/lib/utils'
 
 export function ListingCard({
   listing,
-  product,
   onBidClick,
   onBuyNowClick,
   isLoading = false,
   variant = 'default',
   className = '',
 }) {
+  const product = listing.productId;
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isExpired, setIsExpired] = useState(false);

@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import ProductRoutes from './src/routes/ProductRoutes.js';
 import ListingRoutes from './src/routes/ListingRoutes.js';
 import AddressRoutes from './src/routes/AddressRoutes.js';
@@ -14,7 +15,12 @@ dotenv.config();
 const app = express();
 
 connectDB();
-
+app.use(
+  cors({
+    origin: 'http://localhost:5173', // your frontend URL
+    credentials: true,
+  }),
+);
 app.use(express.json());
 // Routes
 app.use('/api', ProductRoutes);

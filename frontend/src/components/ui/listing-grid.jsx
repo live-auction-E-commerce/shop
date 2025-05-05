@@ -15,7 +15,6 @@ import { cn } from '@/lib/utils';
 
 export function ListingGrid({
   listings = [],
-  products = [],
   title = '',
   isLoading = false,
   onBidClick,
@@ -36,7 +35,7 @@ export function ListingGrid({
 
   // Filter and sort listings
   const filteredListings = listings.filter((listing) => {
-    const product = products.find((p) => p._id === listing.productId);
+    const product = listing.productId;
     if (!product) return false;
     if (!searchTerm) return true;
 
@@ -205,12 +204,11 @@ export function ListingGrid({
         ) : sortedListings.length > 0 ? (
           <div className={cn('grid gap-4', gridClass, gridClassName)}>
             {sortedListings.map((listing) => {
-              const product = products.find((p) => p._id === listing.productId);
+              const product = listing.productId;
               return (
                 <ListingCard
                   key={listing._id}
                   listing={listing}
-                  product={product}
                   onBidClick={onBidClick}
                   onBuyNowClick={onBuyNowClick}
                   variant={variant}
