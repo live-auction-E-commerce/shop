@@ -4,27 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-
-// Debounce hook to prevent excessive API calls
-function useDebounce(value, delay) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const timer = setTimeout(() => {
-      if (!controller.signal.aborted) {
-        setDebouncedValue(value);
-      }
-    }, delay);
-
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}
+import { useDebounce } from '@/hooks/useDebounce';
 
 export function SearchInput({ placeholder = 'Search...', className, searchFunction }) {
   const [query, setQuery] = useState('');
