@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { formatDistanceToNow } from 'date-fns';
+import { fetchAPI } from './fetch';
 
 export const cn = (...inputs) => {
   return twMerge(clsx(inputs));
@@ -28,3 +29,18 @@ export function getTimeRemaining(expiredAt, isExpired) {
 
   return isExpired ? 'Expired' : formatDistanceToNow(new Date(expiredAt), { addSuffix: true });
 }
+
+export const handleListingSearch = async (query) => {
+  e.preventDefault();
+
+  if (!query.trim()) return;
+
+  try {
+    const response = await fetchAPI(`/api/listings?q=${encodeURIComponent(query)}`);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error('Search failed:', err);
+    return [];
+  }
+};

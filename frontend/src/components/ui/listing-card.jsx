@@ -88,7 +88,6 @@ export function ListingCard({
               </div>
             )}
           </div>
-
           {/* Status badge */}
           <div className="absolute top-2 right-2">
             <Badge
@@ -100,7 +99,6 @@ export function ListingCard({
               {status.charAt(0).toUpperCase() + status.slice(1)}
             </Badge>
           </div>
-
           {/* Sale type badge */}
           <div className="absolute top-2 left-2">
             <Badge

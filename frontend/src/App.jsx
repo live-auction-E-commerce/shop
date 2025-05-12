@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react';
 import { ListingGrid } from './components/ui/listing-grid';
-import {
-  buyNowListing,
-  auctionListing,
-  sampleListings,
-  sampleProducts,
-} from './constants/constants';
 import { fetchAPI } from './lib/fetch';
+import { handleListingSearch } from './lib/utils';
+import { SearchInput } from './components/ui/search-input';
 
 const handleBidClick = (listingId) => {
   console.log(`Placing bid on listing: ${listingId}`);
@@ -33,10 +29,11 @@ function App() {
   }, []);
   return (
     <main className="container mx-auto p-4">
+      <SearchInput searchFunction={handleListingSearch} placeholder="Hello Test" />
       <ListingGrid
         listings={listings}
         title="Featured Listings"
-        variant="compact"
+        variant=""
         onBidClick={handleBidClick}
         onBuyNowClick={handleBuyNowClick}
         itemsPerRow={{ sm: 1, md: 2, lg: 3, xl: 4 }}
