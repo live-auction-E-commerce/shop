@@ -35,7 +35,7 @@ export function ListingGrid({
 
   // Filter and sort listings
   const filteredListings = listings.filter((listing) => {
-    const product = listing.productId;
+    const product = listing.product;
     if (!product) return false;
     if (!searchTerm) return true;
 

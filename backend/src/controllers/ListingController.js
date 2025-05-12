@@ -41,7 +41,7 @@ export const getListingById = async (req, res) => {
 
 export const getAllListings = async (req, res) => {
   try {
-    const listings = await ListingLogic.getAllListings(req.params);
+    const listings = await ListingLogic.getAllListings(req.query);
     res.status(201).json(listings);
   } catch (error) {
     res.status(404).json({ error: error.message });

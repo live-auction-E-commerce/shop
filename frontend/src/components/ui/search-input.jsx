@@ -10,12 +10,16 @@ function useDebounce(value, delay) {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
+    const controller = new AbortController();
     const timer = setTimeout(() => {
-      setDebouncedValue(value);
+      if (!controller.signal.aborted) {
+        setDebouncedValue(value);
+      }
     }, delay);
 
     return () => {
       clearTimeout(timer);
+      controller.abort();
     };
   }, [value, delay]);
 
@@ -135,7 +139,7 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
                   <div
                     key={listing._id}
                     className="flex items-start gap-3 p-2 rounded-md cursor-pointer hover:bg-muted transition-colors"
-                    onClick={() => navigateToListing(listing)}
+                    onClick={() => null}
                   >
                     <div className="h-12 w-12 rounded-md overflow-hidden flex-shrink-0">
                       <img

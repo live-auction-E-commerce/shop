@@ -108,13 +108,49 @@ export const getListingById = async (listingId) => {
 export const getAllListings = async (queryParams) => {
   const { q } = queryParams;
 
-  let listings = await Listing.find().populate('productId');
+  const pipeline = [
+    {
+      $lookup: {
+        from: 'products',
+        localField: 'productId',
+        foreignField: '_id',
+        as: 'product',
+      },
+    },
+    { $unwind: '$product' },
+    {
+      $lookup: {
+        from: 'bids',
+        localField: 'currentBid',
+        foreignField: '_id',
+        as: 'currentBid',
+      },
+    },
+    {
+      $unwind: {
+        path: '$currentBid',
+        preserveNullAndEmptyArrays: true, // in case currentBid is null
+      },
+    },
+  ];
 
   if (q && q.trim().length > 1) {
-    listings = listings.filter((listing) =>
-      listing.productId?.name?.toLowerCase().includes(q.toLowerCase()),
-    );
+    const regex = new RegExp(q, 'i'); // case-insensitive match
+
+    pipeline.push({
+      $match: {
+        $or: [
+          { 'product.name': regex },
+          { 'product.description': regex },
+          { 'product.brand': regex },
+          { 'product.category': regex },
+          { 'product.condition': regex },
+          { 'product.size': regex },
+        ],
+      },
+    });
   }
 
-  return listings;
+  const results = await Listing.aggregate(pipeline);
+  return results;
 };
