@@ -31,64 +31,61 @@ const seedData = async () => {
         role: 'Seller',
       },
     ]);
+    const buyer = users[0];
+    const seller = users[1];
     console.log('✅ Users created.');
 
-    console.log('📦 Creating products...');
-    const products = await Product.insertMany([
-      {
-        ownerId: users[1]._id,
-        name: 'Product 1',
-        description: 'Description for product 1',
-        images: ['image1.jpg', 'image2.jpg'],
-        category: 'Electronics',
-        brand: 'Brand A',
-        condition: 'New',
-        size: 'M',
-      },
-      {
-        ownerId: users[1]._id,
-        name: 'Product 2',
-        description: 'Description for product 2',
-        images: ['image3.jpg', 'image4.jpg'],
-        category: 'Furniture',
-        brand: 'Brand B',
-        condition: 'Used',
-        size: 'L',
-      },
-    ]);
-    console.log('✅ Products created.');
+    console.log('📦 Creating products and listings...');
+    const productDocs = [];
+    const listingDocs = [];
+    const bidDocs = [];
 
-    console.log('📄 Creating listings (without currentBid)...');
-    const listings = await Listing.insertMany([
-      {
-        productId: products[0]._id,
-        sellerId: users[1]._id,
-        saleType: 'auction',
-        startingBid: 50,
-        expiredAt: new Date(Date.now() + 86400000),
-      },
-      {
-        productId: products[1]._id,
-        sellerId: users[1]._id,
-        saleType: 'now',
-        price: 120,
-      },
-    ]);
-    console.log('✅ Listings created.');
+    const sampleProducts = Array.from({ length: 10 }).map((_, i) => ({
+      ownerId: seller._id,
+      name: `Product ${i + 1}`,
+      description: `Description for product ${i + 1}`,
+      images: [`image${i * 2 + 1}.jpg`, `image${i * 2 + 2}.jpg`],
+      category: i % 2 === 0 ? 'Electronics' : 'Clothing',
+      brand: `Brand ${String.fromCharCode(65 + i)}`,
+      condition: i % 3 === 0 ? 'New' : 'Used',
+      size: ['S', 'M', 'L'][i % 3],
+    }));
 
-    console.log('💰 Creating bid for auction listing...');
-    const bid = await Bid.create({
-      listingId: listings[0]._id,
-      userId: users[0]._id,
-      paymentIntentId: new mongoose.Types.ObjectId(), // placeholder
-      amount: 75,
-    });
-    console.log('✅ Bid created with _id:', bid._id.toString());
+    const products = await Product.insertMany(sampleProducts);
+    console.log(`✅ ${products.length} Products created.`);
 
-    console.log('📝 Updating listing with currentBid...');
-    listings[0].currentBid = bid._id;
-    await listings[0].save();
-    console.log('✅ Listing updated with currentBid.');
+    // Create listings and bids
+    for (let i = 0; i < products.length; i++) {
+      const isAuction = i % 2 === 0;
+      const listing = await Listing.create({
+        productId: products[i]._id,
+        sellerId: seller._id,
+        saleType: isAuction ? 'auction' : 'now',
+        ...(isAuction
+          ? {
+              startingBid: 50 + i * 5,
+              expiredAt: new Date(Date.now() + 86400000),
+            }
+          : { price: 100 + i * 10 }),
+      });
+
+      const bid = await Bid.create({
+        listingId: listing._id,
+        userId: buyer._id,
+        paymentIntentId: new mongoose.Types.ObjectId(),
+        amount: isAuction ? 60 + i * 5 : listing.price - 10, // Just for seeding logic
+      });
+
+      listing.currentBid = bid._id;
+      await listing.save();
+
+      productDocs.push(products[i]);
+      listingDocs.push(listing);
+      bidDocs.push(bid);
+    }
+
+    console.log(`✅ ${listingDocs.length} Listings created.`);
+    console.log(`✅ ${bidDocs.length} Bids created and linked.`);
 
     console.log('🎉 All data seeded successfully.');
     mongoose.connection.close();

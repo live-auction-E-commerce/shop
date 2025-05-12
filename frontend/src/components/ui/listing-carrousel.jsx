@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useMediaQuery } from '@/hooks/use-mobile';
+import { useMediaQuery } from '@/hooks/useMobile';
 import { ListingCard } from '@/components/ui/listing-card';
 
 export default function ListingCarrousel({
@@ -12,7 +12,6 @@ export default function ListingCarrousel({
   onBuyNowClick,
   className = '',
   viewAllHref = '#',
-  emptyMessage = 'No listings available',
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
@@ -24,26 +23,17 @@ export default function ListingCarrousel({
 
   // Number of cards to show based on screen size
   const cardsToShow = isMobile ? 1 : isTablet ? 2 : 3;
-  const cardGap = 16; // Gap between cards in pixels
 
-  // Handle navigation
+  const maxIndex = Math.max(0, listings.length - cardsToShow);
+
   const nextSlide = () => {
-    if (currentIndex + cardsToShow >= listings.length) {
-      setCurrentIndex(0); // Loop back to start
-    } else {
-      setCurrentIndex(currentIndex + 1);
-    }
+    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
   };
 
   const prevSlide = () => {
-    if (currentIndex === 0) {
-      setCurrentIndex(Math.max(0, listings.length - cardsToShow)); // Loop to end
-    } else {
-      setCurrentIndex(currentIndex - 1);
-    }
+    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
   };
 
-  // Auto-scroll when not hovering
   useEffect(() => {
     if (isHovering || listings.length <= cardsToShow) return;
 
@@ -52,7 +42,7 @@ export default function ListingCarrousel({
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isHovering, listings.length, cardsToShow, currentIndex]);
+  }, [isHovering, listings.length, cardsToShow]);
 
   const showControls = listings.length > cardsToShow;
 
@@ -100,16 +90,16 @@ export default function ListingCarrousel({
           ref={carouselRef}
           className="flex transition-transform duration-500 ease-out"
           style={{
-            transform: `translateX(calc(-${currentIndex * (100 / cardsToShow)}% - ${(currentIndex * cardGap) / cardsToShow}px))`,
-            gap: `${cardGap}px`,
+            width: `${(listings.length * 100) / cardsToShow}%`,
+            transform: `translateX(-${(currentIndex * 100) / listings.length}%)`,
           }}
         >
-          {listings.map((listing, index) => (
+          {listings.map((listing) => (
             <div
-              key={listing._id || index}
-              className="min-w-[100%] sm:min-w-[calc(50%-8px)] lg:min-w-[calc(33.333%-10.67px)]"
+              key={listing._id}
+              className="flex-shrink-0"
+              style={{ width: `${100 / listings.length}%`, padding: '0 8px' }}
             >
-              {/* Using your existing ListingCard component with the compact variant */}
               <ListingCard
                 listing={listing}
                 onBidClick={onBidClick}
