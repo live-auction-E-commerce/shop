@@ -15,7 +15,7 @@ export function ListingCard({
   variant = 'default',
   className = '',
 }) {
-  const product = listing.productId;
+  const product = listing.product;
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isExpired, setIsExpired] = useState(false);
@@ -40,7 +40,6 @@ export function ListingCard({
 
   // Calculate bid progress percentage for auctions
   const progressPercentage = getBidProgress(listing);
-
   // Return skeleton if loading or if listing/product is undefined
   if (isLoading) return <ListingCardSkeleton variant={variant} />;
   if (!listing || !product) return null;
@@ -88,7 +87,6 @@ export function ListingCard({
               </div>
             )}
           </div>
-
           {/* Status badge */}
           <div className="absolute top-2 right-2">
             <Badge
@@ -100,7 +98,6 @@ export function ListingCard({
               {status.charAt(0).toUpperCase() + status.slice(1)}
             </Badge>
           </div>
-
           {/* Sale type badge */}
           <div className="absolute top-2 left-2">
             <Badge
