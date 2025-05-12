@@ -106,7 +106,15 @@ export const getListingById = async (listingId) => {
 };
 
 export const getAllListings = async (queryParams) => {
-  const listings = await Listing.find().populate('productId');
+  const { q } = queryParams;
+
+  let listings = await Listing.find().populate('productId');
+
+  if (q && q.trim().length > 1) {
+    listings = listings.filter((listing) =>
+      listing.productId?.name?.toLowerCase().includes(q.toLowerCase()),
+    );
+  }
 
   return listings;
 };
