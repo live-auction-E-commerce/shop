@@ -1,14 +1,13 @@
 import { Outlet } from 'react-router-dom';
+import { SiteHeader } from '@/components/ui/site-header';
 
 const AppLayout = () => {
   return (
-    <div>
-      <header>Navbar</header>
-      <main>
-        <Outlet />
-      </main>
+    <>
+      <SiteHeader />
+      <Outlet />
       <footer>Footer</footer>
-    </div>
+    </>
   );
 };
 
