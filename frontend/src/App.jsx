@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ListingGrid } from './components/ui/listing-grid';
+import { SiteHeader } from './components/ui/site-header';
 import {
   buyNowListing,
   auctionListing,
@@ -33,6 +34,7 @@ function App() {
   }, []);
   return (
     <main className="container mx-auto p-4">
+      <SiteHeader/>
       <ListingGrid
         listings={listings}
         title="Featured Listings"

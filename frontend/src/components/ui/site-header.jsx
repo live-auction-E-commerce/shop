@@ -1,0 +1,171 @@
+import React from "react"
+import { Search, User } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu"
+import { cn } from "@/lib/utils"
+
+export function SiteHeader() {
+  return (
+    <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-rose-50 to-teal-50 shadow-sm">
+      <div className="container flex h-16 items-center">
+        {/* Logo */}
+        <div className="mr-6">
+          <a href="/" className="flex items-center justify-start">
+            <span className="text-xl font-extrabold tracking-tight md:text-2xl bg-gradient-to-r from-rose-500 to-teal-500 bg-clip-text text-transparent">
+              auction-site
+            </span>
+          </a>
+        </div>
+
+        {/* Categories Navigation */}
+        <NavigationMenu className="hidden md:flex">
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger className="bg-transparent hover:bg-white/50">Categories</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-2">
+                  <li className="row-span-3">
+                    <NavigationMenuLink asChild>
+                      <a
+                        className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-br from-rose-100 to-teal-100 p-6 no-underline outline-none focus:shadow-md"
+                        href="/"
+                      >
+                        <div className="mb-2 mt-4 text-lg font-medium text-rose-800">Featured Fashion</div>
+                        <p className="text-sm leading-tight text-teal-800">
+                          Discover our trending styles and collections
+                        </p>
+                      </a>
+                    </NavigationMenuLink>
+                  </li>
+                  <ListItem href="/categories/shirts" title="Shirts" className="hover:bg-rose-50">
+                    T-shirts, button-ups, and blouses
+                  </ListItem>
+                  <ListItem href="/categories/jeans" title="Jeans" className="hover:bg-teal-50">
+                    Slim, straight, and relaxed fits
+                  </ListItem>
+                  <ListItem href="/categories/swimwear" title="Swimwear" className="hover:bg-rose-50">
+                    Bikinis, one-pieces, and swim trunks
+                  </ListItem>
+                  <ListItem href="/categories/shoes" title="Shoes" className="hover:bg-teal-50">
+                    Sneakers, heels, and boots
+                  </ListItem>
+                  <ListItem href="/categories/bags" title="Bags" className="hover:bg-rose-50">
+                    Handbags, backpacks, and totes
+                  </ListItem>
+                  <ListItem href="/categories/sunglasses" title="Sunglasses" className="hover:bg-teal-50">
+                    Designer and fashion sunglasses
+                  </ListItem>
+                  <ListItem href="/categories/hats" title="Hats" className="hover:bg-rose-50">
+                    Caps, beanies, and sun hats
+                  </ListItem>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <a href="/live-auctions" legacyBehavior passHref>
+  
+  
+  <NavigationMenuLink className="cursor-pointer group inline-flex h-10 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-white/50 hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"> 
+    {/* <span className="flex items-center mr-2">
+      <span className=" relative flex h-2 w-2 ">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75"></span>
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-rose-500"></span>
+      </span>
+    </span> */}
+    Live Auctions
+  </NavigationMenuLink>
+</a>
+
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <a href="/buy-now" legacyBehavior passHref>
+                <NavigationMenuLink className="cursor-pointer group inline-flex h-10 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-white/50 hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
+                  Buy Now
+                </NavigationMenuLink>
+              </a>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+
+        {/* Mobile menu button */}
+        <Button variant="outline" size="icon" className="mr-2 md:hidden bg-white/70 hover:bg-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-4 w-4"
+          >
+            <line x1="4" x2="20" y1="12" y2="12" />
+            <line x1="4" x2="20" y1="6" y2="6" />
+            <line x1="4" x2="20" y1="18" y2="18" />
+          </svg>
+          <span className="sr-only">Toggle menu</span>
+        </Button>
+
+        {/* Search bar (mobile) */}
+        <Button variant="outline" size="icon" className="md:hidden ml-auto bg-white/70 hover:bg-white">
+          <Search className="h-4 w-4" />
+          <span className="sr-only">Search</span>
+        </Button>
+
+        {/* Search bar (desktop) */}
+        <div className="hidden md:flex flex-1 items-center justify-center px-6">
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search for items..."
+              className="w-full pl-8 md:w-[300px] lg:w-[400px] bg-white/70 focus:bg-white border-rose-100 focus:border-teal-200"
+            />
+          </div>
+        </div>
+
+        {/* User icon */}
+        <div className="flex items-center">
+          <a href="/account">
+            <Button variant="ghost" size="icon" className="relative hover:bg-white/50 h-10 w-10">
+              <User className="h-7 w-7 text-rose-600" />
+              <span className="sr-only">Account</span>
+            </Button>
+          </a>
+        </div>
+      </div>
+    </header>
+  )
+}
+
+const ListItem = React.forwardRef(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors",
+            className,
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  )
+})
+ListItem.displayName = "ListItem"
