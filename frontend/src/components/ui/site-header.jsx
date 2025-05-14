@@ -1,7 +1,6 @@
 import React from 'react';
 import { Search, User } from 'lucide-react';
 import { categories } from '@/constants/categories';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,7 +11,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import { cn } from '@/lib/utils';
+import { cn, handleListingSearch } from '@/lib/utils';
+import { SearchInput } from './search-input';
 
 export function SiteHeader() {
   return (
@@ -100,25 +100,10 @@ export function SiteHeader() {
         <span className="sr-only">Toggle menu</span>
       </Button>
 
-      {/* Search bar (mobile) */}
-      <Button
-        variant="outline"
-        size="icon"
-        className="md:hidden ml-auto bg-white/70 hover:bg-white"
-      >
-        <Search className="h-4 w-4" />
-        <span className="sr-only">Search</span>
-      </Button>
-
       {/* Search bar (desktop) */}
       <div className="hidden md:flex flex-1 items-center justify-center px-6">
         <div className="relative w-full max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search for items..."
-            className="w-full pl-8 md:w-[300px] lg:w-[400px] bg-white/70 focus:bg-white border-rose-100 focus:border-teal-200"
-          />
+          <SearchInput placeholder="Search your item..." searchFunction={handleListingSearch} />
         </div>
       </div>
 
