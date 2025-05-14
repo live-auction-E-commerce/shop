@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import AppLayout from '@/components/layout/AppLayout.jsx';
+import App from '@/App';
 import Home from '@/pages/Home.jsx';
 import Login from '@/pages/Login.jsx';
 import Register from '@/pages/Register.jsx';
@@ -8,7 +8,7 @@ import { ROUTES } from '@/routes/routes_consts';
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    element: <App />,
     //errorElement: <Error />, TO RETURN THIS WHEN WE DO THE ERROR COMPONENT
     children: [
       { path: ROUTES.HOME, element: <Home /> },
