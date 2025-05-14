@@ -35,7 +35,7 @@ export function ListingGrid({
 
   // Filter and sort listings
   const filteredListings = listings.filter((listing) => {
-    const product = listing.productId;
+    const product = listing.product;
     if (!product) return false;
     if (!searchTerm) return true;
 
@@ -74,9 +74,6 @@ export function ListingGrid({
         return 0;
     }
   });
-
-  // Determine grid columns based on itemsPerRow
-  const gridCols = `grid-cols-1 sm:grid-cols-${itemsPerRow.sm} md:grid-cols-${itemsPerRow.md} lg:grid-cols-${itemsPerRow.lg} xl:grid-cols-${itemsPerRow.xl}`;
 
   // Get the appropriate grid class based on columns prop
   const getGridClass = () => {
@@ -204,7 +201,6 @@ export function ListingGrid({
         ) : sortedListings.length > 0 ? (
           <div className={cn('grid gap-4', gridClass, gridClassName)}>
             {sortedListings.map((listing) => {
-              const product = listing.productId;
               return (
                 <ListingCard
                   key={listing._id}
