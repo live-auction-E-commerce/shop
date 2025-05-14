@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import ListingCarrousel from '@/components/ui/listing-carrousel';
 import { fetchAPI } from '@/lib/fetch';
+import { HeroSection } from '@/components/ui/hero-section';
 
 const Home = () => {
   const [listings, setListings] = useState([]);
@@ -21,6 +22,8 @@ const Home = () => {
     fetchListings();
   }, []);
   return (
+    <>
+    <HeroSection/>
     <div className="h-screen flex flex-col">
       <div className="flex-1">
         <ListingCarrousel
@@ -47,6 +50,7 @@ const Home = () => {
         />
       </div>
     </div>
+    </>
   );
 };
 
