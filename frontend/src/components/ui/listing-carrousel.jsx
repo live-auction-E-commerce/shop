@@ -22,7 +22,7 @@ export default function ListingCarrousel({
   const isTablet = useMediaQuery('(min-width: 641px) and (max-width: 1024px)');
 
   // Number of cards to show based on screen size
-  const cardsToShow = isMobile ? 1 : isTablet ? 2 : 3;
+  const cardsToShow = isMobile ? 1 : isTablet ? 2 : 5;
 
   const maxIndex = Math.max(0, listings.length - cardsToShow);
 

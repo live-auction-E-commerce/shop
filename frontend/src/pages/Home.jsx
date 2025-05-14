@@ -23,33 +23,33 @@ const Home = () => {
   }, []);
   return (
     <>
-    <HeroSection/>
-    <div className="h-screen flex flex-col">
-      <div className="flex-1">
-        <ListingCarrousel
-          title="Hot Now!"
-          listings={listings}
-          onBidClick={handleClicks}
-          onBuyNowClick={handleClicks}
-        />
+      <HeroSection />
+      <div className="h-screen flex flex-col">
+        <div className="flex-1">
+          <ListingCarrousel
+            title="Hot Now!"
+            listings={listings}
+            onBidClick={handleClicks}
+            onBuyNowClick={handleClicks}
+          />
+        </div>
+        <div className="flex-1">
+          <ListingCarrousel
+            title="Trending Auctions"
+            listings={listings}
+            onBidClick={handleClicks}
+            onBuyNowClick={handleClicks}
+          />
+        </div>
+        <div className="flex-1">
+          <ListingCarrousel
+            title="Ending Soon"
+            listings={listings}
+            onBidClick={handleClicks}
+            onBuyNowClick={handleClicks}
+          />
+        </div>
       </div>
-      <div className="flex-1">
-        <ListingCarrousel
-          title="Trending Auctions"
-          listings={listings}
-          onBidClick={handleClicks}
-          onBuyNowClick={handleClicks}
-        />
-      </div>
-      <div className="flex-1">
-        <ListingCarrousel
-          title="Ending Soon"
-          listings={listings}
-          onBidClick={handleClicks}
-          onBuyNowClick={handleClicks}
-        />
-      </div>
-    </div>
     </>
   );
 };
