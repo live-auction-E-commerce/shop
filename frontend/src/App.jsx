@@ -19,7 +19,6 @@ function App() {
     const fetchListings = async () => {
       try {
         const data = await fetchAPI('http://localhost:5000/api/listings');
-        console.log(data);
         setListings(data);
       } catch (error) {
       } finally {
