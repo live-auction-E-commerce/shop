@@ -8,7 +8,7 @@ import { ROUTES } from '@/routes/routes_consts';
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    element: <App />,
     //errorElement: <Error />, TO RETURN THIS WHEN WE DO THE ERROR COMPONENT
     children: [
       { path: ROUTES.HOME, element: <Home /> },
