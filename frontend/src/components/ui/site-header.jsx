@@ -1,5 +1,6 @@
 import React from "react"
 import { Search, User } from "lucide-react"
+import { categories } from "@/constants/categories"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -46,27 +47,11 @@ export function SiteHeader() {
                       </a>
                     </NavigationMenuLink>
                   </li>
-                  <ListItem href="/categories/shirts" title="Shirts" className="hover:bg-rose-50">
-                    T-shirts, button-ups, and blouses
-                  </ListItem>
-                  <ListItem href="/categories/jeans" title="Jeans" className="hover:bg-teal-50">
-                    Slim, straight, and relaxed fits
-                  </ListItem>
-                  <ListItem href="/categories/swimwear" title="Swimwear" className="hover:bg-rose-50">
-                    Bikinis, one-pieces, and swim trunks
-                  </ListItem>
-                  <ListItem href="/categories/shoes" title="Shoes" className="hover:bg-teal-50">
-                    Sneakers, heels, and boots
-                  </ListItem>
-                  <ListItem href="/categories/bags" title="Bags" className="hover:bg-rose-50">
-                    Handbags, backpacks, and totes
-                  </ListItem>
-                  <ListItem href="/categories/sunglasses" title="Sunglasses" className="hover:bg-teal-50">
-                    Designer and fashion sunglasses
-                  </ListItem>
-                  <ListItem href="/categories/hats" title="Hats" className="hover:bg-rose-50">
-                    Caps, beanies, and sun hats
-                  </ListItem>
+                    {categories.map(({ href, title, description, hoverClass }) => (
+                    <ListItem key={href} href={href} title={title} className={hoverClass}>
+                    {description}
+                    </ListItem>
+                    ))}
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
