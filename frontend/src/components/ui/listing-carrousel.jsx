@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/useMobile';
 import { ListingCard } from '@/components/ui/listing-card';
 
-export default function ListingCarrousel({
+export default const ListingCarrousel = ({
   title,
   listings = [],
   onBidClick,

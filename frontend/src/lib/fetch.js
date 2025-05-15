@@ -6,3 +6,4 @@ export const fetchAPI = async (url, options) => {
   }
   return await response.json();
 };
+  

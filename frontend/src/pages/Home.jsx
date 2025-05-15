@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import ListingCarrousel from '@/components/ui/listing-carrousel';
+import { ListingGrid } from '@/components/ui/listing-grid';
 import { fetchAPI } from '@/lib/fetch';
 import { HeroSection } from '@/components/ui/hero-section';
 
@@ -22,9 +23,9 @@ const Home = () => {
     fetchListings();
   }, []);
   return (
-    <section className='flex flex-col gap-8  py-6'>
+    <section className="flex flex-col gap-8  py-6">
       <HeroSection />
-      <ListingCarrousel
+      {/* <ListingCarrousel
         title="Hot Now!"
         listings={listings}
         onBidClick={handleClicks}
@@ -41,10 +42,15 @@ const Home = () => {
         listings={listings}
         onBidClick={handleClicks}
         onBuyNowClick={handleClicks}
+      /> */}
+      <ListingGrid
+        listings={listings}
+        onBidClick={handleClicks}
+        onBuyNowClick={handleClicks}
+        variant="compact"
       />
     </section>
   );
 };
-
 
 export default Home;
