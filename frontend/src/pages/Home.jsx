@@ -22,36 +22,29 @@ const Home = () => {
     fetchListings();
   }, []);
   return (
-    <>
+    <section className='flex flex-col gap-8  py-6'>
       <HeroSection />
-      <div className="h-screen flex flex-col">
-        <div className="flex-1">
-          <ListingCarrousel
-            title="Hot Now!"
-            listings={listings}
-            onBidClick={handleClicks}
-            onBuyNowClick={handleClicks}
-          />
-        </div>
-        <div className="flex-1">
-          <ListingCarrousel
-            title="Trending Auctions"
-            listings={listings}
-            onBidClick={handleClicks}
-            onBuyNowClick={handleClicks}
-          />
-        </div>
-        <div className="flex-1">
-          <ListingCarrousel
-            title="Ending Soon"
-            listings={listings}
-            onBidClick={handleClicks}
-            onBuyNowClick={handleClicks}
-          />
-        </div>
-      </div>
-    </>
+      <ListingCarrousel
+        title="Hot Now!"
+        listings={listings}
+        onBidClick={handleClicks}
+        onBuyNowClick={handleClicks}
+      />
+      <ListingCarrousel
+        title="Trending Auctions"
+        listings={listings}
+        onBidClick={handleClicks}
+        onBuyNowClick={handleClicks}
+      />
+      <ListingCarrousel
+        title="Ending Soon"
+        listings={listings}
+        onBidClick={handleClicks}
+        onBuyNowClick={handleClicks}
+      />
+    </section>
   );
 };
+
 
 export default Home;
