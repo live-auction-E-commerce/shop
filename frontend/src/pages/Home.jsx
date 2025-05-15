@@ -13,7 +13,7 @@ const Home = () => {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const data = await fetchAPI('http://localhost:5000/api/listings');
+        const data = await fetchAPI('http://localhost:5001/api/listings');
         setListings(data);
       } catch (error) {
         console.log(error);
