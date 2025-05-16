@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ListingCarrousel from '@/components/ui/listing-carrousel';
+import ListingCarrousel from '@/components/listing/ListingCarrousel';
 import { fetchAPI } from '@/lib/fetch';
 import { HeroSection } from '@/components/ui/hero-section';
 

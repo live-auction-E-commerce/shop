@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
-import { SiteHeader } from '@/components/ui/site-header';
-import { SiteFooter } from '../ui/site-footer';
+import { SiteHeader } from '@/components/layout/Header';
+import { SiteFooter } from '@/components/layout/Footer';
 
 const AppLayout = () => {
   return (

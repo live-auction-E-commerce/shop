@@ -1,7 +1,7 @@
-import React from "react"
-import { User } from "lucide-react"
-import { categories } from "@/constants/categories"
-import { Button } from "@/components/ui/button"
+import React from 'react';
+import { User } from 'lucide-react';
+import { categories } from '@/constants/categories';
+import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -9,12 +9,12 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-import { cn, handleListingSearch } from "@/lib/utils"
-import { SearchInput } from "./search-input"
+} from '@/components/layout/NavigationMenu';
+import { cn, handleListingSearch } from '@/lib/utils';
+import { SearchInput } from '../ui/search-input';
 
 export function SiteHeader() {
-  const isLogged = false
+  const isLogged = false;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-rose-50 to-teal-50 shadow-sm flex h-16 items-center">
@@ -32,7 +32,9 @@ export function SiteHeader() {
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-transparent hover:bg-white/50">Categories</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="bg-transparent hover:bg-white/50">
+                Categories
+              </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-2">
                   <li className="row-span-3">
@@ -41,7 +43,9 @@ export function SiteHeader() {
                         className="flex flex-col h-full w-full select-none justify-end rounded-md bg-gradient-to-br from-rose-100 to-teal-100 p-6 no-underline outline-none focus:shadow-md"
                         href="/"
                       >
-                        <div className="mb-2 mt-4 text-lg font-medium text-rose-800">Featured Fashion</div>
+                        <div className="mb-2 mt-4 text-lg font-medium text-rose-800">
+                          Featured Fashion
+                        </div>
                         <p className="text-sm leading-tight text-teal-800">
                           Discover our trending styles and collections
                         </p>
@@ -117,7 +121,10 @@ export function SiteHeader() {
           ) : (
             <>
               <a href="/login">
-                <Button variant="ghost" className="text-rose-600 hover:bg-rose-50 hover:text-rose-700">
+                <Button
+                  variant="ghost"
+                  className="text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+                >
                   Login
                 </Button>
               </a>
@@ -129,7 +136,7 @@ export function SiteHeader() {
         </div>
       </div>
     </header>
-  )
+  );
 }
 
 const ListItem = React.forwardRef(({ className, title, children, ...props }, ref) => {
@@ -139,8 +146,8 @@ const ListItem = React.forwardRef(({ className, title, children, ...props }, ref
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors",
-            className,
+            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors',
+            className
           )}
           {...props}
         >
@@ -149,6 +156,6 @@ const ListItem = React.forwardRef(({ className, title, children, ...props }, ref
         </a>
       </NavigationMenuLink>
     </li>
-  )
-})
-ListItem.displayName = "ListItem"
+  );
+});
+ListItem.displayName = 'ListItem';

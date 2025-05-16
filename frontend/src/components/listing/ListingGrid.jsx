@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ListingCard } from '@/components/ui/listing-card';
+import { ListingCard } from '@/components/listing/ListingCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
