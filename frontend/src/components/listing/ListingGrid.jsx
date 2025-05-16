@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ListingCard } from '@/components/listing/ListingCard';
+import { ListingCardSkeleton } from '@/components/listing/ListingCardSkeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
@@ -189,13 +190,7 @@ export function ListingGrid({
         {isLoading ? (
           <div className={cn('grid gap-4', gridClass, gridClassName)}>
             {loadingItems.map((_, index) => (
-              <ListingCard
-                key={`skeleton-${index}`}
-                listing={null}
-                product={null}
-                isLoading={true}
-                variant={variant}
-              />
+              <ListingCardSkeleton key={index} variant={variant} />
             ))}
           </div>
         ) : sortedListings.length > 0 ? (
