@@ -123,9 +123,7 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
                   >
                     <div className="h-12 w-12 rounded-md overflow-hidden flex-shrink-0">
                       <img
-                        src={
-                          listing.product?.images?.[0] || '/placeholder.svg?height=100&width=100'
-                        }
+                        src={listing.imageUrls?.[0] || '/placeholder.svg?height=100&width=100'}
                         alt={listing.product?.name || 'Product'}
                         className="h-full w-full object-cover"
                       />

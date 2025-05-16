@@ -13,7 +13,7 @@ const Home = () => {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const data = await fetchAPI('http://localhost:5001/api/listings');
+        const data = await fetchAPI('/listings');
         setListings(data);
       } catch (error) {
         console.log(error);
@@ -22,7 +22,7 @@ const Home = () => {
     fetchListings();
   }, []);
   return (
-    <section className="flex flex-col gap-8  py-6">
+    <section className="flex flex-col gap-8 py-6">
       <HeroSection />
       <ListingCarrousel
         title="Hot Now!"
