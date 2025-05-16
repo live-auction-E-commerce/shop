@@ -7,7 +7,7 @@ const Home = () => {
     console.log('Handling a click...');
   };
 
-  const { listings } = useListings();
+  const { listings, isLoading } = useListings();
 
   return (
     <section className="flex flex-col">
@@ -17,18 +17,21 @@ const Home = () => {
         listings={listings}
         onBidClick={handleClicks}
         onBuyNowClick={handleClicks}
+        isLoading={isLoading}
       />
       <ListingCarrousel
         title="Trending Auctions"
         listings={listings}
         onBidClick={handleClicks}
         onBuyNowClick={handleClicks}
+        isLoading={isLoading}
       />
       <ListingCarrousel
         title="Ending Soon"
         listings={listings}
         onBidClick={handleClicks}
         onBuyNowClick={handleClicks}
+        isLoading={isLoading}
       />
     </section>
   );

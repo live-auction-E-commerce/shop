@@ -12,6 +12,7 @@ export default function ListingCarrousel({
   onBuyNowClick,
   className = '',
   viewAllHref = '#',
+  isLoading = false,
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
@@ -23,6 +24,16 @@ export default function ListingCarrousel({
 
   // Number of cards to show based on screen size
   const cardsToShow = isMobile ? 1 : isTablet ? 2 : 5;
+
+  // Dummy listings for loading state
+  const dummyListings = Array.from({ length: cardsToShow }).map((_, i) => ({
+    _id: `loading-${i}`,
+  }));
+
+  // if loading, I want to sent dummy listings for skeletons
+  if (isLoading) {
+    listings = dummyListings;
+  }
 
   const maxIndex = Math.max(0, listings.length - cardsToShow);
 
@@ -105,6 +116,7 @@ export default function ListingCarrousel({
                 onBidClick={onBidClick}
                 onBuyNowClick={onBuyNowClick}
                 variant="compact"
+                isLoading={isLoading}
               />
             </div>
           ))}
@@ -112,7 +124,7 @@ export default function ListingCarrousel({
       </div>
 
       {/* Pagination dots for mobile */}
-      {isMobile && listings.length > 1 && (
+      {isMobile && listings.length > 1 && !isLoading && (
         <div className="mt-4 flex justify-center gap-2">
           {Array.from({ length: listings.length }).map((_, index) => (
             <button
