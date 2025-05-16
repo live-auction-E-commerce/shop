@@ -105,8 +105,10 @@ export const getListingById = async (listingId) => {
   return listing;
 };
 
-export const getAllListings = async (queryParams) => {
+export const getAllListings = async (queryParams, req) => {
   const { q } = queryParams;
+
+  const baseImageUrl = `${req.protocol}://${req.get('host')}/Images`;
 
   const pipeline = [
     {
@@ -129,14 +131,13 @@ export const getAllListings = async (queryParams) => {
     {
       $unwind: {
         path: '$currentBid',
-        preserveNullAndEmptyArrays: true, // in case currentBid is null
+        preserveNullAndEmptyArrays: true,
       },
     },
   ];
 
   if (q && q.trim().length > 1) {
-    const regex = new RegExp(q, 'i'); // case-insensitive match
-
+    const regex = new RegExp(q, 'i');
     pipeline.push({
       $match: {
         $or: [
@@ -150,6 +151,18 @@ export const getAllListings = async (queryParams) => {
       },
     });
   }
+
+  pipeline.push({
+    $addFields: {
+      imageUrls: {
+        $map: {
+          input: '$product.images',
+          as: 'image',
+          in: { $concat: [baseImageUrl + '/', '$$image'] },
+        },
+      },
+    },
+  });
 
   const results = await Listing.aggregate(pipeline);
   return results;

@@ -22,7 +22,7 @@ const Home = () => {
     fetchListings();
   }, []);
   return (
-    <section className='flex flex-col gap-8  py-6'>
+    <section className="flex flex-col gap-8  py-6">
       <HeroSection />
       <ListingCarrousel
         title="Hot Now!"
@@ -45,6 +45,5 @@ const Home = () => {
     </section>
   );
 };
-
 
 export default Home;

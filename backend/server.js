@@ -22,6 +22,8 @@ app.use(
   }),
 );
 app.use(express.json());
+// Exposing Images folder
+app.use('/Images', express.static('public/Images'));
 // Routes
 app.use('/api', ProductRoutes);
 app.use('/api', ListingRoutes);

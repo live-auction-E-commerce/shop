@@ -58,8 +58,8 @@ export function ListingCard({
           <div className="aspect-square overflow-hidden">
             <img
               src={
-                product.images && product.images.length > 0
-                  ? product.images[currentImageIndex]
+                listing.imageUrls && listing.imageUrls.length > 0
+                  ? listing.imageUrls[currentImageIndex]
                   : '/placeholder.svg?height=300&width=300'
               }
               alt={product.name}
@@ -71,9 +71,9 @@ export function ListingCard({
             />
 
             {/* Image navigation dots for multiple images */}
-            {product.images && product.images.length > 1 && (
+            {listing.imageUrls && listing.imageUrls.length > 1 && (
               <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
-                {product.images.map((_, index) => (
+                {listing.imageUrls.map((_, index) => (
                   <button
                     key={index}
                     onClick={(e) => {
