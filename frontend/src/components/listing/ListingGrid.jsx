@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ListingCard } from '@/components/listing/ListingCard';
+import ListingCard from '@/components/listing/ListingCard';
+import ListingCardSkeleton from '@/components/listing/ListingCardSkeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
@@ -13,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export function ListingGrid({
+const ListingGrid = ({
   listings = [],
   title = '',
   isLoading = false,
@@ -25,7 +26,7 @@ export function ListingGrid({
   emptyMessage = 'Nothing found...',
   gridClassName = '',
   itemsPerRow = { sm: 1, md: 2, lg: 3, xl: 4 },
-}) {
+}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [showFilterPanel, setShowFilterPanel] = useState(false);
@@ -189,13 +190,7 @@ export function ListingGrid({
         {isLoading ? (
           <div className={cn('grid gap-4', gridClass, gridClassName)}>
             {loadingItems.map((_, index) => (
-              <ListingCard
-                key={`skeleton-${index}`}
-                listing={null}
-                product={null}
-                isLoading={true}
-                variant={variant}
-              />
+              <ListingCardSkeleton key={index} variant={variant} />
             ))}
           </div>
         ) : sortedListings.length > 0 ? (
@@ -218,4 +213,6 @@ export function ListingGrid({
       </CardContent>
     </Card>
   );
-}
+};
+
+export default ListingGrid;

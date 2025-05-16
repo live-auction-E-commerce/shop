@@ -1,15 +1,15 @@
 import { Outlet } from 'react-router-dom';
-import { SiteHeader } from '@/components/layout/Header';
-import { SiteFooter } from '@/components/layout/Footer';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 const AppLayout = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <SiteHeader />
+      <Header />
       <main className="flex-grow">
         <Outlet />
       </main>
-      <SiteFooter />
+      <Footer />
     </div>
   );
 };

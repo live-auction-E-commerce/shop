@@ -3,9 +3,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/useMobile';
-import { ListingCard } from '@/components/listing/ListingCard';
+import ListingCard from '@/components/listing/ListingCard';
 
-export default function ListingCarrousel({
+const ListingCarrousel = ({
   title,
   listings = [],
   onBidClick,
@@ -13,7 +13,7 @@ export default function ListingCarrousel({
   className = '',
   viewAllHref = '#',
   isLoading = false,
-}) {
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const carouselRef = useRef(null);
@@ -141,4 +141,6 @@ export default function ListingCarrousel({
       )}
     </div>
   );
-}
+};
+
+export default ListingCarrousel;

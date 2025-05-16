@@ -1,6 +1,6 @@
 import ListingCarrousel from '@/components/listing/ListingCarrousel';
 import useListings from '@/hooks/useListings';
-import { HeroSection } from '@/components/ui/hero-section';
+import HeroSection from '@/components/ui/hero-section';
 
 const Home = () => {
   const handleClicks = () => {

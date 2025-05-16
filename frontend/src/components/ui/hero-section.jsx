@@ -1,7 +1,7 @@
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export function HeroSection() {
+const HeroSection = () => {
   return (
     <div className="relative overflow-hidden">
       {/* Fashion background image with gradient overlay */}
@@ -45,4 +45,6 @@ export function HeroSection() {
       </div>
     </div>
   );
-}
+};
+
+export default HeroSection;

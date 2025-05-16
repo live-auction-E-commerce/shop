@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { ListingGrid } from '@/components/listing/ListingGrid';
+import ListingGrid from '@/components/listing/ListingGrid';
 import useListings from '@/hooks/useListings';
 
 const CategoryPage = () => {
@@ -7,7 +7,7 @@ const CategoryPage = () => {
     console.log('Click handeling....');
   };
   const { categoryName } = useParams();
-  const { listings } = useListings();
+  const { listings, isLoading } = useListings();
   const filteredListings = listings.filter(
     (listing) => listing.product?.category?.toLowerCase() === categoryName.toLowerCase()
   );
@@ -19,7 +19,8 @@ const CategoryPage = () => {
       onBuyNowClick={handleClick}
       onBidClick={handleClick}
       variant="compact"
-      className="mt-2 "
+      className="mt-2"
+      isLoading={isLoading}
     />
   );
 };

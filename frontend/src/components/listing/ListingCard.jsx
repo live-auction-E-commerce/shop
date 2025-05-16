@@ -4,18 +4,17 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Skeleton } from '@/components/ui/skeleton';
+import ListingCardSkeleton from '@/components/listing/ListingCardSkeleton';
 import { getBidProgress, getListingStatus, getTimeRemaining } from '@/lib/utils';
 
-export function ListingCard({
+const ListingCard = ({
   listing,
   onBidClick,
   onBuyNowClick,
   isLoading = false,
   variant = 'default',
   className = '',
-}) {
-  const product = listing.product;
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isExpired, setIsExpired] = useState(false);
@@ -42,6 +41,9 @@ export function ListingCard({
   const progressPercentage = getBidProgress(listing);
   // Return skeleton if loading or if listing/product is undefined
   if (isLoading) return <ListingCardSkeleton variant={variant} />;
+
+  const product = listing.product;
+
   if (!listing || !product) return null;
 
   // Compact variant
@@ -322,49 +324,6 @@ export function ListingCard({
       )}
     </Card>
   );
-}
+};
 
-function ListingCardSkeleton({ variant = 'default' }) {
-  const isCompact = variant === 'compact';
-
-  return (
-    <Card className={`flex flex-col h-full overflow-hidden ${isCompact ? 'text-sm' : ''}`}>
-      <div className="aspect-square">
-        <Skeleton className="h-full w-full" />
-      </div>
-      <div className={`p-${isCompact ? '3' : '4'} space-y-${isCompact ? '2' : '3'}`}>
-        <Skeleton className={`h-${isCompact ? '4' : '6'} w-3/4`} />
-
-        {!isCompact && variant === 'default' && (
-          <>
-            <Skeleton className="h-4 w-full" />
-            <div className="flex gap-2">
-              <Skeleton className="h-5 w-16" />
-              <Skeleton className="h-5 w-16" />
-              <Skeleton className="h-5 w-16" />
-            </div>
-          </>
-        )}
-
-        {isCompact && (
-          <div className="flex justify-between">
-            <Skeleton className="h-3 w-16" />
-            <Skeleton className="h-3 w-16" />
-          </div>
-        )}
-
-        <div className="flex justify-between">
-          <Skeleton className={`h-${isCompact ? '3' : '4'} w-1/3`} />
-          <Skeleton className={`h-${isCompact ? '3' : '4'} w-1/4`} />
-        </div>
-
-        <Skeleton className="h-1 w-full" />
-        <Skeleton className={`h-${isCompact ? '3' : '4'} w-1/2`} />
-
-        {(variant === 'default' || isCompact) && (
-          <Skeleton className={`h-${isCompact ? '7' : '10'} w-full mt-2`} />
-        )}
-      </div>
-    </Card>
-  );
-}
+export default ListingCard;
