@@ -1,5 +1,4 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import ProductRoutes from './src/routes/ProductRoutes.js';
 import ListingRoutes from './src/routes/ListingRoutes.js';
@@ -9,15 +8,14 @@ import BidRoutes from './src/routes/BidRoutes.js';
 import OrderRoutes from './src/routes/OrderRoutes.js';
 import connectDB from './src/lib/db.js';
 import { multerErrorHandler } from './src/middlewares/ErrorHandlers.js';
-
-dotenv.config();
+import config from './config.js';
 
 const app = express();
 
 connectDB();
 app.use(
   cors({
-    origin: 'http://localhost:5173', // your frontend URL
+    origin: config.FRONTEND_URL, // your frontend URL
     credentials: true,
   }),
 );
@@ -35,6 +33,6 @@ app.use('/api', OrderRoutes);
 // Middlewares
 app.use(multerErrorHandler);
 
-app.listen(5001, () => {
-  console.log('Server is running on http://localhost:5001');
+app.listen(config.PORT, () => {
+  console.log(`Server is running on ${config.BASE_URL}`);
 });
