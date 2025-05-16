@@ -6,6 +6,7 @@ import {
   validateAuctionUpdates,
   validateBuyNowUpdates,
 } from '../lib/validations.js';
+import { attachImageUrlsToListing } from '../lib/image.js';
 
 export const createListing = async (body) => {
   const { saleType, price, startingBid, expiredAt, productId, sellerId } = body;
@@ -101,8 +102,8 @@ export const getListingById = async (listingId) => {
   if (!listing) {
     throw new Error('Could not find listing with id: ${listingId}');
   }
-
-  return listing;
+  // Adding the imageUrls field to the listing object
+  return attachImageUrlsToListing(listing);
 };
 
 export const getAllListings = async (queryParams, req) => {

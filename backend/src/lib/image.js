@@ -1,6 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import config from '../../config.js';
 
 // middlewares for handling images
 
@@ -50,4 +51,21 @@ export const deleteImage = (filename) => {
       'Could not find the file name you have provided. Check public/Images',
     );
   }
+};
+
+export const attachImageUrlsToListing = (listing) => {
+  // Make sure productId is populated and has images
+  if (!listing.productId || !Array.isArray(listing.productId.images)) {
+    listing.imageUrls = [];
+    return listing;
+  }
+
+  const imageUrls = listing.productId.images.map(
+    (filename) => `${config.BASE_URL}/Images/${filename}`,
+  );
+
+  return {
+    ...listing.toObject(),
+    imageUrls,
+  };
 };
