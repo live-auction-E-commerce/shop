@@ -10,8 +10,6 @@ const HeroSection = () => {
         <img
           src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070"
           alt="Fashion background"
-          fill
-          priority
           className="object-cover object-center opacity-40"
           sizes="100vw"
         />
