@@ -18,9 +18,9 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-rose-50 to-teal-50 shadow-sm flex h-16 items-center">
-      <div className="container flex items-center">
+      <div className="flex items-center justify-between w-full">
         {/* Logo */}
-        <div className="mr-6">
+        <div className="mx-2">
           <a href="/" className="flex items-center justify-start">
             <span className="text-xl font-extrabold tracking-tight md:text-2xl bg-gradient-to-r from-rose-500 to-teal-500 bg-clip-text text-transparent">
               auction-site
@@ -81,27 +81,6 @@ export function SiteHeader() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* Mobile menu button */}
-        <Button variant="outline" size="icon" className="mr-2 md:hidden bg-white/70 hover:bg-white">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-4 w-4"
-          >
-            <line x1="4" x2="20" y1="12" y2="12" />
-            <line x1="4" x2="20" y1="6" y2="6" />
-            <line x1="4" x2="20" y1="18" y2="18" />
-          </svg>
-          <span className="sr-only">Toggle menu</span>
-        </Button>
-
         {/* Search bar (desktop) */}
         <div className="hidden md:flex flex-1 items-center justify-center px-6">
           <div className="relative w-full max-w-sm">
@@ -110,7 +89,7 @@ export function SiteHeader() {
         </div>
 
         {/* User authentication */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 mx-2">
           {isLogged ? (
             <a href="/account">
               <Button variant="ghost" size="icon" className="relative hover:bg-white/50 h-10 w-10">

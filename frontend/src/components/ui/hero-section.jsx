@@ -17,7 +17,7 @@ export function HeroSection() {
         />
       </div>
 
-      <div className="container relative z-10 py-28 md:py-40 lg:py-52 flex flex-col min-h-[70vh] justify-center">
+      <div className="container mx-2 relative z-10 py-28 md:py-40 lg:py-52 flex flex-col min-h-[70vh] justify-center">
         <div className="max-w-3xl">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 text-white">
             <span className="bg-gradient-to-r from-white to-rose-100 bg-clip-text text-transparent">

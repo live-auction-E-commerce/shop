@@ -5,9 +5,12 @@ import Product from '../models/Product.js';
 import Listing from '../models/Listing.js';
 import Bid from '../models/Bid.js';
 import connectDB from '../lib/db.js';
+import { CategoryEnum } from '../constants/enum.js';
 
 dotenv.config();
 console.log('🚀 Starting seed script...');
+
+const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 const seedData = async () => {
   try {
@@ -45,7 +48,7 @@ const seedData = async () => {
       name: `Product ${i + 1}`,
       description: `Description for product ${i + 1}`,
       images: [`image${i * 2 + 1}.jpg`, `image${i * 2 + 2}.jpg`],
-      category: i % 2 === 0 ? 'Electronics' : 'Clothing',
+      category: getRandom(CategoryEnum),
       brand: `Brand ${String.fromCharCode(65 + i)}`,
       condition: i % 3 === 0 ? 'New' : 'Used',
       size: ['S', 'M', 'L'][i % 3],
@@ -54,7 +57,6 @@ const seedData = async () => {
     const products = await Product.insertMany(sampleProducts);
     console.log(`✅ ${products.length} Products created.`);
 
-    // Create listings and bids
     for (let i = 0; i < products.length; i++) {
       const isAuction = i % 2 === 0;
       const listing = await Listing.create({
@@ -73,7 +75,7 @@ const seedData = async () => {
         listingId: listing._id,
         userId: buyer._id,
         paymentIntentId: new mongoose.Types.ObjectId(),
-        amount: isAuction ? 60 + i * 5 : listing.price - 10, // Just for seeding logic
+        amount: isAuction ? 60 + i * 5 : listing.price - 10,
       });
 
       listing.currentBid = bid._id;
@@ -86,8 +88,8 @@ const seedData = async () => {
 
     console.log(`✅ ${listingDocs.length} Listings created.`);
     console.log(`✅ ${bidDocs.length} Bids created and linked.`);
-
     console.log('🎉 All data seeded successfully.');
+
     mongoose.connection.close();
   } catch (error) {
     console.error('❌ Error seeding data:', error);
