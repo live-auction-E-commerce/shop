@@ -1,28 +1,16 @@
-import { useEffect, useState } from 'react';
 import ListingCarrousel from '@/components/listing/ListingCarrousel';
-import { fetchAPI } from '@/lib/fetch';
+import useListings from '@/hooks/useListings';
 import { HeroSection } from '@/components/ui/hero-section';
 
 const Home = () => {
-  const [listings, setListings] = useState([]);
-
   const handleClicks = () => {
     console.log('Handling a click...');
   };
 
-  useEffect(() => {
-    const fetchListings = async () => {
-      try {
-        const data = await fetchAPI('/listings');
-        setListings(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchListings();
-  }, []);
+  const { listings } = useListings();
+
   return (
-    <section className="flex flex-col gap-8 py-6">
+    <section className="flex flex-col">
       <HeroSection />
       <ListingCarrousel
         title="Hot Now!"
