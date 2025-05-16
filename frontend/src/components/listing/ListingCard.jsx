@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import ListingCardSkeleton from '@/components/listing/ListingCardSkeleton';
 import { getBidProgress, getListingStatus, getTimeRemaining } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 const ListingCard = ({
   listing,
@@ -19,6 +20,8 @@ const ListingCard = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isExpired, setIsExpired] = useState(false);
   const [isSold, setIsSold] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!listing) return;
@@ -50,11 +53,12 @@ const ListingCard = ({
   if (variant === 'compact') {
     return (
       <Card
-        className={`flex flex-col h-full overflow-hidden transition-all duration-200 ${
+        className={`flex flex-col h-full overflow-hidden transition-all duration-200 cursor-pointer ${
           isHovered ? 'shadow-md' : ''
         } ${className}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onClick={() => navigate(`/listings/${listing._id}`)}
       >
         <div className="relative">
           <div className="aspect-square overflow-hidden">
@@ -161,7 +165,10 @@ const ListingCard = ({
                   <Button
                     size="sm"
                     className="w-full h-7 text-xs cursor-pointer"
-                    onClick={() => onBidClick?.(listing._id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onBidClick?.(listing._id);
+                    }}
                     disabled={isExpired || isSold}
                   >
                     <ArrowUp className="h-3 w-3 mr-1" />
@@ -171,7 +178,10 @@ const ListingCard = ({
                   <Button
                     size="sm"
                     className="w-full h-7 text-xs cursor-pointer"
-                    onClick={() => onBuyNowClick?.(listing._id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onBuyNowClick?.(listing._id);
+                    }}
                     disabled={isSold}
                   >
                     <ShoppingCart className="h-3 w-3 mr-1" />
@@ -189,9 +199,10 @@ const ListingCard = ({
   // Default variant
   return (
     <Card
-      className={`flex flex-col h-full overflow-hidden transition-all duration-200 ${isHovered ? 'shadow-md' : ''} ${className}`}
+      className={`flex flex-col h-full overflow-hidden transition-all duration-200 cursor-pointer ${isHovered ? 'shadow-md' : ''} ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={navigate(`/listings/${listing._id}`)}
     >
       <div className="relative">
         <div className="aspect-square overflow-hidden">
@@ -304,7 +315,10 @@ const ListingCard = ({
           {listing.saleType === 'auction' ? (
             <Button
               className="w-full cursor-pointer"
-              onClick={() => onBidClick?.(listing._id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onBidClick?.(listing._id);
+              }}
               disabled={isExpired || isSold}
             >
               <ArrowUp className="h-4 w-4 mr-2" />
@@ -312,8 +326,11 @@ const ListingCard = ({
             </Button>
           ) : (
             <Button
-              className="w-full cursor-pointer"
-              onClick={() => onBuyNowClick?.(listing._id)}
+              className="w-full cursor-pointer z-100"
+              onClick={(e) => {
+                e.stopPropagation();
+                onBuyNowClick?.(listing._id);
+              }}
               disabled={isSold}
             >
               <ShoppingCart className="h-4 w-4 mr-2" />

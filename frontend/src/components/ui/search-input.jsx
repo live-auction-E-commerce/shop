@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useNavigate } from 'react-router-dom';
 
 export function SearchInput({ placeholder = 'Search...', className, searchFunction }) {
   const [query, setQuery] = useState('');
@@ -14,6 +15,7 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
   const debouncedQuery = useDebounce(query, 300);
   const inputRef = useRef(null);
   const resultsRef = useRef(null);
+  const navigate = useNavigate();
 
   // Fetch search results when query changes
   useEffect(() => {
@@ -119,7 +121,7 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
                   <div
                     key={listing._id}
                     className="flex items-start gap-3 p-2 rounded-md cursor-pointer hover:bg-muted transition-colors"
-                    onClick={() => null}
+                    onClick={() => navigate(`/listings/${listing._id}`)}
                   >
                     <div className="h-12 w-12 rounded-md overflow-hidden flex-shrink-0">
                       <img
