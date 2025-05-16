@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function ListingCardSkeleton({ variant = 'default' }) {
+const ListingCardSkeleton = ({ variant = 'default' }) => {
   const isCompact = variant === 'compact';
 
   return (
@@ -45,4 +45,6 @@ export function ListingCardSkeleton({ variant = 'default' }) {
       </div>
     </Card>
   );
-}
+};
+
+export default ListingCardSkeleton;

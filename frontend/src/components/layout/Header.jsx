@@ -13,7 +13,7 @@ import {
 import { cn, handleListingSearch } from '@/lib/utils';
 import { SearchInput } from '../ui/search-input';
 
-export function SiteHeader() {
+const Header = () => {
   const isLogged = false;
 
   return (
@@ -116,7 +116,7 @@ export function SiteHeader() {
       </div>
     </header>
   );
-}
+};
 
 const ListItem = React.forwardRef(({ className, title, children, ...props }, ref) => {
   return (
@@ -138,3 +138,5 @@ const ListItem = React.forwardRef(({ className, title, children, ...props }, ref
   );
 });
 ListItem.displayName = 'ListItem';
+
+export default Header;

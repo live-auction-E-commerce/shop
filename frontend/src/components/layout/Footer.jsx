@@ -1,6 +1,4 @@
-
-
-export function SiteFooter() {
+const Footer = () => {
   return (
     <footer className="mt-2 bg-gradient-to-r from-rose-50 to-teal-50 border-t border-gray-200">
       <div className="container py-8 md:py-12">
@@ -13,7 +11,8 @@ export function SiteFooter() {
               </span>
             </a>
             <p className="text-sm  text-gray-600">
-              Your premier destination for fashion auctions. Bid on exclusive designer items in real-time.
+              Your premier destination for fashion auctions. Bid on exclusive designer items in
+              real-time.
             </p>
           </div>
 
@@ -85,10 +84,14 @@ export function SiteFooter() {
       {/* Bottom bar with made by AIR */}
       <div className="bg-gradient-to-r from-rose-600 to-teal-600 py-4">
         <div className="container flex flex-col md:flex-row justify-between items-center">
-          <p className="text-white text-sm">&copy; {new Date().getFullYear()} auction-site. All rights reserved.</p>
+          <p className="text-white text-sm">
+            &copy; {new Date().getFullYear()} auction-site. All rights reserved.
+          </p>
           <p className="text-white font-medium tracking-widest mt-2 md:mt-0">MADE BY AIR</p>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
+
+export default Footer;

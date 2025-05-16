@@ -4,17 +4,17 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { ListingCardSkeleton } from '@/components/listing/ListingCardSkeleton';
+import ListingCardSkeleton from '@/components/listing/ListingCardSkeleton';
 import { getBidProgress, getListingStatus, getTimeRemaining } from '@/lib/utils';
 
-export function ListingCard({
+const ListingCard = ({
   listing,
   onBidClick,
   onBuyNowClick,
   isLoading = false,
   variant = 'default',
   className = '',
-}) {
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isExpired, setIsExpired] = useState(false);
@@ -324,4 +324,6 @@ export function ListingCard({
       )}
     </Card>
   );
-}
+};
+
+export default ListingCard;
