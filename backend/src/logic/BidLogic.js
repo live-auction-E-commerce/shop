@@ -1,8 +1,7 @@
-import mongoose from 'mongoose';
 import Bid from '../models/Bid.js';
 import Listing from '../models/Listing.js';
 import User from '../models/User.js';
-import PaymentIntent from '../models/PaymentIntent.js';
+//import PaymentIntent from '../models/PaymentIntent.js';
 import { validateObjectId } from '../lib/validations.js';
 
 export const createBid = async (data) => {
@@ -16,34 +15,40 @@ export const createBid = async (data) => {
     throw new Error('Invalid amount: must be a positive number.');
   }
 
-  // const listing = await Listing.findById(data.listingId);
-  // if (!listing) {
-  //   throw new Error('Listing not found.');
-  // }
+  const listing = await Listing.findById(data.listingId);
+  if (!listing) {
+    throw new Error('Listing not found.');
+  }
 
-  // const user = await User.findById(data.userId);
-  // if (!user) {
-  //   throw new Error('User not found.');
-  // }
+  const user = await User.findById(data.userId);
+  if (!user) {
+    throw new Error('User not found.');
+  }
 
-  // const paymentIntent = await PaymentIntent.findById(data.paymentIntentId);
-  // if (!paymentIntent) {
-  //   throw new Error('PaymentIntent not found.');
-  // }
+  /* TODO: We still don`t have paymentIntet logic so commenting this for now 
+   const paymentIntent = await PaymentIntent.findById(data.paymentIntentId);
+   if (!paymentIntent) {
+     throw new Error('PaymentIntent not found.');
+   }
+  */
 
-  // if (!listing.currentBid) {
-  //   if (data.amount <= listing.startingBid) {
-  //     throw new Error(`Bid amount must be greater than the starting bid (${listing.startingBid}).`);
-  //   }
-  // } else {
-  //   const currentBid = await Bid.findById(listing.currentBid);
-  //   if (!currentBid) {
-  //     throw new Error('Current bid not found.');
-  //   }
-  //   if (data.amount <= currentBid.amount) {
-  //     throw new Error(`Bid amount must be greater than the current highest bid (${currentBid.amount}).`);
-  //   }
-  // }
+  if (!listing.currentBid) {
+    if (data.amount <= listing.startingBid) {
+      throw new Error(
+        `Bid amount must be greater than the starting bid (${listing.startingBid}).`,
+      );
+    }
+  } else {
+    const currentBid = await Bid.findById(listing.currentBid);
+    if (!currentBid) {
+      throw new Error('Current bid not found.');
+    }
+    if (data.amount <= currentBid.amount) {
+      throw new Error(
+        `Bid amount must be greater than the current highest bid (${currentBid.amount}).`,
+      );
+    }
+  }
 
   const newBid = new Bid({
     listingId: data.listingId,
@@ -54,8 +59,8 @@ export const createBid = async (data) => {
 
   const savedBid = await newBid.save();
 
-  //listing.currentBid = savedBid._id;
-  //await listing.save();
+  listing.currentBid = savedBid._id;
+  await listing.save();
 
   return savedBid;
 };

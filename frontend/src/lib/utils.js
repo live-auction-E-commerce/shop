@@ -51,7 +51,7 @@ export const handleListingSearch = async (query) => {
   if (!query.trim()) return;
 
   try {
-    const data = await fetchAPI(`/listings?q=${encodeURIComponent(query)}`);
+    const data = await fetchAPI(`/api/listings?q=${encodeURIComponent(query)}`);
     console.log(data);
     return data;
   } catch (err) {
