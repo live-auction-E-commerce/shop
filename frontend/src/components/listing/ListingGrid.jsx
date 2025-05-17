@@ -96,7 +96,7 @@ const ListingGrid = ({
 
   const gridClass = getGridClass();
   return (
-    <Card className={cn('w-full', className)}>
+    <Card className={cn('w-full mt-2', className)}>
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <CardTitle>{title}</CardTitle>
 

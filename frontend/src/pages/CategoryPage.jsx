@@ -18,8 +18,6 @@ const CategoryPage = () => {
       title={categoryName}
       onBuyNowClick={handleClick}
       onBidClick={handleClick}
-      variant="compact"
-      className="mt-2"
       isLoading={isLoading}
     />
   );
