@@ -17,7 +17,7 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
   const resultsRef = useRef(null);
   const navigate = useNavigate();
 
-  // Fetch search results when query changes
+  // Fetch search results when query changes also close the dropdown menu if query is null
   useEffect(() => {
     if (debouncedQuery.trim().length < 2) {
       setResults([]);
@@ -75,6 +75,8 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
             setQuery(e.target.value);
             if (e.target.value.trim().length >= 2) {
               setIsOpen(true);
+            } else {
+              setIsOpen(false);
             }
           }}
           onFocus={() => {

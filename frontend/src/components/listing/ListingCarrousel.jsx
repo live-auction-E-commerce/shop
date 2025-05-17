@@ -115,7 +115,6 @@ const ListingCarrousel = ({
                 listing={listing}
                 onBidClick={onBidClick}
                 onBuyNowClick={onBuyNowClick}
-                variant="compact"
                 isLoading={isLoading}
               />
             </div>

@@ -21,7 +21,6 @@ const ListingGrid = ({
   onBidClick,
   onBuyNowClick,
   className = '',
-  variant = 'default',
   showFilters = true,
   emptyMessage = 'Nothing found...',
   gridClassName = '',
@@ -190,7 +189,7 @@ const ListingGrid = ({
         {isLoading ? (
           <div className={cn('grid gap-4', gridClass, gridClassName)}>
             {loadingItems.map((_, index) => (
-              <ListingCardSkeleton key={index} variant={variant} />
+              <ListingCardSkeleton key={index} />
             ))}
           </div>
         ) : sortedListings.length > 0 ? (
@@ -202,7 +201,6 @@ const ListingGrid = ({
                   listing={listing}
                   onBidClick={onBidClick}
                   onBuyNowClick={onBuyNowClick}
-                  variant={variant}
                 />
               );
             })}
