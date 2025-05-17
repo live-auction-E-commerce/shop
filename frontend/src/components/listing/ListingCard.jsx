@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { Clock, ArrowUp, Tag, ShoppingCart } from 'lucide-react';
 import { Card } from '@/components/ui/card';
