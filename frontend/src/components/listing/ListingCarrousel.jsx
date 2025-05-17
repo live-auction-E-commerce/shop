@@ -3,16 +3,17 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/useMobile';
-import { ListingCard } from '@/components/ui/listing-card';
+import ListingCard from '@/components/listing/ListingCard';
 
-export default function ListingCarrousel({
+const ListingCarrousel = ({
   title,
   listings = [],
   onBidClick,
   onBuyNowClick,
   className = '',
   viewAllHref = '#',
-}) {
+  isLoading = false,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const carouselRef = useRef(null);
@@ -23,6 +24,16 @@ export default function ListingCarrousel({
 
   // Number of cards to show based on screen size
   const cardsToShow = isMobile ? 1 : isTablet ? 2 : 5;
+
+  // Dummy listings for loading state
+  const dummyListings = Array.from({ length: cardsToShow }).map((_, i) => ({
+    _id: `loading-${i}`,
+  }));
+
+  // if loading, I want to sent dummy listings for skeletons
+  if (isLoading) {
+    listings = dummyListings;
+  }
 
   const maxIndex = Math.max(0, listings.length - cardsToShow);
 
@@ -104,7 +115,7 @@ export default function ListingCarrousel({
                 listing={listing}
                 onBidClick={onBidClick}
                 onBuyNowClick={onBuyNowClick}
-                variant="compact"
+                isLoading={isLoading}
               />
             </div>
           ))}
@@ -112,7 +123,7 @@ export default function ListingCarrousel({
       </div>
 
       {/* Pagination dots for mobile */}
-      {isMobile && listings.length > 1 && (
+      {isMobile && listings.length > 1 && !isLoading && (
         <div className="mt-4 flex justify-center gap-2">
           {Array.from({ length: listings.length }).map((_, index) => (
             <button
@@ -129,4 +140,6 @@ export default function ListingCarrousel({
       )}
     </div>
   );
-}
+};
+
+export default ListingCarrousel;

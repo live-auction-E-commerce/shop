@@ -1,46 +1,37 @@
-import { useEffect, useState } from 'react';
-import ListingCarrousel from '@/components/ui/listing-carrousel';
-import { fetchAPI } from '@/lib/fetch';
-import { HeroSection } from '@/components/ui/hero-section';
+import ListingCarrousel from '@/components/listing/ListingCarrousel';
+import useListings from '@/hooks/useListings';
+import HeroSection from '@/components/ui/hero-section';
 
 const Home = () => {
-  const [listings, setListings] = useState([]);
-
   const handleClicks = () => {
     console.log('Handling a click...');
   };
 
-  useEffect(() => {
-    const fetchListings = async () => {
-      try {
-        const data = await fetchAPI('/listings');
-        setListings(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchListings();
-  }, []);
+  const { listings, isLoading } = useListings();
+
   return (
-    <section className="flex flex-col gap-8 py-6">
+    <section className="flex flex-col">
       <HeroSection />
       <ListingCarrousel
         title="Hot Now!"
         listings={listings}
         onBidClick={handleClicks}
         onBuyNowClick={handleClicks}
+        isLoading={isLoading}
       />
       <ListingCarrousel
         title="Trending Auctions"
         listings={listings}
         onBidClick={handleClicks}
         onBuyNowClick={handleClicks}
+        isLoading={isLoading}
       />
       <ListingCarrousel
         title="Ending Soon"
         listings={listings}
         onBidClick={handleClicks}
         onBuyNowClick={handleClicks}
+        isLoading={isLoading}
       />
     </section>
   );
