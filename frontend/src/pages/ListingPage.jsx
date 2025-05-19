@@ -13,7 +13,8 @@ const ListingPage = () => {
     async function fetchListing() {
       setLoading(true);
       try {
-        const data = await fetchAPI(`/listings/${id}`);
+        const data = await fetchAPI(`/api/listings/${id}`);
+        console.log(data);
         setListing(data);
       } catch (err) {
         setError('Failed to load product.');

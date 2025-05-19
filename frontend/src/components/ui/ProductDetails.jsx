@@ -1,24 +1,25 @@
-import { useState, useEffect } from "react"
-import { ArrowLeft, ArrowRight, Clock } from "lucide-react"
+import { useState, useEffect } from 'react';
+import { ArrowLeft, ArrowRight, Clock } from 'lucide-react';
 
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [bidAmount, setBidAmount] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  const { productId } = listing;
+
   useEffect(() => {
     if (listing) {
       setLoading(false);
-      setBidAmount(listing.saleType === "auction" 
-        ? (listing.currentBid?.amount || listing.startingBid) 
-        : 0
+      setBidAmount(
+        listing.saleType === 'auction' ? listing.currentBid?.amount || listing.startingBid : 0
       );
     } else {
       setLoading(true);
@@ -39,7 +40,7 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
     return <p>No product found.</p>;
   }
 
-  const isAuction = listing.saleType === "auction";
+  const isAuction = listing.saleType === 'auction';
   const isSold = listing.isSold;
 
   const timeRemaining = () => {
@@ -49,7 +50,7 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
     const expiry = new Date(listing.expiredAt);
     const diff = expiry.getTime() - now.getTime();
 
-    if (diff <= 0) return "Auction ended";
+    if (diff <= 0) return 'Auction ended';
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -60,22 +61,18 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
 
   const nextImage = () => {
     if (!listing?.images?.length) return;
-    setCurrentImageIndex((prev) =>
-      prev === listing.images.length - 1 ? 0 : prev + 1
-    );
+    setCurrentImageIndex((prev) => (prev === listing.images.length - 1 ? 0 : prev + 1));
   };
 
   const prevImage = () => {
     if (!listing?.images?.length) return;
-    setCurrentImageIndex((prev) =>
-      prev === 0 ? listing.images.length - 1 : prev - 1
-    );
+    setCurrentImageIndex((prev) => (prev === 0 ? listing.images.length - 1 : prev - 1));
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD"
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
     }).format(amount);
   };
 
@@ -94,7 +91,7 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
         <div className="space-y-4">
           <div className="relative aspect-square rounded-xl overflow-hidden border">
             <img
-              src={listing.images[currentImageIndex] || "/placeholder.svg"}
+              src={listing.imageUrls[currentImageIndex] || '/placeholder.svg'}
               alt={listing.name}
               className="object-cover w-full h-full"
             />
@@ -120,16 +117,16 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
           </div>
 
           <div className="flex gap-2 overflow-x-auto pb-2">
-            {listing.images.map((image, index) => (
+            {listing.imageUrls.map((image, index) => (
               <button
                 key={index}
                 className={`relative h-20 w-20 flex-shrink-0 rounded-md overflow-hidden border-2 ${
-                  index === currentImageIndex ? "border-primary" : "border-border"
+                  index === currentImageIndex ? 'border-primary' : 'border-border'
                 }`}
                 onClick={() => setCurrentImageIndex(index)}
               >
                 <img
-                  src={image || "/placeholder.svg"}
+                  src={image || '/placeholder.svg'}
                   alt={`${listing.name} thumbnail ${index + 1}`}
                   className="object-cover w-full h-full"
                 />
@@ -151,7 +148,7 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
 
           <Card>
             <CardHeader>
-              <CardTitle>{isAuction ? "Current Bid" : "Price"}</CardTitle>
+              <CardTitle>{isAuction ? 'Current Bid' : 'Price'}</CardTitle>
               <CardDescription>
                 {isAuction && !isSold && (
                   <div className="flex items-center gap-2 text-muted-foreground">
@@ -180,19 +177,19 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
                         onChange={(e) => setBidAmount(Number(e.target.value))}
                         min={
                           listing.currentBid
-                            ? listing.currentBid.amount + 1
-                            : listing.startingBid
+                            ? String(listing.currentBid.amount + 1)
+                            : String(listing.startingBid)
                         }
                         step={1}
                       />
                       <Button onClick={handleBid}>Place Bid</Button>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Minimum bid:{" "}
+                      Minimum bid:{' '}
                       {formatCurrency(
                         listing.currentBid
-                          ? listing.currentBid.amount + 1
-                          : listing.startingBid
+                          ? String(listing.currentBid.amount + 1)
+                          : String(listing.startingBid)
                       )}
                     </p>
                   </div>
@@ -215,11 +212,11 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
               <Separator className="my-2" />
               <dl className="grid grid-cols-2 gap-2 text-sm">
                 <dt className="font-medium text-muted-foreground">Brand</dt>
-                <dd>{listing.brand}</dd>
+                <dd>{productId.brand}</dd>
                 <dt className="font-medium text-muted-foreground">Size</dt>
-                <dd>{listing.size}</dd>
+                <dd>{productId.size}</dd>
                 <dt className="font-medium text-muted-foreground">Condition</dt>
-                <dd>{listing.condition}</dd>
+                <dd>{productId.condition}</dd>
                 <dt className="font-medium text-muted-foreground">Listed</dt>
                 <dd>{new Date(listing.createdAt).toLocaleDateString()}</dd>
               </dl>
