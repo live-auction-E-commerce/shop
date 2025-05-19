@@ -3,6 +3,7 @@ import App from '@/App';
 import Home from '@/pages/Home.jsx';
 import Login from '@/pages/Login.jsx';
 import Register from '@/pages/Register.jsx';
+import ProductPage from '@/pages/ListingPage';
 import CategoryPage from '@/pages/CategoryPage';
 import LiveAuctions from '@/pages/LiveAuctions';
 import BuyNowPage from '@/pages/BuyNowPage';

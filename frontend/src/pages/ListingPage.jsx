@@ -1,26 +1,35 @@
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import useSocketEmit from '@/hooks/useSocketEmit';
+import ProductDetails from '@/components/ui/ProductDetails';
+import { fetchAPI } from '@/lib/fetch';
 
 const ListingPage = () => {
-  const { listingId } = useParams();
-  const emit = useSocketEmit();
+  const { id } = useParams();
+  const [listing, setListing] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!listingId) return;
+    async function fetchListing() {
+      setLoading(true);
+      try {
+        const data = await fetchAPI(`/listings/${id}`);
+        setListing(data);
+      } catch (err) {
+        setError('Failed to load product.');
+      } finally {
+        setLoading(false);
+      }
+    }
 
-    // Join room when page loads
-    emit('join-listing', listingId);
-    console.log(`Joined listing room ${listingId}`);
+    if (id) fetchListing();
+  }, [id]);
 
-    // Leave room when component unmounts or listingId changes
-    return () => {
-      emit('leave-listing', listingId);
-      console.log(`Left listing room ${listingId}`);
-    };
-  }, [listingId, emit]);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+  if (!listing) return <p>Product not found</p>;
 
-  return <div>ListingPage</div>;
+  return <ProductDetails listing={listing} />;
 };
 
 export default ListingPage;
