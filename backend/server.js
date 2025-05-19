@@ -16,6 +16,7 @@ export const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
+  console.log(`${socket.id} just established connection with WebSocket`);
   handleListingSocketConnection(socket, io);
 });
 

@@ -2,19 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
 import { fetchAPI } from '@/lib/fetch';
+import useSocketEmit from '@/hooks/useSocketEmit';
 
 const ListingPage = () => {
   const { id } = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const emit = useSocketEmit();
 
   useEffect(() => {
     async function fetchListing() {
       setLoading(true);
       try {
         const data = await fetchAPI(`/api/listings/${id}`);
-        console.log(data);
+        emit('join-listing', id);
         setListing(data);
       } catch (err) {
         setError('Failed to load product.');
