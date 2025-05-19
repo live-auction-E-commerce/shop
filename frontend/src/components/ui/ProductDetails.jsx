@@ -60,13 +60,14 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
   };
 
   const nextImage = () => {
-    if (!listing?.images?.length) return;
-    setCurrentImageIndex((prev) => (prev === listing.images.length - 1 ? 0 : prev + 1));
+    console.log(listing.imageUrls);
+    if (!listing?.imageUrls.length) return;
+    setCurrentImageIndex((prev) => (prev === listing.imageUrls.length - 1 ? 0 : prev + 1));
   };
 
   const prevImage = () => {
-    if (!listing?.images?.length) return;
-    setCurrentImageIndex((prev) => (prev === 0 ? listing.images.length - 1 : prev - 1));
+    if (!listing?.imageUrls?.length) return;
+    setCurrentImageIndex((prev) => (prev === 0 ? listing.imageUrls.length - 1 : prev - 1));
   };
 
   const formatCurrency = (amount) => {
