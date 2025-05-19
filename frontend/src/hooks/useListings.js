@@ -9,7 +9,7 @@ const useListings = () => {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const data = await fetchAPI('/listings');
+        const data = await fetchAPI('/api/listings');
         setListings(data);
       } catch (err) {
         console.error('Failed to fetch listings:', err);
