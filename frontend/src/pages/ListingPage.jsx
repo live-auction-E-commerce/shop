@@ -83,6 +83,7 @@ const ListingPage = () => {
 
   useSocketListener('new-bid', ({ listingId: incomingId, bid }) => {
   if (incomingId === id) {
+    console.log('bid accepted',bid);
     setListing((prev) => ({
       ...prev,
       currentBid: {
