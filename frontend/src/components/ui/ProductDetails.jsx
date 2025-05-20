@@ -78,9 +78,10 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
   };
 
   const handleBid = () => {
-    if (onBidClick) onBidClick(bidAmount);
-  };
-
+  if (onBidClick) {
+    onBidClick(bidAmount);
+  }
+};
   const handleBuyNow = () => {
     if (onBuyNowClick) onBuyNowClick();
   };
