@@ -6,6 +6,7 @@ import AddressRoutes from './src/routes/AddressRoutes.js';
 import PaymentMethodRoutes from './src/routes/PaymentMethodRoutes.js';
 import BidRoutes from './src/routes/BidRoutes.js';
 import OrderRoutes from './src/routes/OrderRoutes.js';
+import AuthRoutes from './src/routes/AuthRoutes.js';
 import connectDB from './src/lib/db.js';
 import { multerErrorHandler } from './src/middlewares/ErrorHandlers.js';
 import config from './config.js';
@@ -29,6 +30,7 @@ app.use('/api', AddressRoutes);
 app.use('/api', PaymentMethodRoutes);
 app.use('/api', BidRoutes);
 app.use('/api', OrderRoutes);
+app.use('/api', AuthRoutes);
 
 // Middlewares
 app.use(multerErrorHandler);
