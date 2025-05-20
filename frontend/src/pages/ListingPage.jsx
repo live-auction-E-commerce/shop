@@ -10,6 +10,7 @@ const ListingPage = () => {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [bid,setBid] = useState(null);
   const emit = useSocketEmit();
 
   // Fetch listing and emit join event
@@ -48,6 +49,8 @@ const ListingPage = () => {
     amount: bidAmount,
   }),
 });
+
+setBid(newBid);
 
     
 
@@ -98,7 +101,7 @@ const ListingPage = () => {
   if (error) return <p>{error}</p>;
   if (!listing) return <p>Product not found</p>;
 
-  return <ProductDetails listing={listing} onBidClick={handleBidClick} />;
+  return <ProductDetails listing={listing} bid={bid} onBidClick={handleBidClick} />;
 };
 
 export default ListingPage;
