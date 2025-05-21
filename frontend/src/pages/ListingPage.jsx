@@ -2,24 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
 import { fetchAPI } from '@/lib/fetch';
-import useSocketEmit from '@/hooks/useSocketEmit';
-import useSocketListener from '@/hooks/useSocketListener';
+import {
+  emitJoinListing,
+  emitNewBid,
+  listenToJoinRoom,
+  listenToNewBid,
+  removeSocketListeners
+} from '@/lib/socketEvents';
 
 const ListingPage = () => {
   const { id } = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [bid,setBid] = useState(null);
-  const emit = useSocketEmit();
+  const [bid, setBid] = useState(null);
 
-  // Fetch listing and emit join event
   useEffect(() => {
     async function fetchListing() {
       setLoading(true);
       try {
         const data = await fetchAPI(`/api/listings/${id}`);
-        emit('join-listing', id); // Emit join room
+        emitJoinListing(id); // socket emit moved
         setListing(data);
       // eslint-disable-next-line no-unused-vars
       } catch (err) {
@@ -30,72 +33,71 @@ const ListingPage = () => {
     }
 
     if (id) fetchListing();
-  }, [id, emit]);
+  }, [id]);
 
-   const handleBidClick = async (bidAmount) => {
-  try {
-    const fakeUserId = '682c6aa24d11b67f3842ee33'; // Replace with real auth later
-    const fakePaymentIntentId = '664b4914c1234567890abce0'; // Also placeholder
+  useEffect(() => {
+    // Listen to socket events
+    const handleJoinRoom = ({ message, userId }) => {
+      console.log('User joined the room:', userId, message);
+    };
 
-    const newBid = await fetchAPI(`/api/bids`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    listingId: id,
-    userId: fakeUserId,
-    paymentIntentId: fakePaymentIntentId,
-    amount: bidAmount,
-  }),
-});
+    const handleNewBid = ({ listingId: incomingId, bid }) => {
+      if (incomingId === id) {
+        console.log('bid accepted', bid);
+        setListing((prev) => ({
+          ...prev,
+          currentBid: {
+            amount: bid.amount,
+            userId: bid.userId,
+          },
+        }));
+      }
+    };
 
-setBid(newBid);
+    listenToJoinRoom(handleJoinRoom);
+    listenToNewBid(handleNewBid);
 
-    
+    return () => {
+      // Clean up
+      removeSocketListeners();
+    };
+  }, [id]);
 
-    // Broadcast bid to others via socket
-    emit('new-bid', {
-      listingId: id,
-      bid: {
-        userId: newBid.userId,
-        amount: newBid.amount,
-        createdAt: newBid.createdAt,
-      },
-    });
+  const handleBidClick = async (bidAmount) => {
+    try {
+      const fakeUserId = '682c6aa24d11b67f3842ee33';
+      const fakePaymentIntentId = '664b4914c1234567890abce0';
 
-    // Update UI immediately
-    setListing((prev) => ({
-      ...prev,
-      currentBid: {
-        _id: newBid._id,
-        amount: newBid.amount,
-        userId: newBid.userId,
-      },
-    }));
-  } catch (err) {
-    console.error('Failed to place bid:', err);
-    alert(err.message || 'Bid failed.');
-  }
-};
+      const newBid = await fetchAPI(`/api/bids`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          listingId: id,
+          userId: fakeUserId,
+          paymentIntentId: fakePaymentIntentId,
+          amount: bidAmount,
+        }),
+      });
 
+      setBid(newBid);
 
-  useSocketListener('socket-joined-your-room', ({ message, userId }) => {
-    console.log('User joined the room:', userId, message);
-  });
+      emitNewBid(id, newBid); // emit moved to socketEvents
 
-  useSocketListener('new-bid', ({ listingId: incomingId, bid }) => {
-  if (incomingId === id) {
-    console.log('bid accepted',bid);
-    setListing((prev) => ({
-      ...prev,
-      currentBid: {
-        amount: bid.amount,
-        userId: bid.userId,
-      },
-    }));
-  }
-});
+      setListing((prev) => ({
+        ...prev,
+        currentBid: {
+          _id: newBid._id,
+          amount: newBid.amount,
+          userId: newBid.userId,
+        },
+      }));
+    } catch (err) {
+      console.error('Failed to place bid:', err);
+      alert(err.message || 'Bid failed.');
+    }
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
