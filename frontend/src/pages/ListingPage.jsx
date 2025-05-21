@@ -31,7 +31,6 @@ const ListingPage = () => {
         setLoading(false);
       }
     }
-
     if (id) fetchListing();
   }, [id]);
 
@@ -53,16 +52,13 @@ const ListingPage = () => {
         }));
       }
     };
-
-    listenToJoinRoom(handleJoinRoom);
-    listenToNewBid(handleNewBid);
-
-    return () => {
+      listenToJoinRoom(handleJoinRoom);
+      listenToNewBid(handleNewBid);
+      return () => {
       // Clean up
       removeSocketListeners();
     };
   }, [id]);
-
   const handleBidClick = async (bidAmount) => {
     try {
       const fakeUserId = '682c6aa24d11b67f3842ee33';
@@ -82,7 +78,6 @@ const ListingPage = () => {
       });
 
       setBid(newBid);
-
       emitNewBid(id, newBid); // emit moved to socketEvents
 
       setListing((prev) => ({
