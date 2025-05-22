@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { ROUTES } from '@/routes/routes_consts';
 
 const Footer = () => {
   return (
@@ -8,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Site info */}
           <div className="px-2 md:col-span-1">
-            <Link to="/" className="flex items-center mb-4">
+            <Link to={ROUTES.HOME} className="flex items-center mb-4">
               <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-rose-500 to-teal-500 bg-clip-text text-transparent">
                 auction-site
               </span>
@@ -24,18 +25,13 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/live-auctions" className="text-gray-600 hover:text-rose-500">
+                <Link to={ROUTES.LIVE} className="text-gray-600 hover:text-rose-500">
                   Live Auctions
                 </Link>
               </li>
               <li>
-                <Link to="/buy-now" className="text-gray-600 hover:text-rose-500">
+                <Link to={ROUTES.BUY_NOW} className="text-gray-600 hover:text-rose-500">
                   Buy Now
-                </Link>
-              </li>
-              <li>
-                <Link to="/how-it-works" className="text-gray-600 hover:text-rose-500">
-                  How It Works
                 </Link>
               </li>
             </ul>

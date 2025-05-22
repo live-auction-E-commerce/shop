@@ -2,13 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
 import { fetchAPI } from '@/lib/fetch';
-import {
-  emitJoinListing,
-  emitNewBid,
-  listenToJoinRoom,
-  listenToNewBid,
-  removeSocketListeners
-} from '@/lib/socketEvents';
+import { emitNewBid } from '@/lib/socketEvents';
+import useSingleListingSocket from '@/hooks/useSingleListingSocket';
 
 const ListingPage = () => {
   const { id } = useParams();
@@ -22,9 +17,7 @@ const ListingPage = () => {
       setLoading(true);
       try {
         const data = await fetchAPI(`/api/listings/${id}`);
-        emitJoinListing(id); // socket emit moved
         setListing(data);
-      // eslint-disable-next-line no-unused-vars
       } catch (err) {
         setError('Failed to load product.');
       } finally {
@@ -34,31 +27,9 @@ const ListingPage = () => {
     if (id) fetchListing();
   }, [id]);
 
-  useEffect(() => {
-    // Listen to socket events
-    const handleJoinRoom = ({ message, userId }) => {
-      console.log('User joined the room:', userId, message);
-    };
+  // Use your socket hook here, passing listing and setListing
+  useSingleListingSocket(listing, setListing);
 
-    const handleNewBid = ({ listingId: incomingId, bid }) => {
-      if (incomingId === id) {
-        console.log('bid accepted', bid);
-        setListing((prev) => ({
-          ...prev,
-          currentBid: {
-            amount: bid.amount,
-            userId: bid.userId,
-          },
-        }));
-      }
-    };
-      listenToJoinRoom(handleJoinRoom);
-      listenToNewBid(handleNewBid);
-      return () => {
-      // Clean up
-      removeSocketListeners();
-    };
-  }, [id]);
   const handleBidClick = async (bidAmount) => {
     try {
       const fakeUserId = '682c6aa24d11b67f3842ee33';
@@ -78,7 +49,7 @@ const ListingPage = () => {
       });
 
       setBid(newBid);
-      emitNewBid(id, newBid); // emit moved to socketEvents
+      emitNewBid(id, newBid); // emit new bid event
 
       setListing((prev) => ({
         ...prev,

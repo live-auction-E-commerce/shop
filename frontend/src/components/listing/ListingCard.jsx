@@ -16,29 +16,24 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
 
   const navigate = useNavigate();
 
+  const isAuction = listing?.saleType === 'auction';
+
   useEffect(() => {
     if (!listing) return;
 
     const expired =
-      listing.saleType === 'auction' && listing.expiredAt
-        ? new Date() > new Date(listing.expiredAt)
-        : false;
+      isAuction && listing.expiredAt ? new Date() > new Date(listing.expiredAt) : false;
 
     setIsExpired(expired);
     setIsSold(listing.isSold || false);
-  }, [listing]);
+  }, [listing, isAuction]);
 
   // Return skeleton if loading or if listing/product is undefined
   if (isLoading) return <ListingCardSkeleton />;
 
   const status = getListingStatus(listing);
-
-  const timeRemaining =
-    listing.saleType === 'auction' ? getTimeRemaining(listing.expiredAt, isExpired) : null;
-
-  // Calculate bid progress percentage for auctions
+  const timeRemaining = isAuction ? getTimeRemaining(listing.expiredAt, isExpired) : null;
   const progressPercentage = getBidProgress(listing);
-
   const product = listing.product;
 
   if (!listing || !product) return null;
@@ -67,8 +62,6 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
               isHovered ? 'scale-105' : 'scale-100'
             }`}
           />
-
-          {/* Image navigation dots for multiple images */}
           {listing.imageUrls && listing.imageUrls.length > 1 && (
             <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
               {listing.imageUrls.map((_, index) => (
@@ -85,7 +78,7 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
             </div>
           )}
         </div>
-        {/* Status badge */}
+
         <div className="absolute top-2 right-2">
           <Badge
             variant={
@@ -96,13 +89,13 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </Badge>
         </div>
-        {/* Sale type badge */}
+
         <div className="absolute top-2 left-2">
           <Badge
             variant="outline"
             className="bg-background/80 backdrop-blur-sm text-xs px-1.5 py-0"
           >
-            {listing.saleType === 'auction' ? 'Auction' : 'Buy Now'}
+            {isAuction ? 'Auction' : 'Buy Now'}
           </Badge>
         </div>
       </div>
@@ -124,7 +117,7 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
         </div>
 
         <div className="mt-auto">
-          {listing.saleType === 'auction' ? (
+          {isAuction ? (
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs">
                 <span className="text-muted-foreground">
@@ -153,7 +146,7 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
 
           {status === 'active' && (
             <div className="mt-2">
-              {listing.saleType === 'auction' ? (
+              {isAuction ? (
                 <Button
                   size="sm"
                   className="w-full h-7 text-xs cursor-pointer"

@@ -2,70 +2,27 @@ import React, { useEffect, useState } from 'react';
 import ListingCarrousel from '@/components/listing/ListingCarrousel';
 import useListings from '@/hooks/useListings';
 import HeroSection from '@/components/ui/hero-section';
-
-import {
-  emitJoinListing,
-  emitLeaveListing,
-  listenToNewBid,
-  removeSocketListeners,
-} from '@/lib/socketEvents';
+import useListingsSocket from '@/hooks/useListingsSocket';
 
 const Home = () => {
-  const { listings: initialListings, isLoading } = useListings();
-  const [listings, setListings] = useState([]);
+  const { listings, isLoading } = useListings();
+  const [localListings, setLocalListings] = useState([]);
 
-  // Set local listings and join socket rooms for each listing
+  // Sync local copy of listings
   useEffect(() => {
-    if (initialListings.length) {
-      setListings(initialListings);
-
-      // Join socket rooms for all listings
-      initialListings.forEach((listing) => {
-        emitJoinListing(listing._id);
-      });
-
-      // Cleanup on unmount or listings change: leave rooms and remove listeners
-      return () => {
-        initialListings.forEach((listing) => {
-          emitLeaveListing(listing._id);
-        });
-        removeSocketListeners();
-      };
+    if (listings.length) {
+      setLocalListings(listings);
     }
-  }, [initialListings]);
+  }, [listings]);
 
-  // Listen to new bid socket events and update matching listing in state
-  useEffect(() => {
-    const handleNewBid = ({ listingId, bid }) => {
-      setListings((prevListings) => {
-        let updated = false;
-        const updatedListings = prevListings.map((listing) => {
-          if (listing._id === listingId) {
-            updated = true;
-            return {
-              ...listing,
-              currentBid: {
-                amount: bid.amount,
-                userId: bid.userId,
-              },
-            };
-          }
-          return listing;
-        });
+  useListingsSocket(localListings, setLocalListings);
 
-        return updated ? updatedListings : prevListings;
-      });
-    };
+  const handleBidClick = (listingId) => {
+    console.log('Bid clicked for:', listingId);
+  };
 
-    listenToNewBid(handleNewBid);
-
-    return () => {
-      removeSocketListeners();
-    };
-  }, []);
-
-  const handleClicks = () => {
-    console.log('Handling a click...');
+  const handleBuyNowClick = (listingId) => {
+    console.log('Buy Now clicked for:', listingId);
   };
 
   return (
@@ -73,23 +30,23 @@ const Home = () => {
       <HeroSection />
       <ListingCarrousel
         title="Hot Now!"
-        listings={listings}
-        onBidClick={handleClicks}
-        onBuyNowClick={handleClicks}
+        listings={localListings}
+        onBidClick={handleBidClick}
+        onBuyNowClick={handleBuyNowClick}
         isLoading={isLoading}
       />
       <ListingCarrousel
         title="Trending Auctions"
-        listings={listings}
-        onBidClick={handleClicks}
-        onBuyNowClick={handleClicks}
+        listings={localListings}
+        onBidClick={handleBidClick}
+        onBuyNowClick={handleBuyNowClick}
         isLoading={isLoading}
       />
       <ListingCarrousel
         title="Ending Soon"
-        listings={listings}
-        onBidClick={handleClicks}
-        onBuyNowClick={handleClicks}
+        listings={localListings}
+        onBidClick={handleBidClick}
+        onBuyNowClick={handleBuyNowClick}
         isLoading={isLoading}
       />
     </section>

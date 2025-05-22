@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Clock } from 'lucide-react';
-
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { getTimeRemaining, formatCurrency } from '@/lib/utils';
 
 function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -43,22 +43,6 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
   const isAuction = listing.saleType === 'auction';
   const isSold = listing.isSold;
 
-  const timeRemaining = () => {
-    if (!isAuction) return null;
-
-    const now = new Date();
-    const expiry = new Date(listing.expiredAt);
-    const diff = expiry.getTime() - now.getTime();
-
-    if (diff <= 0) return 'Auction ended';
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-    return `${days}d ${hours}h ${minutes}m`;
-  };
-
   const nextImage = () => {
     console.log(listing.imageUrls);
     if (!listing?.imageUrls.length) return;
@@ -70,18 +54,11 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
     setCurrentImageIndex((prev) => (prev === 0 ? listing.imageUrls.length - 1 : prev - 1));
   };
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(amount);
-  };
-
   const handleBid = () => {
-  if (onBidClick) {
-    onBidClick(bidAmount);
-  }
-};
+    if (onBidClick) {
+      onBidClick(bidAmount);
+    }
+  };
   const handleBuyNow = () => {
     if (onBuyNowClick) onBuyNowClick();
   };
@@ -155,7 +132,12 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
                 {isAuction && !isSold && (
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Clock className="h-4 w-4" />
-                    <span>{timeRemaining()}</span>
+                    <span>
+                      {getTimeRemaining(
+                        listing.expiredAt,
+                        new Date() > new Date(listing.expiredAt)
+                      )}
+                    </span>
                   </div>
                 )}
               </CardDescription>

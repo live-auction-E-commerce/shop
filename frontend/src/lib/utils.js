@@ -59,3 +59,28 @@ export const handleListingSearch = async (query) => {
     return [];
   }
 };
+
+export function formatCurrency(amount, locale = 'en-US', currency = 'USD') {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+  }).format(amount);
+}
+
+export const getGridClass = (itemsPerRow) => {
+  let gridClass = 'grid grid-cols-1 gap-4';
+
+  if (itemsPerRow.sm === 2) gridClass += ' sm:grid-cols-2';
+  if (itemsPerRow.md === 2) gridClass += ' md:grid-cols-2';
+  if (itemsPerRow.md === 3) gridClass += ' md:grid-cols-3';
+  if (itemsPerRow.lg === 2) gridClass += ' lg:grid-cols-2';
+  if (itemsPerRow.lg === 3) gridClass += ' lg:grid-cols-3';
+  if (itemsPerRow.lg === 4) gridClass += ' lg:grid-cols-4';
+  if (itemsPerRow.xl === 2) gridClass += ' xl:grid-cols-2';
+  if (itemsPerRow.xl === 3) gridClass += ' xl:grid-cols-3';
+  if (itemsPerRow.xl === 4) gridClass += ' xl:grid-cols-4';
+  if (itemsPerRow.xl === 5) gridClass += ' xl:grid-cols-5';
+  if (itemsPerRow.xl === 6) gridClass += ' xl:grid-cols-6';
+
+  return gridClass;
+};

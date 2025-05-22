@@ -8,8 +8,6 @@ export function handleListingSocketConnection(socket) {
       message: `has joined the room.`,
       userId: socket.id,
     });
-
-    console.log(`${socket.id} joined room ${listingId}`);
   });
 
   socket.on('disconnect', () => {
