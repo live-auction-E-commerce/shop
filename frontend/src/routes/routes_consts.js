@@ -5,5 +5,6 @@ export const ROUTES = {
   CATEGORY: '/categories/:categoryName',
   LIVE: '/live',
   BUY_NOW: '/buy-now',
+  LISTING_PAGE: `listings/:id`,
   NOT_FOUND: '*',
 };

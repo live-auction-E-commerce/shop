@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, SlidersHorizontal } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, getGridClass } from '@/lib/utils';
 
 const ListingGrid = ({
   listings = [],
@@ -75,26 +75,8 @@ const ListingGrid = ({
     }
   });
 
-  // Get the appropriate grid class based on columns prop
-  const getGridClass = () => {
-    let gridClass = 'grid grid-cols-1 gap-4';
+  const gridClass = getGridClass(itemsPerRow);
 
-    if (itemsPerRow.sm === 2) gridClass += ' sm:grid-cols-2';
-    if (itemsPerRow.md === 2) gridClass += ' md:grid-cols-2';
-    if (itemsPerRow.md === 3) gridClass += ' md:grid-cols-3';
-    if (itemsPerRow.lg === 2) gridClass += ' lg:grid-cols-2';
-    if (itemsPerRow.lg === 3) gridClass += ' lg:grid-cols-3';
-    if (itemsPerRow.lg === 4) gridClass += ' lg:grid-cols-4';
-    if (itemsPerRow.xl === 2) gridClass += ' xl:grid-cols-2';
-    if (itemsPerRow.xl === 3) gridClass += ' xl:grid-cols-3';
-    if (itemsPerRow.xl === 4) gridClass += ' xl:grid-cols-4';
-    if (itemsPerRow.xl === 5) gridClass += ' xl:grid-cols-5';
-    if (itemsPerRow.xl === 6) gridClass += ' xl:grid-cols-6';
-
-    return gridClass;
-  };
-
-  const gridClass = getGridClass();
   return (
     <Card className={cn('w-full mt-2', className)}>
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

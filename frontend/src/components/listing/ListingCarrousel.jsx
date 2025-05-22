@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/useMobile';
+import { Button } from '@/components/ui/button';
 import ListingCard from '@/components/listing/ListingCard';
 
 const ListingCarrousel = ({
@@ -18,24 +18,16 @@ const ListingCarrousel = ({
   const [isHovering, setIsHovering] = useState(false);
   const carouselRef = useRef(null);
 
-  // Responsive breakpoints
   const isMobile = useMediaQuery('(max-width: 640px)');
   const isTablet = useMediaQuery('(min-width: 641px) and (max-width: 1024px)');
 
-  // Number of cards to show based on screen size
   const cardsToShow = isMobile ? 1 : isTablet ? 2 : 5;
-
-  // Dummy listings for loading state
   const dummyListings = Array.from({ length: cardsToShow }).map((_, i) => ({
     _id: `loading-${i}`,
   }));
-
-  // if loading, I want to sent dummy listings for skeletons
-  if (isLoading) {
-    listings = dummyListings;
-  }
-
-  const maxIndex = Math.max(0, listings.length - cardsToShow);
+  const displayedListings = isLoading ? dummyListings : listings;
+  const listingsLength = displayedListings.length;
+  const maxIndex = Math.max(0, listingsLength - cardsToShow);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
@@ -46,16 +38,16 @@ const ListingCarrousel = ({
   };
 
   useEffect(() => {
-    if (isHovering || listings.length <= cardsToShow) return;
+    if (isHovering || listingsLength <= cardsToShow) return;
 
     const interval = setInterval(() => {
       nextSlide();
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isHovering, listings.length, cardsToShow]);
+  }, [isHovering, listingsLength, cardsToShow]);
 
-  const showControls = listings.length > cardsToShow;
+  const showControls = listingsLength > cardsToShow;
 
   return (
     <div
@@ -101,15 +93,15 @@ const ListingCarrousel = ({
           ref={carouselRef}
           className="flex transition-transform duration-500 ease-out"
           style={{
-            width: `${(listings.length * 100) / cardsToShow}%`,
-            transform: `translateX(-${(currentIndex * 100) / listings.length}%)`,
+            width: `${(listingsLength * 100) / cardsToShow}%`,
+            transform: `translateX(-${(currentIndex * 100) / listingsLength}%)`,
           }}
         >
-          {listings.map((listing) => (
+          {displayedListings.map((listing) => (
             <div
               key={listing._id}
               className="flex-shrink-0"
-              style={{ width: `${100 / listings.length}%`, padding: '0 8px' }}
+              style={{ width: `${100 / listingsLength}%`, padding: '0 8px' }}
             >
               <ListingCard
                 listing={listing}
@@ -122,10 +114,9 @@ const ListingCarrousel = ({
         </div>
       </div>
 
-      {/* Pagination dots for mobile */}
-      {isMobile && listings.length > 1 && !isLoading && (
+      {isMobile && listingsLength > 1 && !isLoading && (
         <div className="mt-4 flex justify-center gap-2">
-          {Array.from({ length: listings.length }).map((_, index) => (
+          {Array.from({ length: listingsLength }).map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}

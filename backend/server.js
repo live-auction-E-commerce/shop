@@ -1,38 +1,25 @@
-import express from 'express';
-import cors from 'cors';
-import ProductRoutes from './src/routes/ProductRoutes.js';
-import ListingRoutes from './src/routes/ListingRoutes.js';
-import AddressRoutes from './src/routes/AddressRoutes.js';
-import PaymentMethodRoutes from './src/routes/PaymentMethodRoutes.js';
-import BidRoutes from './src/routes/BidRoutes.js';
-import OrderRoutes from './src/routes/OrderRoutes.js';
-import connectDB from './src/lib/db.js';
-import { multerErrorHandler } from './src/middlewares/ErrorHandlers.js';
+import http from 'http';
+import { Server } from 'socket.io';
+import app from './app.js';
 import config from './config.js';
+import './src/sockets/sockets.js';
+import { handleListingSocketConnection } from './src/sockets/sockets.js';
 
-const app = express();
+const server = http.createServer(app);
 
-connectDB();
-app.use(
-  cors({
-    origin: config.FRONTEND_URL, // your frontend URL
+export const io = new Server(server, {
+  cors: {
+    origin: config.FRONTEND_URL,
+    methods: [`GET`, `POST`],
     credentials: true,
-  }),
-);
-app.use(express.json());
-// Exposing Images folder
-app.use('/Images', express.static('public/Images'));
-// Routes
-app.use('/api', ProductRoutes);
-app.use('/api', ListingRoutes);
-app.use('/api', AddressRoutes);
-app.use('/api', PaymentMethodRoutes);
-app.use('/api', BidRoutes);
-app.use('/api', OrderRoutes);
+  },
+});
 
-// Middlewares
-app.use(multerErrorHandler);
+io.on('connection', (socket) => {
+  console.log(`${socket.id} just established connection with WebSocket`);
+  handleListingSocketConnection(socket, io);
+});
 
-app.listen(config.PORT, () => {
-  console.log(`Server is running on ${config.BASE_URL}`);
+server.listen(config.PORT, () => {
+  console.log(`Server running on ${config.BASE_URL}`);
 });

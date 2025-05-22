@@ -13,6 +13,7 @@ import {
 import { cn, handleListingSearch } from '@/lib/utils';
 import { SearchInput } from '../ui/search-input';
 import { Link } from 'react-router-dom';
+import { ROUTES } from '@/routes/routes_consts';
 
 const Header = () => {
   const isLogged = false;
@@ -22,7 +23,7 @@ const Header = () => {
       <div className="flex items-center justify-between w-full">
         {/* Logo */}
         <div className="mx-2">
-          <Link to="/" className="flex items-center justify-start">
+          <Link to={ROUTES.HOME} className="flex items-center justify-start">
             <span className="text-xl font-extrabold tracking-tight md:text-2xl bg-gradient-to-r from-rose-500 to-teal-500 bg-clip-text text-transparent">
               auction-site
             </span>
@@ -41,7 +42,7 @@ const Header = () => {
                   <li className="row-span-3">
                     <NavigationMenuLink asChild>
                       <Link
-                        to="/"
+                        to={ROUTES.HOME}
                         className="flex flex-col h-full w-full select-none justify-end rounded-md bg-gradient-to-br from-rose-100 to-teal-100 p-6 no-underline outline-none focus:shadow-md"
                       >
                         <div className="mb-2 mt-4 text-lg font-medium text-rose-800">
@@ -64,7 +65,7 @@ const Header = () => {
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
                 <Link
-                  to="/live"
+                  to={ROUTES.LIVE}
                   className="cursor-pointer items-center inline-flex h-10 w-max rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-white/50 hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                 >
                   <span className="relative flex h-2 w-2 mr-2">
@@ -78,7 +79,7 @@ const Header = () => {
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
                 <Link
-                  to="/buy-now"
+                  to={ROUTES.BUY_NOW}
                   className="cursor-pointer group inline-flex h-10 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-white/50 hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                 >
                   Buy Now
@@ -106,7 +107,7 @@ const Header = () => {
             </Link>
           ) : (
             <>
-              <Link to="/login">
+              <Link to={ROUTES.LOGIN}>
                 <Button
                   variant="ghost"
                   className="text-rose-600 hover:bg-rose-50 hover:text-rose-700"
@@ -114,7 +115,7 @@ const Header = () => {
                   Login
                 </Button>
               </Link>
-              <Link to="/register">
+              <Link to={ROUTES.REGISTER}>
                 <Button className="bg-teal-600 hover:bg-teal-700 text-white">Register</Button>
               </Link>
             </>

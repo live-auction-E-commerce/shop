@@ -98,7 +98,9 @@ export const deleteListing = async (listingId) => {
 export const getListingById = async (listingId) => {
   validateObjectId(listingId);
 
-  const listing = await Listing.findById(listingId).populate('productId');
+  const listing = await Listing.findById(listingId)
+    .populate('productId')
+    .populate('currentBid');
   if (!listing) {
     throw new Error('Could not find listing with id: ${listingId}');
   }
