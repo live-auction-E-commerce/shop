@@ -7,9 +7,6 @@ export const productSchema = z.object({
   brand: z.string().min(1, 'Brand is required'),
   condition: z.string().min(1, 'Condition is required'),
   size: z.string().min(1, 'Size is required'),
-  images: z.any().refine((files) => Array.isArray(files) && files.length > 0, {
-    message: 'At least one image is required',
-  }),
 });
 
 export const auctionSchema = z.object({

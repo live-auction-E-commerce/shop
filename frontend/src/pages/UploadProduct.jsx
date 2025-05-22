@@ -21,9 +21,9 @@ import { ImageUpload } from '@/components/ui/image-upload';
 import { toast } from 'sonner';
 import { formSchema } from '@/schemas/schemas';
 
-export default function UploadProductPage() {
-  const [images, setImages] = useState([]);
+const UploadProduct = () => {
   const [activeTab, setActiveTab] = useState('now');
+  const [images, setImages] = useState([]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -55,21 +55,42 @@ export default function UploadProductPage() {
 
   const onSubmit = async (data) => {
     try {
-      const submitData = { ...data, images };
+      const formData = new FormData();
 
-      console.log('Form submitted:', submitData);
+      formData.append('saleType', data.saleType);
+      formData.append('name', data.name);
+      formData.append('description', data.description);
+      formData.append('category', data.category);
+      formData.append('brand', data.brand);
+      formData.append('condition', data.condition);
+      formData.append('size', data.size);
 
-      // Example: await fetch("/api/products", { ... })
+      if (data.saleType === 'now') {
+        formData.append('price', data.listing.price.toString());
+      } else {
+        formData.append('startingBid', data.listing.startingBid.toString());
+        formData.append('expiredAt', new Date(data.listing.expiredAt).toISOString());
+      }
 
-      toast({
-        title: 'Product listed successfully',
-        description: `Your ${data.saleType === 'auction' ? 'auction' : 'buy now'} listing has been created.`,
+      images.forEach((file) => {
+        formData.append('images', file); // multiple files
       });
+
+      // const response = await fetch('/api/products', {
+      //   method: 'POST',
+      //   body: formData,
+      // });
+
+      // if (!response.ok) throw new Error('Failed to submit');
+
+      toast(
+        `Your ${data.saleType === 'auction' ? 'auction' : 'buy now'} listing has been created.`
+      );
 
       form.reset();
       setImages([]);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error(error);
       toast({
         title: 'Error',
         description: 'There was an error creating your listing. Please try again.',
@@ -114,4 +135,6 @@ export default function UploadProductPage() {
       </Card>
     </div>
   );
-}
+};
+
+export default UploadProduct;

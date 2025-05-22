@@ -47,7 +47,7 @@ const seedData = async () => {
       ownerId: seller._id,
       name: `Product ${i + 1}`,
       description: `Description for product ${i + 1}`,
-      images: [`image${i * 2 + 1}.jpg`, `image${i * 2 + 2}.jpg`],
+      images: [`image${i * 2 + 1}.svg`, `image${i * 2 + 2}.svg`],
       category: getRandom(CategoryEnum),
       brand: `Brand ${String.fromCharCode(65 + i)}`,
       condition: i % 3 === 0 ? 'New' : 'Used',

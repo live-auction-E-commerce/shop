@@ -1,40 +1,19 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { X, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-export function ImageUpload({ images, setImages }) {
-  const [isUploading, setIsUploading] = useState(false);
-
+export function ImageUpload({ images = [], setImages }) {
   const onDrop = useCallback(
     (acceptedFiles) => {
-      setIsUploading(true);
-
-      // Convert files to base64 strings for preview
-      // In a real app, you would upload these to your server or cloud storage
-      const promises = acceptedFiles.map((file) => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            if (e.target?.result) {
-              resolve(e.target.result);
-            }
-          };
-          reader.readAsDataURL(file);
-        });
-      });
-
-      Promise.all(promises).then((newImages) => {
-        setImages([...images, ...newImages]);
-        setIsUploading(false);
-      });
+      setImages([...images, ...acceptedFiles]); // use the current `images` prop value
     },
     [images, setImages]
   );
 
   const removeImage = (index) => {
-    const newImages = [...images];
+    const newImages = [...(images || [])];
     newImages.splice(index, 1);
     setImages(newImages);
   };
@@ -77,22 +56,17 @@ export function ImageUpload({ images, setImages }) {
         </div>
       </div>
 
-      {isUploading && (
-        <div className="text-center text-sm text-muted-foreground">Uploading images...</div>
-      )}
-
-      {images.length > 0 && (
+      {images?.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-          {images.map((image, index) => (
+          {images.map((file, index) => (
             <div
               key={index}
               className="relative group aspect-square rounded-md overflow-hidden border"
             >
               <img
-                src={image || '/placeholder.svg'}
+                src={URL.createObjectURL(file)}
                 alt={`Product image ${index + 1}`}
-                fill
-                className="object-cover"
+                className="object-cover w-full h-full"
               />
               <Button
                 type="button"
