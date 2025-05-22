@@ -8,6 +8,7 @@ import CategoryPage from '@/pages/CategoryPage';
 import LiveAuctions from '@/pages/LiveAuctions';
 import BuyNowPage from '@/pages/BuyNowPage';
 import ListingPage from '@/pages/ListingPage';
+import UploadProductPage from '@/pages/UploadProduct';
 import NotFound from '@/pages/NotFound';
 import { ROUTES } from '@/routes/routes_consts';
 
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
       { path: ROUTES.LIVE, element: <LiveAuctions /> },
       { path: ROUTES.BUY_NOW, element: <BuyNowPage /> },
       { path: ROUTES.LISTING_PAGE, element: <ListingPage /> },
+      { path: ROUTES.NEW_PRODUCT, element: <UploadProductPage /> },
       { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     ],
   },
