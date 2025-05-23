@@ -84,3 +84,5 @@ export const getGridClass = (itemsPerRow) => {
 
   return gridClass;
 };
+
+export const getCurrentYear = () => new Date().getFullYear();
