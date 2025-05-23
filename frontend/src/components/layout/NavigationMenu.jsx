@@ -1,10 +1,14 @@
-import * as React from 'react';
+// In general, each componnet here should be in a separate file. 
+// All components should be under the same directory Navigation 
+// and be exported from ther in index.jsx using barrel import.import * as React from 'react';
+
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import { cva } from 'class-variance-authority';
 import { ChevronDownIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
+// Move to separate file
 function NavigationMenu({ className, children, viewport = true, ...props }) {
   return (
     <NavigationMenuPrimitive.Root
@@ -22,6 +26,7 @@ function NavigationMenu({ className, children, viewport = true, ...props }) {
   );
 }
 
+// Move to separate file
 function NavigationMenuList({ className, ...props }) {
   return (
     <NavigationMenuPrimitive.List
@@ -32,6 +37,7 @@ function NavigationMenuList({ className, ...props }) {
   );
 }
 
+// Move to separate file
 function NavigationMenuItem({ className, ...props }) {
   return (
     <NavigationMenuPrimitive.Item
@@ -42,10 +48,12 @@ function NavigationMenuItem({ className, ...props }) {
   );
 }
 
+// Move to style file
 const navigationMenuTriggerStyle = cva(
   'group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[state=open]:hover:bg-accent data-[state=open]:text-accent-foreground data-[state=open]:focus:bg-accent data-[state=open]:bg-accent/50 focus-visible:ring-ring/50 outline-none transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1'
 );
 
+// Move to separate file
 function NavigationMenuTrigger({ className, children, ...props }) {
   return (
     <NavigationMenuPrimitive.Trigger
@@ -62,6 +70,7 @@ function NavigationMenuTrigger({ className, children, ...props }) {
   );
 }
 
+// Move to separate file
 function NavigationMenuContent({ className, ...props }) {
   return (
     <NavigationMenuPrimitive.Content
@@ -76,6 +85,7 @@ function NavigationMenuContent({ className, ...props }) {
   );
 }
 
+// Move to separate file
 function NavigationMenuViewport({ className, ...props }) {
   return (
     <div className={cn('absolute top-full left-0 isolate z-50 flex justify-center')}>
@@ -91,6 +101,7 @@ function NavigationMenuViewport({ className, ...props }) {
   );
 }
 
+// Move to separate file
 function NavigationMenuLink({ className, ...props }) {
   return (
     <NavigationMenuPrimitive.Link
@@ -104,6 +115,7 @@ function NavigationMenuLink({ className, ...props }) {
   );
 }
 
+// Move to separate file
 function NavigationMenuIndicator({ className, ...props }) {
   return (
     <NavigationMenuPrimitive.Indicator
