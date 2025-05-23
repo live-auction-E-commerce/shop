@@ -5,7 +5,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from '@/components/layout/NavigationMenu';
+} from '@/components/layout/Navigation';
 import { categories } from '@/constants/categories';
 import ListItem from './ListItem';
 import { Link } from 'react-router-dom';

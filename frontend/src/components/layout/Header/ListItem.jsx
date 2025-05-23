@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { NavigationMenuLink } from '@/components/layout/NavigationMenu';
+import { NavigationMenuLink } from '@/components/layout/Navigation';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
