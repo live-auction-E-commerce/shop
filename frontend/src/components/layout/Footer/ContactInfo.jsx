@@ -1,6 +1,3 @@
-import { Link } from 'react-router-dom';
-import { ROUTES } from '@/routes/routes_consts';
-
 const ContactInfo = () => (
   <div>
     <h3 className="font-semibold mb-4">Contact</h3>
