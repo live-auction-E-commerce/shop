@@ -22,6 +22,10 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-rose-50 to-teal-50 shadow-sm flex h-16 items-center">
       <div className="flex items-center justify-between w-full">
         {/* Logo */}
+        {/* 
+          If you had to expalin what is this section, 
+          consider to extract it to a new component with appropriate name 
+        */}
         <div className="mx-2">
           <Link to={ROUTES.HOME} className="flex items-center justify-start">
             <span className="text-xl font-extrabold tracking-tight md:text-2xl bg-gradient-to-r from-rose-500 to-teal-500 bg-clip-text text-transparent">
@@ -31,6 +35,10 @@ const Header = () => {
         </div>
 
         {/* Categories Navigation */}
+        {/* 
+          If you had to expalin what is this section, 
+          consider to extract it to a new component with appropriate name 
+        */}
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -90,6 +98,10 @@ const Header = () => {
         </NavigationMenu>
 
         {/* Search bar (desktop) */}
+        {/* 
+          If you had to expalin what is this section, 
+          consider to extract it to a new component with appropriate name 
+        */}
         <div className="hidden md:flex flex-1 items-center justify-center px-6">
           <div className="relative w-full max-w-sm">
             <SearchInput placeholder="Search your item..." searchFunction={handleListingSearch} />
@@ -97,6 +109,10 @@ const Header = () => {
         </div>
 
         {/* User authentication */}
+        {/* 
+          If you had to expalin what is this section, 
+          consider to extract it to a new component with appropriate name 
+        */}
         <div className="flex items-center space-x-2 mx-2">
           {isLogged ? (
             <Link to="/account">
@@ -126,6 +142,7 @@ const Header = () => {
   );
 };
 
+// Move to a new file 
 const ListItem = React.forwardRef(({ className, title, children, href }, ref) => {
   return (
     <li>
