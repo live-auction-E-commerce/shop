@@ -17,7 +17,6 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
   const resultsRef = useRef(null);
   const navigate = useNavigate();
 
-  // Fetch search results when query changes also close the dropdown menu if query is null
   useEffect(() => {
     if (debouncedQuery.trim().length < 2) {
       setResults([]);
@@ -62,6 +61,7 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
   }, []);
 
   return (
+    // This component is very long. Separate the component to smaller components
     <div className={cn('relative w-full', className)}>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -106,6 +106,7 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
       </div>
 
       {/* Results dropdown */}
+      {/* Create a component for ResultsDropdown*/}
       {isOpen && (
         <div
           ref={resultsRef}
@@ -123,7 +124,11 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
                   <div
                     key={listing._id}
                     className="flex items-start gap-3 p-2 rounded-md cursor-pointer hover:bg-muted transition-colors"
-                    onClick={() => navigate(`/listings/${listing._id}`)}
+                    onClick={() => {
+                      navigate(`/listings/${listing._id}`);
+                      setIsOpen(false);
+                      setQuery('');
+                    }}
                   >
                     <div className="h-12 w-12 rounded-md overflow-hidden flex-shrink-0">
                       <img
@@ -179,3 +184,5 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
     </div>
   );
 }
+
+// Consider using PropTypes

@@ -30,5 +30,5 @@ function Badge({ className, variant, asChild = false, ...props }) {
     <Comp data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />
   );
 }
-
+// Consider using PropTypes
 export { Badge, badgeVariants };

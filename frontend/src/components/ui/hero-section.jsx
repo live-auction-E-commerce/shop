@@ -45,4 +45,6 @@ const HeroSection = () => {
   );
 };
 
+// Consider using PropTypes
+
 export default HeroSection;
