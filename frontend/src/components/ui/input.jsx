@@ -21,4 +21,6 @@ function Input({
   );
 }
 
+// Consider using PropTypes
+
 export { Input }

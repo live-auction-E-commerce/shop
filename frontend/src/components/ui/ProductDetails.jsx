@@ -64,9 +64,11 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
   };
 
   return (
+    // This component is very long. Separate the component to smaller components
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Images */}
+        {/* Export to "ProductImages" component*/}
         <div className="space-y-4">
           <div className="relative aspect-square rounded-xl overflow-hidden border">
             <img
@@ -95,6 +97,7 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
             </div>
           </div>
 
+          {/* Consider to export it to a component */}
           <div className="flex gap-2 overflow-x-auto pb-2">
             {listing.imageUrls.map((image, index) => (
               <button
@@ -115,6 +118,7 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
         </div>
 
         {/* Product Details */}
+        {/* Export to component */}
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold">{listing.name}</h1>
@@ -228,5 +232,7 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
     </div>
   );
 }
+
+// Consider using PropTypes
 
 export default ProductDetails;

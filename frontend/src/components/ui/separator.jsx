@@ -21,5 +21,7 @@ function Separator({
       {...props} />
   );
 }
+// Consider using PropTypes
+
 
 export { Separator }

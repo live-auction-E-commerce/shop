@@ -1,15 +1,5 @@
-/**
- * Custom hook to manage socket connections for multiple listings.
- *
- * - Joins socket rooms for each listing when the listings array changes.
- * - Leaves those socket rooms and cleans up listeners on unmount or listings update.
- * - Listens for incoming "new bid" events on any of the listings.
- * - Updates the matching listing's currentBid in the listings state when a new bid arrives,
- *   triggering a UI update across the listings list.
- *
- * @param {Array} listings - Array of listing objects currently displayed.
- * @param {Function} setListings - State setter function for updating listings.
- */
+// Custom hook to manage socket connections for live updates of multiple listings.
+// Joins/leaves rooms based on current listings and updates state on new bids.
 
 import { useEffect } from 'react';
 import {
@@ -20,7 +10,6 @@ import {
 } from '@/lib/socketEvents';
 
 const useListingsSocket = (listings, setListings) => {
-  // Join socket rooms when listings change
   useEffect(() => {
     if (!listings.length) return;
 
@@ -36,7 +25,6 @@ const useListingsSocket = (listings, setListings) => {
     };
   }, [listings]);
 
-  // Listen for new bids
   useEffect(() => {
     const handleNewBid = ({ listingId, bid }) => {
       setListings((prevListings) =>

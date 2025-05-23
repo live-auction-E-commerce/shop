@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
-import { fetchAPI } from '@/lib/fetch';
+import { getListingById } from '@/services/listingService';
+import { placeBid } from '@/services/bidService';
 import { emitNewBid } from '@/lib/socketEvents';
 import useSingleListingSocket from '@/hooks/useSingleListingSocket';
 
@@ -16,10 +17,10 @@ const ListingPage = () => {
     async function fetchListing() {
       setLoading(true);
       try {
-        const data = await fetchAPI(`/api/listings/${id}`);
+        const data = await getListingById(id);
         setListing(data);
       } catch (err) {
-        setError('Failed to load product.');
+        setError(`Failed to load product. : ${err}`);
       } finally {
         setLoading(false);
       }
@@ -27,30 +28,22 @@ const ListingPage = () => {
     if (id) fetchListing();
   }, [id]);
 
-  // Use your socket hook here, passing listing and setListing
   useSingleListingSocket(listing, setListing);
 
   const handleBidClick = async (bidAmount) => {
     try {
-      const fakeUserId = '682c6aa24d11b67f3842ee33';
-      const fakePaymentIntentId = '664b4914c1234567890abce0';
+      const fakeUserId = '682c6aa24d11b67f3842ee33'; // TODO: Send the current user ID which do this from context
+      const fakePaymentIntentId = '664b4914c1234567890abce0'; // TODO: Create PaymentIntent with Stripe
 
-      const newBid = await fetchAPI(`/api/bids`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          listingId: id,
-          userId: fakeUserId,
-          paymentIntentId: fakePaymentIntentId,
-          amount: bidAmount,
-        }),
+      const newBid = await placeBid({
+        listingId: id,
+        userId: fakeUserId,
+        paymentIntentId: fakePaymentIntentId,
+        amount: bidAmount,
       });
 
       setBid(newBid);
-      emitNewBid(id, newBid); // emit new bid event
-
+      emitNewBid(id, newBid);
       setListing((prev) => ({
         ...prev,
         currentBid: {

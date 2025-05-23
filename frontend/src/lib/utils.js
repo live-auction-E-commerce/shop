@@ -84,3 +84,49 @@ export const getGridClass = (itemsPerRow) => {
 
   return gridClass;
 };
+
+export const getCurrentYear = () => new Date().getFullYear();
+
+export const sortListings = (listings, sortBy) => {
+  return [...listings].sort((a, b) => {
+    const aPrice = a.price || a.currentBid?.amount || a.startingBid || 0;
+    const bPrice = b.price || b.currentBid?.amount || b.startingBid || 0;
+    const aDate = new Date(a.createdAt || 0);
+    const bDate = new Date(b.createdAt || 0);
+    const aExpire = new Date(a.expiredAt || Number.POSITIVE_INFINITY);
+    const bExpire = new Date(b.expiredAt || Number.POSITIVE_INFINITY);
+
+    switch (sortBy) {
+      case 'newest':
+        return bDate - aDate;
+      case 'oldest':
+        return aDate - bDate;
+      case 'price-high':
+        return bPrice - aPrice;
+      case 'price-low':
+        return aPrice - bPrice;
+      case 'ending-soon':
+        return aExpire - bExpire;
+      default:
+        return 0;
+    }
+  });
+};
+
+export const filterListings = (listings, searchTerm) => {
+  if (!searchTerm) return listings;
+
+  const searchLower = searchTerm.toLowerCase();
+
+  return listings.filter((listing) => {
+    const product = listing.product;
+    if (!product) return false;
+
+    return (
+      product.name?.toLowerCase().includes(searchLower) ||
+      product.description?.toLowerCase().includes(searchLower) ||
+      product.category?.toLowerCase().includes(searchLower) ||
+      product.brand?.toLowerCase().includes(searchLower)
+    );
+  });
+};

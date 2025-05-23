@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchAPI } from '@/lib/fetch';
-
+import { getAllListings } from '@/services/listingService';
 const useListings = () => {
   const [listings, setListings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -9,7 +8,7 @@ const useListings = () => {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const data = await fetchAPI('/api/listings');
+        const data = await getAllListings();
         setListings(data);
       } catch (err) {
         console.error('Failed to fetch listings:', err);

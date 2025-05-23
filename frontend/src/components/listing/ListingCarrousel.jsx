@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/useMobile';
 import { Button } from '@/components/ui/button';
-import ListingCard from '@/components/listing/ListingCard';
+import { ListingCard } from '@/components/listing/ListingCard';
 
 const ListingCarrousel = ({
   title,
