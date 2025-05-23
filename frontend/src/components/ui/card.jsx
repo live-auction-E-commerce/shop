@@ -90,6 +90,8 @@ function CardFooter({
   );
 }
 
+// Consider using PropTypes
+
 export {
   Card,
   CardHeader,

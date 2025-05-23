@@ -14,10 +14,12 @@ const ListingCarrousel = ({
   viewAllHref = '#',
   isLoading = false,
 }) => {
+  // The state can be exported to a custom hook.
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const carouselRef = useRef(null);
 
+  // Define the sizes in consts.js file
   const isMobile = useMediaQuery('(max-width: 640px)');
   const isTablet = useMediaQuery('(min-width: 641px) and (max-width: 1024px)');
 

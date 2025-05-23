@@ -23,5 +23,6 @@ function Progress({
     </ProgressPrimitive.Root>
   );
 }
+// Consider using PropTypes
 
 export { Progress }

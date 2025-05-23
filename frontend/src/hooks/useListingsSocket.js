@@ -1,3 +1,4 @@
+// Remove comments. Your code should be understandable without comments.
 /**
  * Custom hook to manage socket connections for multiple listings.
  *

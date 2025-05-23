@@ -49,11 +49,13 @@ const ListingGrid = ({
   });
 
   // Sort listings
+  // Consider to export sorting functionality in each case to a function.
   const sortedListings = [...filteredListings].sort((a, b) => {
     switch (sortBy) {
       case 'newest':
         return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
       case 'oldest':
+        // Here you could use the newest functionality.
         return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
       case 'price-high':
         return (
@@ -61,6 +63,7 @@ const ListingGrid = ({
           (a.price || a.currentBid?.amount || a.startingBid || 0)
         );
       case 'price-low':
+        // Here you could use the price-high functionality.
         return (
           (a.price || a.currentBid?.amount || a.startingBid || 0) -
           (b.price || b.currentBid?.amount || b.startingBid || 0)
@@ -76,7 +79,7 @@ const ListingGrid = ({
   });
 
   const gridClass = getGridClass(itemsPerRow);
-
+  // Very long component. Separate to smaller components
   return (
     <Card className={cn('w-full mt-2', className)}>
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

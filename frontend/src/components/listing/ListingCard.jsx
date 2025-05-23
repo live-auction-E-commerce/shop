@@ -16,6 +16,7 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
 
   const navigate = useNavigate();
 
+  // auction should be a constant
   const isAuction = listing?.saleType === 'auction';
 
   useEffect(() => {
@@ -39,6 +40,7 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
   if (!listing || !product) return null;
 
   return (
+    // This component is very long. consider to export some code to smaller components
     <Card
       className={`flex flex-col h-full overflow-hidden transition-all duration-200 cursor-pointer ${
         isHovered ? 'shadow-md' : ''
@@ -65,6 +67,7 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
           {listing.imageUrls && listing.imageUrls.length > 1 && (
             <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
               {listing.imageUrls.map((_, index) => (
+                // This can ba a component
                 <button
                   key={index}
                   onClick={(e) => {

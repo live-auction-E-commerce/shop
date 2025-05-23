@@ -62,6 +62,7 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
   }, []);
 
   return (
+    // This component is very long. Separate the component to smaller components
     <div className={cn('relative w-full', className)}>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -106,6 +107,7 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
       </div>
 
       {/* Results dropdown */}
+      {/* Create a component for ResultsDropdown*/}
       {isOpen && (
         <div
           ref={resultsRef}
@@ -179,3 +181,6 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
     </div>
   );
 }
+
+// Consider using PropTypes
+

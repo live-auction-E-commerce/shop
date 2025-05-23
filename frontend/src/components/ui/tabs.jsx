@@ -1,3 +1,5 @@
+// Separate each component to a file in Tab folder. 
+// Use barrel import to export them.
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 
@@ -56,5 +58,7 @@ function TabsContent({
       {...props} />
   );
 }
+
+// Consider using PropTypes
 
 export { Tabs, TabsList, TabsTrigger, TabsContent }

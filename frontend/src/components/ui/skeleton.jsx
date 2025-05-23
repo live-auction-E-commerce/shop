@@ -12,4 +12,5 @@ function Skeleton({
   );
 }
 
+// Consider using PropTypes
 export { Skeleton }

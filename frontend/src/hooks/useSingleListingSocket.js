@@ -6,6 +6,7 @@ import {
   removeSocketListeners,
 } from '@/lib/socketEvents';
 
+// Remove comments
 // Custom hook to handle socket setup for a single listing:
 // - Joins the socket room for the listing
 // - Listens for new bid events from other users
