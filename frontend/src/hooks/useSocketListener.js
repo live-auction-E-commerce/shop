@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import socket from '@/socket';
+import { socket } from '@/services/socket';
 
 // Consider to move to a socket hook or services or something like it.
 

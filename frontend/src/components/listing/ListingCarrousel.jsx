@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/useMobile';
 import { Button } from '@/components/ui/button';
-import ListingCard from '@/components/listing/ListingCard';
+import { ListingCard } from '@/components/listing/ListingCard';
 
 const ListingCarrousel = ({
   title,
@@ -14,12 +14,10 @@ const ListingCarrousel = ({
   viewAllHref = '#',
   isLoading = false,
 }) => {
-  // The state can be exported to a custom hook.
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const carouselRef = useRef(null);
 
-  // Define the sizes in consts.js file
   const isMobile = useMediaQuery('(max-width: 640px)');
   const isTablet = useMediaQuery('(min-width: 641px) and (max-width: 1024px)');
 

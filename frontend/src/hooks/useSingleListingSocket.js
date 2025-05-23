@@ -6,13 +6,6 @@ import {
   removeSocketListeners,
 } from '@/lib/socketEvents';
 
-// Remove comments
-// Custom hook to handle socket setup for a single listing:
-// - Joins the socket room for the listing
-// - Listens for new bid events from other users
-// - Updates the listing state with the latest bid to trigger UI re-render
-
-
 const useSingleListingSocket = (listing, setListing) => {
   useEffect(() => {
     if (!listing?._id) return;

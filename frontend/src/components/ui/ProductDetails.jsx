@@ -235,5 +235,4 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
 
 // Consider using PropTypes
 
-
 export default ProductDetails;

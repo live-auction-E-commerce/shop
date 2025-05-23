@@ -1,5 +1,5 @@
 import useListings from '@/hooks/useListings';
-import ListingGrid from '@/components/listing/ListingGrid';
+import { ListingGrid } from '@/components/listing/ListingGrid';
 
 const BuyNowPage = () => {
   const { listings, isLoading } = useListings();
