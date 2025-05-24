@@ -29,7 +29,6 @@ const paymentMethodSchema = new mongoose.Schema({
     ref: 'Address',
   },
   stripePaymentMethodId: {
-    
     type: String,
     required: [true, 'Stripe PaymentMethod ID is required'],
   },
