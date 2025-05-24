@@ -1,10 +1,22 @@
 import LoginForm from '@/components/forms/LoginForm';
+import { login as loginApi } from '@/services/authService';
+import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { ROUTES } from '@/routes/routes_consts';
 
 const Login = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
   const handleLogin = async (data) => {
-    // TODO: Implement your login logic here
-    // Example: call your API endpoint
-    console.log('Login data:', data);
+    const { token, user } = await loginApi(data);
+
+    login({ token, user });
+
+    toast.success('Login successful!');
+
+    navigate(ROUTES.HOME);
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

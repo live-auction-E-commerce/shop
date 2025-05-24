@@ -14,8 +14,6 @@ const Register = () => {
 
     login({ token, user });
 
-    localStorage.setItem('token', token);
-
     toast.success('Registration successful!');
 
     setTimeout(() => {
