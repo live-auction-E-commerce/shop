@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import config from '../../config.js';
 
 export const hashPassword = async (password) => {
   if (!password) return null;
@@ -12,8 +13,8 @@ export const hashPassword = async (password) => {
 
 export const getNewToken = (user) => {
   const payload = { user };
-  const token = jwt.sign(payload, process.env.SECRET_KEY, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+  const token = jwt.sign(payload, config.SECRET_KEY, {
+    expiresIn: config.JWT_EXPIRES_IN,
   });
   return token;
 };

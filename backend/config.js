@@ -8,10 +8,18 @@ const config = {
   BASE_URL:
     process.env.BASE_URL || `http://localhost:${process.env.PORT || 5001}`,
   MONGO_URI: process.env.MONGO_URI || '',
+  SECRET_KEY: process.env.SECRET_KEY || '',
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '1d',
 };
 
 if (!config.MONGO_URI) {
   console.warn('⚠️  Warning: MONGO_URI is not set in your .env file.');
+}
+
+if (!config.SECRET_KEY) {
+  console.warn(
+    '⚠️  Warning: SECRET_KEY is not set in your .env file. JWT generation will fail.',
+  );
 }
 
 export default config;

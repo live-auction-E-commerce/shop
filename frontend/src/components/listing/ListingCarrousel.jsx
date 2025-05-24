@@ -56,7 +56,7 @@ const ListingCarrousel = ({
       onMouseLeave={() => setIsHovering(false)}
     >
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">{title}</h2>
+        <h2 className="text-xl font-semibold mx-2">{title}</h2>
         <div className="flex items-center gap-2">
           {viewAllHref && (
             <a href={viewAllHref} className="text-sm font-medium text-primary hover:underline">
