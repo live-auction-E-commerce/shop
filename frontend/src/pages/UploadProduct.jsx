@@ -14,12 +14,12 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import ProductForm from '@/components/forms/product-form';
-import AuctionForm from '@/components/forms/auction-form';
-import BuyNowForm from '@/components/forms/buy-now-form';
+import ProductForm from '@/components/forms/ProductForm';
+import AuctionForm from '@/components/forms/AuctionForm';
+import BuyNowForm from '@/components/forms/BuyNowForm';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { toast } from 'sonner';
-import { formSchema } from '@/schemas/schemas';
+import { formSchema } from '@/lib/validations';
 import { createListing } from '@/services/listingService';
 import { createProduct, updateProduct } from '@/services/productService';
 
