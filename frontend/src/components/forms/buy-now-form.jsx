@@ -2,7 +2,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 
-export function BuyNowForm({ form }) {
+const BuyNowForm = ({ form }) => {
   return (
     <Card>
       <CardContent className="pt-6">
@@ -37,4 +37,5 @@ export function BuyNowForm({ form }) {
       </CardContent>
     </Card>
   );
-}
+};
+export default BuyNowForm;

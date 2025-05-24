@@ -14,12 +14,14 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { ProductForm } from '@/components/forms/product-form';
-import { AuctionForm } from '@/components/forms/auction-form';
-import { BuyNowForm } from '@/components/forms/buy-now-form';
+import ProductForm from '@/components/forms/product-form';
+import AuctionForm from '@/components/forms/auction-form';
+import BuyNowForm from '@/components/forms/buy-now-form';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { toast } from 'sonner';
 import { formSchema } from '@/schemas/schemas';
+import { createListing } from '@/services/listingService';
+import { createProduct, updateProduct } from '@/services/productService';
 
 const UploadProduct = () => {
   const [activeTab, setActiveTab] = useState('now');
@@ -36,7 +38,7 @@ const UploadProduct = () => {
       condition: '',
       size: '',
       listing: {
-        price: 0,
+        startingBid: 0,
       },
     },
   });
@@ -55,48 +57,85 @@ const UploadProduct = () => {
 
   const onSubmit = async (data) => {
     try {
-      const formData = new FormData();
-
-      formData.append('saleType', data.saleType);
-      formData.append('name', data.name);
-      formData.append('description', data.description);
-      formData.append('category', data.category);
-      formData.append('brand', data.brand);
-      formData.append('condition', data.condition);
-      formData.append('size', data.size);
-
-      if (data.saleType === 'now') {
-        formData.append('price', data.listing.price.toString());
-      } else {
-        formData.append('startingBid', data.listing.startingBid.toString());
-        formData.append('expiredAt', new Date(data.listing.expiredAt).toISOString());
-      }
+      const fakeUserId = '682c6aa24d11b67f3842ee33'; // TODO: get from auth context
+      const productFormData = new FormData();
+      productFormData.append('ownerId', fakeUserId); // TODO: get from auth context
+      productFormData.append('name', data.name);
+      productFormData.append('description', data.description || '');
+      productFormData.append('category', data.category);
+      productFormData.append('brand', data.brand);
+      productFormData.append('condition', data.condition);
+      productFormData.append('size', data.size);
 
       images.forEach((file) => {
-        formData.append('images', file); // multiple files
+        productFormData.append('images', file);
       });
 
-      // const response = await fetch('/api/products', {
-      //   method: 'POST',
-      //   body: formData,
-      // });
+      const savedProduct = await createProduct(productFormData);
 
-      // if (!response.ok) throw new Error('Failed to submit');
+      console.log('Saved product response:', savedProduct);
+      console.log('Saved product ID:', savedProduct._id);
 
-      toast(
-        `Your ${data.saleType === 'auction' ? 'auction' : 'buy now'} listing has been created.`
-      );
+      const listingData = {
+        productId: savedProduct._id,
+        sellerId: fakeUserId, // TODO: get from auth context
+        saleType: activeTab,
+        price: activeTab === 'now' ? Number(data.listing.price) : undefined,
+        startingBid: activeTab === 'auction' ? data.listing.startingBid : undefined,
+        expiredAt: activeTab === 'auction' ? data.listing.expiredAt : undefined,
+      };
+
+      console.log('Listing data sent:', listingData);
+      const savedListing = await createListing(listingData);
+
+      await updateProduct(savedProduct._id, { listing: savedListing._id });
+      toast.success(`Your listing has been created!`);
 
       form.reset();
       setImages([]);
     } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'There was an error creating your listing. Please try again.',
+      console.error(error.message);
+      toast('There was an error creating your listing. Please try again.', {
         variant: 'destructive',
       });
     }
+
+    // try {
+    //   const formData = new FormData();
+    //   formData.append('saleType', data.saleType);
+    //   formData.append('name', data.name);
+    //   formData.append('description', data.description);
+    //   formData.append('category', data.category);
+    //   formData.append('brand', data.brand);
+    //   formData.append('condition', data.condition);
+    //   formData.append('size', data.size);
+    //   if (data.saleType === 'now') {
+    //     formData.append('price', data.listing.price.toString());
+    //   } else {
+    //     formData.append('startingBid', data.listing.startingBid.toString());
+    //     formData.append('expiredAt', new Date(data.listing.expiredAt).toISOString());
+    //   }
+    //   images.forEach((file) => {
+    //     formData.append('images', file); // multiple files
+    //   });
+    //   const response = await fetch('/api/products', {
+    //     method: 'POST',
+    //     body: formData,
+    //   });
+    //   if (!response.ok) throw new Error('Failed to submit');
+    //   toast(
+    //     `Your ${data.saleType === 'auction' ? 'auction' : 'buy now'} listing has been created.`
+    //   );
+    //   form.reset();
+    //   setImages([]);
+    // } catch (error) {
+    //   console.error(error);
+    //   toast({
+    //     title: 'Error',
+    //     description: 'There was an error creating your listing. Please try again.',
+    //     variant: 'destructive',
+    //   });
+    // }
   };
 
   return (

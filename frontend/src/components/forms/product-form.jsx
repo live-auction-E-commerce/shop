@@ -1,5 +1,3 @@
-'use client';
-
 import {
   FormControl,
   FormDescription,
@@ -20,7 +18,7 @@ import {
 import { categories } from '@/constants/categories';
 import { CONDITIONS } from '@/constants/conditions';
 
-export function ProductForm({ form }) {
+const ProductForm = ({ form }) => {
   return (
     <div className="space-y-6">
       <div className="text-xl font-semibold">Product Details</div>
@@ -139,4 +137,6 @@ export function ProductForm({ form }) {
       </div>
     </div>
   );
-}
+};
+
+export default ProductForm;

@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
   // 1714410413658-837423559.png
 
   filename: function (req, file, cb) {
-    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`;
+    const uniqueName = `${Date.now()}${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`;
     cb(null, uniqueName);
   },
 });

@@ -28,13 +28,13 @@ const HeroSection = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button className="bg-rose-600 hover:bg-rose-700 text-white px-8 py-6 rounded-full text-lg">
+            <Button className="bg-rose-600 hover:bg-rose-700 text-white px-8 py-6 rounded-full text-lg cursor-pointer">
               Explore Live Auctions
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button
               variant="outline"
-              className="border-white text-black hover:bg-white/20 px-8 py-6 rounded-full text-lg"
+              className="border-white text-black hover:bg-white/20 px-8 py-6 rounded-full text-lg cursor-pointer"
             >
               How It Works
             </Button>
