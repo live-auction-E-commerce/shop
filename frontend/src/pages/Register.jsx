@@ -1,4 +1,4 @@
-import { RegisterForm } from '@/components/forms/RegisterForm';
+import RegisterForm from '@/components/forms/RegisterForm';
 import { register } from '@/services/authService';
 import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
@@ -10,7 +10,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleRegister = async (data) => {
-    const { token, user } = await register(data); // TODO : Set the user with useContext!
+    const { token, user } = await register(data);
 
     login({ token, user });
 

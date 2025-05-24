@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/form';
 import PasswordField from '@/components/ui/PasswordField';
 
-export function RegisterForm({ onSubmit, isLoading = false }) {
+const RegisterForm = ({ onSubmit, isLoading = false }) => {
   const [error, setError] = useState(null);
 
   const form = useForm({
@@ -104,7 +104,11 @@ export function RegisterForm({ onSubmit, isLoading = false }) {
                 <FormItem>
                   <FormLabel>Role</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value} disabled={loading}>
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) => field.onChange(value)}
+                      disabled={loading}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select your role" />
                       </SelectTrigger>
@@ -168,4 +172,6 @@ export function RegisterForm({ onSubmit, isLoading = false }) {
       </Form>
     </Card>
   );
-}
+};
+
+export default RegisterForm;

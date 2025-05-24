@@ -1,5 +1,5 @@
 import LoginForm from '@/components/forms/LoginForm';
-import { login as loginApi } from '@/services/authService';
+import { login as loginService } from '@/services/authService';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -10,7 +10,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (data) => {
-    const { token, user } = await loginApi(data);
+    const { token, user } = await loginService(data);
 
     login({ token, user });
 

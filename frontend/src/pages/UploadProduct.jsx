@@ -22,10 +22,13 @@ import { toast } from 'sonner';
 import { formSchema } from '@/lib/validations';
 import { createListing } from '@/services/listingService';
 import { createProduct, updateProduct } from '@/services/productService';
+import { useAuth } from '@/context/AuthContext';
 
 const UploadProduct = () => {
   const [activeTab, setActiveTab] = useState('now');
   const [images, setImages] = useState([]);
+
+  const { user } = useAuth();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -57,9 +60,8 @@ const UploadProduct = () => {
 
   const onSubmit = async (data) => {
     try {
-      const fakeUserId = '682c6aa24d11b67f3842ee33'; // TODO: get from auth context
       const productFormData = new FormData();
-      productFormData.append('ownerId', fakeUserId); // TODO: get from auth context
+      productFormData.append('ownerId', user._id);
       productFormData.append('name', data.name);
       productFormData.append('description', data.description || '');
       productFormData.append('category', data.category);
@@ -75,7 +77,7 @@ const UploadProduct = () => {
 
       const listingData = {
         productId: savedProduct._id,
-        sellerId: fakeUserId, // TODO: get from auth context
+        sellerId: user._id,
         saleType: activeTab,
         price: activeTab === 'now' ? Number(data.listing.price) : undefined,
         startingBid: activeTab === 'auction' ? data.listing.startingBid : undefined,
