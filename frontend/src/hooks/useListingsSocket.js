@@ -1,6 +1,3 @@
-// Custom hook to manage socket connections for live updates of multiple listings.
-// Joins/leaves rooms based on current listings and updates state on new bids.
-
 import { useEffect } from 'react';
 import {
   emitJoinListing,
@@ -10,6 +7,7 @@ import {
 } from '@/lib/socketEvents';
 
 const useListingsSocket = (listings, setListings) => {
+  // Join/leave rooms when listings change
   useEffect(() => {
     if (!listings.length) return;
 
@@ -21,10 +19,10 @@ const useListingsSocket = (listings, setListings) => {
       listings.forEach((listing) => {
         emitLeaveListing(listing._id);
       });
-      removeSocketListeners();
     };
   }, [listings]);
 
+  // Listen for new bids (once, when mounted)
   useEffect(() => {
     const handleNewBid = ({ listingId, bid }) => {
       setListings((prevListings) =>
@@ -43,7 +41,9 @@ const useListingsSocket = (listings, setListings) => {
     };
 
     listenToNewBid(handleNewBid);
+
     return () => {
+      // Only remove the listeners here
       removeSocketListeners();
     };
   }, [setListings]);

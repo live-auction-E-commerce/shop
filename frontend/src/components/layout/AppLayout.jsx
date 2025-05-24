@@ -9,7 +9,7 @@ const AppLayout = () => {
       <Header />
       <main className="flex-grow">
         <Outlet />
-        <Toaster />
+        <Toaster richColors />
       </main>
       <Footer />
     </div>
