@@ -1,9 +1,14 @@
 import { RegisterForm } from '@/components/forms/RegisterForm';
+import { register } from '@/services/authService';
+import { toast } from 'sonner';
+
 const Register = () => {
   const handleRegister = async (data) => {
-    // TODO: Implement your registration logic here
-    // Example: call your API endpoint
     console.log('Register data:', data);
+    const { token, _user } = await register(data); // TODO : Set the user with useContext!
+
+    localStorage.setItem('token', token);
+    toast.success('Registration successful!');
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

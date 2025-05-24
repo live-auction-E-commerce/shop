@@ -134,7 +134,6 @@ export function RegisterForm({ onSubmit, isLoading = false }) {
                       disabled={loading}
                     />
                   </FormControl>
-                  <FormMessage>{fieldState.error?.message}</FormMessage>
                 </FormItem>
               )}
             />
@@ -154,7 +153,6 @@ export function RegisterForm({ onSubmit, isLoading = false }) {
                       disabled={loading}
                     />
                   </FormControl>
-                  <FormMessage>{fieldState.error?.message}</FormMessage>
                 </FormItem>
               )}
             />

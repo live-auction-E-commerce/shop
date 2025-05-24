@@ -3,17 +3,15 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff } from 'lucide-react';
 
-const PasswordField = ({ id, placeholder, error, disabled, register }) => {
+const PasswordField = ({ error, disabled, ...props }) => {
   const [show, setShow] = useState(false);
 
   return (
     <div className="space-y-2">
       <div className="relative">
         <Input
-          id={id}
+          {...props} // contains ref, name, onChange, value, etc.
           type={show ? 'text' : 'password'}
-          placeholder={placeholder}
-          {...register}
           disabled={disabled}
         />
         <Button
