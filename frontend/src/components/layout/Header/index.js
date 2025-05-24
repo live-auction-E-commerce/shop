@@ -4,3 +4,4 @@ export { default as CategoriesMenu } from './CategoriesMenu';
 export { default as SearchBar } from './SearchBar';
 export { default as AuthSection } from './AuthSection';
 export { default as ListItem } from './ListItem';
+export { default as ProfileDropdown } from './ProfileDropdown';
