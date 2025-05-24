@@ -7,7 +7,7 @@ export const fetchAPI = async (url, options) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(`HTTP Error, status: ${response.status}, ${data?.error || 'Unknown error'}`);
+    throw new Error(`${data?.error || 'Unknown error'}`);
   }
 
   return data;

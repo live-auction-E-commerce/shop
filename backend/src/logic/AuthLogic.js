@@ -3,7 +3,7 @@ import { hashPassword, getNewToken } from '../lib/vault.js';
 import bcrypt from 'bcryptjs';
 
 export const register = async (data) => {
-  const { email, password } = data;
+  const { email, password, role } = data;
 
   if (!email) throw new Error('Email is required');
   if (!password) throw new Error('Password is required');
@@ -16,7 +16,7 @@ export const register = async (data) => {
   const newUser = await User.create({
     email,
     password: hashedPassword,
-    role: 'User',
+    role: role,
   });
 
   const token = getNewToken({

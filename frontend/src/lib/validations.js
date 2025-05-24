@@ -31,3 +31,32 @@ export const buyNowFormSchema = productSchema.extend({
 });
 
 export const formSchema = z.discriminatedUnion('saleType', [auctionFormSchema, buyNowFormSchema]);
+
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address')
+    .toLowerCase()
+    .trim(),
+  password: z.string().min(6, 'Password must be at least 6 characters long'),
+});
+
+export const registerSchema = z
+  .object({
+    email: z
+      .string()
+      .min(1, 'Email is required')
+      .email('Please enter a valid email address')
+      .toLowerCase()
+      .trim(),
+    password: z.string().min(6, 'Password must be at least 6 characters long'),
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
+    role: z.enum(['User', 'Seller'], {
+      required_error: 'Please select a role',
+    }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });

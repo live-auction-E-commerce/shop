@@ -5,6 +5,8 @@ import { getListingById } from '@/services/listingService';
 import { placeBid } from '@/services/bidService';
 import { emitNewBid } from '@/lib/socketEvents';
 import useSingleListingSocket from '@/hooks/useSingleListingSocket';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'sonner';
 
 const ListingPage = () => {
   const { id } = useParams();
@@ -12,6 +14,8 @@ const ListingPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [bid, setBid] = useState(null);
+
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
     async function fetchListing() {
@@ -31,13 +35,16 @@ const ListingPage = () => {
   useSingleListingSocket(listing, setListing);
 
   const handleBidClick = async (bidAmount) => {
+    if (!isAuthenticated) {
+      toast.error('You must be logged in to place a bid!');
+      return;
+    }
     try {
-      const fakeUserId = '682c6aa24d11b67f3842ee33'; // TODO: Send the current user ID which do this from context
       const fakePaymentIntentId = '664b4914c1234567890abce0'; // TODO: Create PaymentIntent with Stripe
 
       const newBid = await placeBid({
         listingId: id,
-        userId: fakeUserId,
+        userId: user._id,
         paymentIntentId: fakePaymentIntentId,
         amount: bidAmount,
       });
