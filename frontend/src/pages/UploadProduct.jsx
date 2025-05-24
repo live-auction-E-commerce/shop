@@ -95,43 +95,6 @@ const UploadProduct = () => {
         variant: 'destructive',
       });
     }
-
-    // try {
-    //   const formData = new FormData();
-    //   formData.append('saleType', data.saleType);
-    //   formData.append('name', data.name);
-    //   formData.append('description', data.description);
-    //   formData.append('category', data.category);
-    //   formData.append('brand', data.brand);
-    //   formData.append('condition', data.condition);
-    //   formData.append('size', data.size);
-    //   if (data.saleType === 'now') {
-    //     formData.append('price', data.listing.price.toString());
-    //   } else {
-    //     formData.append('startingBid', data.listing.startingBid.toString());
-    //     formData.append('expiredAt', new Date(data.listing.expiredAt).toISOString());
-    //   }
-    //   images.forEach((file) => {
-    //     formData.append('images', file); // multiple files
-    //   });
-    //   const response = await fetch('/api/products', {
-    //     method: 'POST',
-    //     body: formData,
-    //   });
-    //   if (!response.ok) throw new Error('Failed to submit');
-    //   toast(
-    //     `Your ${data.saleType === 'auction' ? 'auction' : 'buy now'} listing has been created.`
-    //   );
-    //   form.reset();
-    //   setImages([]);
-    // } catch (error) {
-    //   console.error(error);
-    //   toast({
-    //     title: 'Error',
-    //     description: 'There was an error creating your listing. Please try again.',
-    //     variant: 'destructive',
-    //   });
-    // }
   };
 
   return (
