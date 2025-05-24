@@ -73,9 +73,6 @@ const UploadProduct = () => {
 
       const savedProduct = await createProduct(productFormData);
 
-      console.log('Saved product response:', savedProduct);
-      console.log('Saved product ID:', savedProduct._id);
-
       const listingData = {
         productId: savedProduct._id,
         sellerId: fakeUserId, // TODO: get from auth context
@@ -85,7 +82,6 @@ const UploadProduct = () => {
         expiredAt: activeTab === 'auction' ? data.listing.expiredAt : undefined,
       };
 
-      console.log('Listing data sent:', listingData);
       const savedListing = await createListing(listingData);
 
       await updateProduct(savedProduct._id, { listing: savedListing._id });
