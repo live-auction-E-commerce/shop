@@ -56,17 +56,22 @@ export const getAllCategoryProducts = async (category) => {
   return products;
 };
 
-/* TODO: see if theres a better way of only passing the updated fields instead of the whole 
-object again but then we need to make some conditionally validations*/
 /*
   Currently no specific behavior on updating images even tho we will need it
   We need to handle the case where the data being sent are files
 */
 export const updateProduct = async (productId, updateData) => {
   validateObjectId(productId);
-  validateEnum(updateData.category, CategoryEnum, 'category');
-  validateEnum(updateData.condition, ConditionEnum, 'condition');
-  validateImages(updateData.images);
+
+  if (updateData.category !== undefined) {
+    validateEnum(updateData.category, CategoryEnum, 'category');
+  }
+  if (updateData.condition !== undefined) {
+    validateEnum(updateData.condition, ConditionEnum, 'condition');
+  }
+  if (updateData.images !== undefined) {
+    validateImages(updateData.images);
+  }
 
   const updatedProduct = await Product.findByIdAndUpdate(
     productId,

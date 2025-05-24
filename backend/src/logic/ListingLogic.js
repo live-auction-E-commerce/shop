@@ -26,17 +26,16 @@ export const createListing = async (body) => {
       throw new Error('Expiration date is required for an auction listing');
     }
   }
-
   const newListing = new Listing({
-    productId,
-    sellerId,
-    saleType,
+    productId: productId,
+    sellerId: sellerId,
+    saleType: saleType,
     price: saleType === 'now' ? price : null,
     startingBid: saleType === 'auction' ? startingBid : null,
     expiredAt: saleType === 'auction' ? expiredAt : null,
   });
 
-  const savedListing = newListing.save();
+  const savedListing = await newListing.save();
   return savedListing;
 };
 

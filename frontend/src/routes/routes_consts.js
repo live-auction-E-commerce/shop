@@ -9,6 +9,7 @@ export const ROUTES = {
   CATEGORY_BAGS: '/categories/bags',
   LIVE: '/live',
   BUY_NOW: '/buy-now',
-  LISTING_PAGE: `listings/:id`,
+  LISTING_PAGE: `/listings/:id`,
+  NEW_PRODUCT: `/new-product`,
   NOT_FOUND: '*',
 };

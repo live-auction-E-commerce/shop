@@ -12,7 +12,7 @@ export const createProduct = async (req, res) => {
       listing,
       ownerId,
     } = req.body;
-    const images = req.files.map((file) => `/Images/${file.filename}`);
+    const images = req.files.map((file) => file.filename);
     const productData = {
       category,
       condition,
