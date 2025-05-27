@@ -28,7 +28,7 @@ const UploadProduct = () => {
   const [activeTab, setActiveTab] = useState('now');
   const [images, setImages] = useState([]);
 
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -73,7 +73,7 @@ const UploadProduct = () => {
         productFormData.append('images', file);
       });
 
-      const savedProduct = await createProduct(productFormData);
+      const savedProduct = await createProduct(productFormData, token);
 
       const listingData = {
         productId: savedProduct._id,
@@ -84,7 +84,11 @@ const UploadProduct = () => {
         expiredAt: activeTab === 'auction' ? data.listing.expiredAt : undefined,
       };
 
-      const savedListing = await createListing(listingData);
+      console.log('savedProduct:', savedProduct);
+      console.log('user:', user);
+      console.log('token:', token);
+      console.log('listingData:', listingData);
+      const savedListing = await createListing(listingData, token);
 
       await updateProduct(savedProduct._id, { listing: savedListing._id });
       toast.success(`Your listing has been created!`);

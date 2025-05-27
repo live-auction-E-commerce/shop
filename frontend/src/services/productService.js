@@ -5,9 +5,12 @@ export const getProductById = async (id) => {
 };
 
 // Backend expect FormData object here, do not JSON this body!
-export const createProduct = async (data) => {
+export const createProduct = async (data, token) => {
   return await fetchAPI('/api/products', {
     method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     body: data,
   });
 };
