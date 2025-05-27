@@ -8,13 +8,16 @@ export const getListingById = async (id) => {
   return await fetchAPI(`/api/listings/${id}`);
 };
 
-export const createListing = async (data, token) => {
-  return await fetchAPI('/api/listings', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+export const createListing = async (data) => {
+  return await fetchAPI(
+    '/api/listings',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
     },
-    body: JSON.stringify(data),
-  });
+    { requireAuth: true }
+  );
 };

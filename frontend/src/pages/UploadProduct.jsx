@@ -28,7 +28,7 @@ const UploadProduct = () => {
   const [activeTab, setActiveTab] = useState('now');
   const [images, setImages] = useState([]);
 
-  const { user, token } = useAuth();
+  const { user } = useAuth();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -73,7 +73,9 @@ const UploadProduct = () => {
         productFormData.append('images', file);
       });
 
-      const savedProduct = await createProduct(productFormData, token);
+      const savedProduct = await createProduct(productFormData);
+
+      console.log('savedProduct:', savedProduct);
 
       const listingData = {
         productId: savedProduct._id,
@@ -84,11 +86,7 @@ const UploadProduct = () => {
         expiredAt: activeTab === 'auction' ? data.listing.expiredAt : undefined,
       };
 
-      console.log('savedProduct:', savedProduct);
-      console.log('user:', user);
-      console.log('token:', token);
-      console.log('listingData:', listingData);
-      const savedListing = await createListing(listingData, token);
+      const savedListing = await createListing(listingData);
 
       await updateProduct(savedProduct._id, { listing: savedListing._id });
       toast.success(`Your listing has been created!`);
@@ -96,7 +94,7 @@ const UploadProduct = () => {
       form.reset();
       setImages([]);
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
       toast('There was an error creating your listing. Please try again.', {
         variant: 'destructive',
       });
