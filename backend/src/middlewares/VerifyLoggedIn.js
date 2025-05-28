@@ -1,5 +1,4 @@
-import jwt from 'jsonwebtoken';
-import config from '../../config.js';
+import { getPayload } from '../lib/vault.js';
 
 const verifyLoggedIn = async (req, res, next) => {
   try {
@@ -8,10 +7,7 @@ const verifyLoggedIn = async (req, res, next) => {
       return res.status(401).json({ message: 'Missing or invalid token' });
     }
     const token = authHeader.replace('Bearer ', '');
-
-    // Move this to vault.js
-    const payload = jwt.verify(token, config.SECRET_KEY);
-    req.user = payload;
+    req.user = getPayload(token).user;
     next();
   } catch (err) {
     console.error('Token verification failed:', err.message);
