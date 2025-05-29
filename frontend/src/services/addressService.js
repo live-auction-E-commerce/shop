@@ -22,7 +22,6 @@ export const updateAddress = async (id, data) => {
   return await fetchAPI(
     `/api/addresses/${id}`,
     {
-      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },

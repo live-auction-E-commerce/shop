@@ -60,3 +60,13 @@ export const registerSchema = z
     message: "Passwords don't match",
     path: ['confirmPassword'],
   });
+
+export const addressSchema = z.object({
+  userId: z.string().min(1, 'userId is required'),
+  description: z.string().min(1, 'description is required').toLowerCase(),
+  street: z.string().min(1, 'Street is required'),
+  number: z.number({ required_error: 'number is required' }),
+  city: z.string().min(1, 'city is required'),
+  country: z.string().min(1, 'Country is required'),
+  isDefault: z.boolean().optional(),
+});
