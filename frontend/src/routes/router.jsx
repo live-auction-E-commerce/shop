@@ -26,6 +26,7 @@ const router = createBrowserRouter([
       { path: ROUTES.LIVE, element: <LiveAuctions /> },
       { path: ROUTES.ADDRESSES, element: <AddressesPage /> },
       { path: ROUTES.NEW_ADDRESS, element: <NewAddress /> },
+      { path: ROUTES.EDIT_ADDRESS, element: <NewAddress /> },
       { path: ROUTES.BUY_NOW, element: <BuyNowPage /> },
       { path: ROUTES.LISTING_PAGE, element: <ListingPage /> },
       { path: ROUTES.NEW_PRODUCT, element: <UploadProductPage /> },
