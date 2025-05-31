@@ -9,11 +9,15 @@ export const getListingById = async (id) => {
 };
 
 export const createListing = async (data) => {
-  return await fetchAPI('/api/listings', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  return await fetchAPI(
+    '/api/listings',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
     },
-    body: JSON.stringify(data),
-  });
+    { requireAuth: true }
+  );
 };
