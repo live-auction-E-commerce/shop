@@ -13,7 +13,7 @@ export const hashPassword = async (password) => {
 
 export const getNewToken = (user) => {
   const payload = { user };
-  const token = jwt.sign(payload, config.SECRET_KEY, {
+  const token = jwt.sign(payload, config.JWT_SECRET_KEY, {
     expiresIn: config.JWT_EXPIRES_IN,
   });
   return token;
