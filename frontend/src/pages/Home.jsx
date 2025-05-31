@@ -6,12 +6,15 @@ import useListingsSocket from '@/hooks/useListingsSocket';
 import BidModal from '@/components/modals/BidModal';
 import PaymentModal from '@/components/modals/PaymentModal';
 import usePaymentHandler from '@/hooks/usePaymentHandler';
+import { toast } from 'sonner';
+import { useAuth } from '@/context/AuthContext';
 
 const Home = () => {
   const { listings, isLoading } = useListings();
   const [localListings, setLocalListings] = useState([]);
   const [selectedListing, setSelectedListing] = useState(null);
   const [isBidModalOpen, setIsBidModalOpen] = useState(false);
+  const { user } = useAuth();
 
   const {
     openPaymentModal,
@@ -31,6 +34,10 @@ const Home = () => {
   useListingsSocket(localListings, setLocalListings);
 
   const handleBidClick = (listingId) => {
+    if (!user?._id) {
+      toast.error('You must be logged in to place a bid!');
+      return;
+    }
     const listing = localListings.find((l) => l._id === listingId);
     if (listing) {
       setSelectedListing(listing);

@@ -6,6 +6,7 @@ import useSingleListingSocket from '@/hooks/useSingleListingSocket';
 import { toast } from 'sonner';
 import PaymentModal from '@/components/modals/PaymentModal';
 import usePaymentHandler from '@/hooks/usePaymentHandler';
+import { useAuth } from '@/context/AuthContext';
 
 const ListingPage = () => {
   const { id } = useParams();
@@ -13,6 +14,7 @@ const ListingPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [bid, setBid] = useState(null);
+  const { user } = useAuth();
 
   const {
     openPaymentModal,
@@ -40,6 +42,10 @@ const ListingPage = () => {
   useSingleListingSocket(listing, setListing);
 
   const handleBidClick = (bidAmount) => {
+    if (!user?._id) {
+      toast.error('You must be logged in to place a bid!');
+      return;
+    }
     if (bidAmount <= listing.currentBid.amount) {
       toast.error('Bid must be greater than current bid');
       return;
@@ -61,8 +67,6 @@ const ListingPage = () => {
       },
     });
   };
-
-  
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
