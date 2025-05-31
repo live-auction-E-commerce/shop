@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ListingCarrousel from '@/components/listing/ListingCarrousel';
 import useListings from '@/hooks/useListings';
 import HeroSection from '@/components/ui/hero-section';

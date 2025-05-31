@@ -37,7 +37,10 @@ const PaymentForm = ({ amount, currency = 'usd', onClose, onSuccess, paymentInte
 
       if (result.error) {
         setError(result.error.message);
-      } else if (result.paymentIntent?.status === 'succeeded') {
+      } else if (
+        result.paymentIntent?.status === 'succeeded' ||
+        result.paymentIntent?.status === 'requires_capture'
+      ) {
         onSuccess?.(paymentIntentId);
         onClose?.();
       }

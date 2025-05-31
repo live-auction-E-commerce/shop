@@ -8,6 +8,8 @@ export const createPaymentIntent = async ({ amount, bidId, userId }) => {
   const paymentIntent = await stripe.paymentIntents.create({
     amount: amount * 100,
     currency: 'usd',
+    capture_method: 'manual',
+    payment_method_types: ['card'],
     metadata: { bidId, userId },
   });
 

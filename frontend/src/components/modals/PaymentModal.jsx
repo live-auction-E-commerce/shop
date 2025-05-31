@@ -32,7 +32,7 @@ const PaymentModal = ({
       if (isOpen && user?._id) {
         setLoading(true);
         try {
-          const response = await createPaymentIntent(amount * 100, null, user._id);
+          const response = await createPaymentIntent(amount, user._id);
           setClientSecret(response.client_secret);
           setIntentId(response.newIntent._id);
         } catch (err) {
