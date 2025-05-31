@@ -8,7 +8,7 @@ if (!config.API_BASE_URL) {
     "VITE_API_BASE_URL wasn`t defined in .env file and its required, should be something like 'http://localhost:5000'"
   );
 }
-if (!config.VITE_STRIPE_PUBLISHABLE_KEY) {
+if (!config.STRIPE_PUBLISHABLE_KEY) {
   console.warn(
     'VITE_STRIPE_PUBLISHABLE_KEY wasn`t defined in .env file and its required, check https://dashboard.stripe.com/test/apikeys '
   );

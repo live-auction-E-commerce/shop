@@ -13,6 +13,7 @@ const ListingCarrousel = ({
   className = '',
   viewAllHref = '#',
   isLoading = false,
+  isPaused = false,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
@@ -38,14 +39,14 @@ const ListingCarrousel = ({
   };
 
   useEffect(() => {
-    if (isHovering || listingsLength <= cardsToShow) return;
+    if (isHovering || listingsLength <= cardsToShow || isPaused) return;
 
     const interval = setInterval(() => {
       nextSlide();
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isHovering, listingsLength, cardsToShow]);
+  }, [isHovering, listingsLength, cardsToShow, isPaused]);
 
   const showControls = listingsLength > cardsToShow;
 

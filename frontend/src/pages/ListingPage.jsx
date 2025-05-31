@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
 import { getListingById } from '@/services/listingService';
-import { placeBid } from '@/services/bidService';
-import { emitNewBid } from '@/lib/socketEvents';
 import useSingleListingSocket from '@/hooks/useSingleListingSocket';
-import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import PaymentModal from '@/components/modals/PaymentModal';
+import usePaymentHandler from '@/hooks/usePaymentHandler';
 
 const ListingPage = () => {
   const { id } = useParams();
@@ -15,10 +13,14 @@ const ListingPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [bid, setBid] = useState(null);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [pendingBidAmount, setPendingBidAmount] = useState(null);
 
-  const { user, isAuthenticated } = useAuth();
+  const {
+    openPaymentModal,
+    handlePaymentSuccess,
+    handlePaymentCancel,
+    isPaymentModalOpen,
+    pendingBidAmount,
+  } = usePaymentHandler();
 
   useEffect(() => {
     async function fetchListing() {
@@ -37,52 +39,30 @@ const ListingPage = () => {
 
   useSingleListingSocket(listing, setListing);
 
-  const openPaymentModal = (bidAmount) => {
-    if (!isAuthenticated) {
-      toast.error('You must be logged in to place a bid!');
-      return;
-    }
+  const handleBidClick = (bidAmount) => {
     if (bidAmount <= listing.currentBid.amount) {
-      toast.error('Bid amount must be greater than the current bid');
+      toast.error('Bid must be greater than current bid');
       return;
     }
-    setPendingBidAmount(bidAmount);
-    setIsPaymentModalOpen(true);
+
+    openPaymentModal({
+      listingId: id,
+      amount: bidAmount,
+      onSuccess: (newBid) => {
+        setBid(newBid);
+        setListing((prev) => ({
+          ...prev,
+          currentBid: {
+            _id: newBid._id,
+            amount: newBid.amount,
+            userId: newBid.userId,
+          },
+        }));
+      },
+    });
   };
 
-  // This function will be called from inside PaymentForm after successful payment
-  const handlePaymentSuccess = async (paymentIntentId) => {
-    try {
-      const newBid = await placeBid({
-        listingId: id,
-        userId: user._id,
-        paymentIntentId,
-        amount: pendingBidAmount,
-      });
-
-      setBid(newBid);
-      emitNewBid(id, newBid);
-      setListing((prev) => ({
-        ...prev,
-        currentBid: {
-          _id: newBid._id,
-          amount: newBid.amount,
-          userId: newBid.userId,
-        },
-      }));
-      toast.success('Bid placed successfully!');
-      setIsPaymentModalOpen(false);
-      setPendingBidAmount(null);
-    } catch (err) {
-      console.error('Failed to place bid:', err);
-      toast.error(err.message || 'Bid failed.');
-    }
-  };
-
-  const handlePaymentCancel = () => {
-    setIsPaymentModalOpen(false);
-    setPendingBidAmount(null);
-  };
+  
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -90,7 +70,7 @@ const ListingPage = () => {
 
   return (
     <>
-      <ProductDetails listing={listing} bid={bid} onBidClick={openPaymentModal} />
+      <ProductDetails listing={listing} bid={bid} onBidClick={handleBidClick} />
 
       <PaymentModal
         isOpen={isPaymentModalOpen}
