@@ -9,6 +9,9 @@ import { useStripeContext } from '@/context/StripeContext';
 import { CreditCard } from 'lucide-react';
 import { Elements } from '@stripe/react-stripe-js';
 import PaymentForm from '@/components/forms/PaymentForm';
+import { useEffect, useState } from 'react';
+import { createPaymentIntent } from '@/services/paymentService';
+import { useAuth } from '@/context/AuthContext';
 
 const PaymentModal = ({
   isOpen,
@@ -19,6 +22,30 @@ const PaymentModal = ({
   onSuccess,
 }) => {
   const { stripePromise } = useStripeContext();
+  const { user } = useAuth();
+  const [clientSecret, setClientSecret] = useState(null);
+  const [intentId, setIntentId] = useState(null);
+  const [_loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const initializePayment = async () => {
+      if (isOpen && user?._id) {
+        setLoading(true);
+        try {
+          const response = await createPaymentIntent(amount * 100, null, user._id);
+          setClientSecret(response.client_secret);
+          setIntentId(response.newIntent._id);
+        } catch (err) {
+          console.error('Error creating payment intent:', err);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    initializePayment();
+  }, [isOpen, amount, user]);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
@@ -32,14 +59,25 @@ const PaymentModal = ({
           </DialogDescription>
         </DialogHeader>
 
-        <Elements stripe={stripePromise}>
-          <PaymentForm
-            amount={amount}
-            currency={currency}
-            onClose={onClose}
-            onSuccess={onSuccess}
-          />
-        </Elements>
+        {clientSecret && stripePromise ? (
+          <Elements
+            stripe={stripePromise}
+            options={{
+              clientSecret,
+              appearance: { theme: 'stripe' },
+            }}
+          >
+            <PaymentForm
+              amount={amount}
+              currency={currency}
+              onClose={onClose}
+              onSuccess={onSuccess}
+              paymentIntentId={intentId}
+            />
+          </Elements>
+        ) : (
+          <div className="text-center py-6 text-muted-foreground">Loading payment form...</div>
+        )}
       </DialogContent>
     </Dialog>
   );

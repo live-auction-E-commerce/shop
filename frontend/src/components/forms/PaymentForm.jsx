@@ -1,51 +1,48 @@
 import React, { useState } from 'react';
-import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
+import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { CreditCard, Lock, Loader2 } from 'lucide-react';
-import { createPaymentIntent } from '@/services/paymentService';
+import { Lock, Loader2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
-function PaymentForm({ amount, currency = 'usd', onClose, onSuccess }) {
+const PaymentForm = ({ amount, currency = 'usd', onClose, onSuccess, paymentIntentId }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [name, setName] = useState('');
   const { user } = useAuth();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!stripe || !elements) return;
 
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await createPaymentIntent(amount * 100, null, user?._id);
-      console.log(response);
-
-      const { newIntent, client_secret } = response;
-      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(client_secret, {
-        payment_method: {
-          card: elements.getElement(CardElement),
-          billing_details: { name, email: user?.email },
+      const result = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: window.location.href,
+          payment_method_data: {
+            billing_details: {
+              email: user?.email,
+            },
+          },
         },
+        redirect: 'if_required',
       });
 
-      if (stripeError) {
-        setError(stripeError.message || 'An error occurred during payment');
-      } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-        if (onSuccess) {
-          onSuccess(newIntent._id);
-        }
-        onClose();
+      if (result.error) {
+        setError(result.error.message);
+      } else if (result.paymentIntent?.status === 'succeeded') {
+        onSuccess?.(paymentIntentId);
+        onClose?.();
       }
     } catch (err) {
-      setError(err.message || 'Payment failed. Please try again.');
+      setError(err.message || 'Something went wrong');
     } finally {
       setIsLoading(false);
     }
@@ -55,31 +52,13 @@ function PaymentForm({ amount, currency = 'usd', onClose, onSuccess }) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          value={user?.email || ''}
-          readOnly
-          className="disabled opacity-70"
-        />
+        <Input id="email" type="email" value={user?.email || ''} readOnly className="opacity-70" />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="name">Full Name</Label>
-        <Input
-          id="name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="John Doe"
-          required
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label>Card Information</Label>
-        <div className="border rounded-md p-3 bg-background">
-          <CardElement options={{ style: { base: { fontSize: '16px' } } }} />
+        <Label>Payment Information</Label>
+        <div className="border rounded-md p-4 bg-background">
+          <PaymentElement />
         </div>
       </div>
 
@@ -104,14 +83,11 @@ function PaymentForm({ amount, currency = 'usd', onClose, onSuccess }) {
             Processing...
           </>
         ) : (
-          <>
-            <CreditCard className="mr-2 h-4 w-4" />
-            Pay ${amount.toFixed(2)}
-          </>
+          <>Pay ${amount.toFixed(2)}</>
         )}
       </Button>
     </form>
   );
-}
+};
 
 export default PaymentForm;
