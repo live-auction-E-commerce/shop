@@ -1,15 +1,35 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
 import { toast } from 'sonner';
 import { placeBid } from '@/services/bidService';
 import { emitNewBid } from '@/lib/socketEvents';
 import { useAuth } from '@/context/AuthContext';
 
-const usePaymentHandler = () => {
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [pendingBidAmount, setPendingBidAmount] = useState(null);
-  const [activeListingId, setActiveListingId] = useState(null);
-  const [onSuccessCallback, setOnSuccessCallback] = useState(null);
+const initialState = {
+  isPaymentModalOpen: false,
+  pendingBidAmount: null,
+  activeListingId: null,
+  onSuccessCallback: null,
+};
 
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'OPEN_MODAL':
+      return {
+        ...state,
+        isPaymentModalOpen: true,
+        activeListingId: action.payload.listingId,
+        pendingBidAmount: action.payload.amount,
+        onSuccessCallback: action.payload.onSuccess,
+      };
+    case 'CLOSE_MODAL':
+      return initialState;
+    default:
+      return state;
+  }
+};
+
+const usePaymentHandler = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
   const { user, isAuthenticated } = useAuth();
 
   const openPaymentModal = ({ listingId, amount, onSuccess }) => {
@@ -17,29 +37,24 @@ const usePaymentHandler = () => {
       toast.error('You must be logged in to place a bid!');
       return;
     }
-    setActiveListingId(listingId);
-    setPendingBidAmount(amount);
-    setOnSuccessCallback(() => onSuccess);
-    setIsPaymentModalOpen(true);
+    dispatch({ type: 'OPEN_MODAL', payload: { listingId, amount, onSuccess } });
   };
 
   const handlePaymentSuccess = async (paymentIntentId) => {
     try {
       const newBid = await placeBid({
-        listingId: activeListingId,
+        listingId: state.activeListingId,
         userId: user._id,
         paymentIntentId,
-        amount: pendingBidAmount,
+        amount: state.pendingBidAmount,
       });
 
-      emitNewBid(activeListingId, newBid);
+      emitNewBid(state.activeListingId, newBid);
 
-      if (onSuccessCallback) onSuccessCallback(newBid);
+      if (state.onSuccessCallback) state.onSuccessCallback(newBid);
 
       toast.success('Bid placed successfully!');
-      setIsPaymentModalOpen(false);
-      setPendingBidAmount(null);
-      setActiveListingId(null);
+      dispatch({ type: 'CLOSE_MODAL' });
     } catch (err) {
       console.error('Failed to place bid:', err);
       toast.error(err.message || 'Bid failed.');
@@ -47,18 +62,14 @@ const usePaymentHandler = () => {
   };
 
   const handlePaymentCancel = () => {
-    setIsPaymentModalOpen(false);
-    setPendingBidAmount(null);
-    setActiveListingId(null);
+    dispatch({ type: 'CLOSE_MODAL' });
   };
 
   return {
     openPaymentModal,
     handlePaymentSuccess,
     handlePaymentCancel,
-    isPaymentModalOpen,
-    pendingBidAmount,
-    activeListingId,
+    ...state,
   };
 };
 
