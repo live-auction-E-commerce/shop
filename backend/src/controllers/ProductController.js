@@ -1,4 +1,5 @@
 import * as ProductLogic from '../logic/ProductLogic.js';
+import { StatusCodes } from 'http-status-codes';
 
 export const createProduct = async (req, res) => {
   try {
@@ -25,27 +26,29 @@ export const createProduct = async (req, res) => {
       images,
     };
     const product = await ProductLogic.createProduct(productData);
-    res.status(201).json(product);
+    res.status(StatusCodes.CREATED).json(product);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
   }
 };
 
 export const getProductById = async (req, res) => {
   try {
     const product = await ProductLogic.getProductById(req.params.id);
-    res.status(201).json(product);
+    res.status(StatusCodes.OK).json(product);
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    res.status(StatusCodes.NOT_FOUND).json({ error: error.message });
   }
 };
 
 export const getAllProducts = async (_req, res) => {
   try {
     const products = await ProductLogic.getAllProducts();
-    res.status(200).json(products);
+    res.status(StatusCodes.OK).json(products);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
   }
 };
 
@@ -54,9 +57,9 @@ export const getAllCategoryProducts = async (req, res) => {
     const products = await ProductLogic.getAllCategoryProducts(
       req.params.category,
     );
-    res.status(200).json(products);
+    res.status(StatusCodes.OK).json(products);
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    res.status(StatusCodes.NOT_FOUND).json({ error: error.message });
   }
 };
 
@@ -66,8 +69,8 @@ export const updateProduct = async (req, res) => {
       req.params.id,
       req.body,
     );
-    res.status(200).json(updatedProduct);
+    res.status(StatusCodes.OK).json(updatedProduct);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
   }
 };
