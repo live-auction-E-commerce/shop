@@ -75,6 +75,8 @@ const UploadProduct = () => {
 
       const savedProduct = await createProduct(productFormData);
 
+      console.log('savedProduct:', savedProduct);
+
       const listingData = {
         productId: savedProduct._id,
         sellerId: user._id,
@@ -92,7 +94,7 @@ const UploadProduct = () => {
       form.reset();
       setImages([]);
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
       toast('There was an error creating your listing. Please try again.', {
         variant: 'destructive',
       });

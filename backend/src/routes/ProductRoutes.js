@@ -1,7 +1,7 @@
 import express from 'express';
 import * as ProductController from '../controllers/ProductController.js';
-//import { upload } from '../lib/image.js';
 import upload from '../middlewares/S3Upload.js';
+import verifyLoggedIn from '../middlewares/VerifyLoggedIn.js';
 
 const router = express.Router();
 
@@ -17,5 +17,17 @@ router.get(
   ProductController.getAllCategoryProducts,
 );
 router.put('/products/:id', ProductController.updateProduct);
+  verifyLoggedIn,
+  upload.array('images', 3),
+  ProductController.createProduct,
+);
+router.get('/products', verifyLoggedIn, ProductController.getAllProducts);
+router.get('/products/:id', verifyLoggedIn, ProductController.getProductById);
+router.get(
+  '/products/category/:category',
+  verifyLoggedIn,
+  ProductController.getAllCategoryProducts,
+);
+router.put('/products/:id', verifyLoggedIn, ProductController.updateProduct);
 
 export default router;

@@ -76,7 +76,7 @@ const ProfileDropdown = () => {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/upload-product" className="flex items-center">
+              <Link to="/new-product" className="flex items-center">
                 <Upload className="mr-2 h-4 w-4" />
                 Upload Product
               </Link>

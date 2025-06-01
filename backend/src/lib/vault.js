@@ -18,3 +18,7 @@ export const getNewToken = (user) => {
   });
   return token;
 };
+
+export const getPayload = (token) => {
+  return jwt.verify(token, config.SECRET_KEY);
+};
