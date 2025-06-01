@@ -45,9 +45,9 @@ const Home = () => {
     }
   };
 
+  // TODO : Handle Buy Now Logic
   const handleBuyNowClick = (listingId) => {
     console.log('Buy Now clicked for:', listingId);
-    // Trigger Buy Now payment logic here
   };
 
   const handleBidAmountConfirmed = (bidAmount) => {
