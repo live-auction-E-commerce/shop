@@ -7,6 +7,7 @@ import { Lock, Loader2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import usePaymentForm from '@/hooks/usePaymentForm';
 import { toast } from 'sonner';
+import { formatCurrency } from '@/lib/utils';
 
 const PaymentForm = ({ amount, currency = 'usd', onSuccess, onError, paymentIntentId }) => {
   const { user } = useAuth();
@@ -49,7 +50,7 @@ const PaymentForm = ({ amount, currency = 'usd', onSuccess, onError, paymentInte
           Secured by Stripe
         </div>
         <div className="font-medium">
-          Total: ${amount.toFixed(2)} {currency.toUpperCase()}
+          Total: {formatCurrency(amount, undefined, currency.toUpperCase())}
         </div>
       </div>
 
@@ -60,7 +61,7 @@ const PaymentForm = ({ amount, currency = 'usd', onSuccess, onError, paymentInte
             Processing...
           </>
         ) : (
-          <>Pay ${amount.toFixed(2)}</>
+          <>Pay {formatCurrency(amount, undefined, currency.toUpperCase())}</>
         )}
       </Button>
     </form>

@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 
 const usePaymentForm = ({ email, onSuccess, onError, paymentIntentId }) => {
+  const VALID_STATUSES = ['succeeded', 'requires_capture'];
+
   const stripe = useStripe();
   const elements = useElements();
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -32,10 +33,7 @@ const usePaymentForm = ({ email, onSuccess, onError, paymentIntentId }) => {
       if (result.error) {
         setError(result.error.message);
         onError && onError(result.error.message);
-      } else if (
-        result.paymentIntent?.status === 'succeeded' ||
-        result.paymentIntent?.status === 'requires_capture'
-      ) {
+      } else if (VALID_STATUSES.includes(result.paymentIntent.status)) {
         onSuccess && onSuccess(paymentIntentId);
       }
     } catch (err) {
