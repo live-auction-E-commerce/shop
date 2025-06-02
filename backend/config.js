@@ -8,7 +8,7 @@ const config = {
   BASE_URL:
     process.env.BASE_URL || `http://localhost:${process.env.PORT || 5001}`,
   MONGO_URI: process.env.MONGO_URI || '',
-  JWT_SECRET_KEY: process.env.JWT_SECRET_KEY || '',
+  JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '1d',
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
   AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
