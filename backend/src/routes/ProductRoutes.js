@@ -1,16 +1,16 @@
 import express from 'express';
 import * as ProductController from '../controllers/ProductController.js';
-import upload from '../middlewares/S3Upload.js';
+import { uploadToS3 } from '../middlewares/S3Upload.js';
 import verifyLoggedIn from '../middlewares/VerifyLoggedIn.js';
 
 const router = express.Router();
 
 router.post(
+  '/products',
   verifyLoggedIn,
-  upload.array('images', 3),
+  uploadToS3.array('images', 3),
   ProductController.createProduct,
 );
-
 router.get('/products', ProductController.getAllProducts);
 router.get('/products/:id', ProductController.getProductById);
 router.get(
