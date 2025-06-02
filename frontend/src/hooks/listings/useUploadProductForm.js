@@ -18,16 +18,17 @@ export const useUploadProductForm = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      saleType: 'now',
+      saleType: DEFAULT_SALE_TYPE,
       name: '',
       description: '',
       category: '',
       brand: '',
       condition: '',
       size: '',
-      listing: {
-        startingBid: 0,
-      },
+      listing:
+        DEFAULT_SALE_TYPE === 'auction'
+          ? { startingBid: 0, expiredAt: new Date(Date.now() + 60 * 60 * 1000 * 24) } // DEFAULT AUCTION EXPIRY TO 24 HOURS
+          : { price: 0 },
     },
   });
 
@@ -71,7 +72,7 @@ export const useUploadProductForm = () => {
       const savedListing = await createListing(listingData);
 
       await updateProduct(savedProduct._id, { listing: savedListing._id });
-      toast.success(`Your listing has been created!`);
+      toast.success('Your listing has been created!');
 
       form.reset();
       setImages([]);
