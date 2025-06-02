@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import ListingCarrousel from '@/components/listing/ListingCarrousel';
-import useListings from '@/hooks/useListings';
+import useListings from '@/hooks/listings/useListings';
 import HeroSection from '@/components/ui/hero-section';
-import useListingsSocket from '@/hooks/useListingsSocket';
+import useListingsSocket from '@/hooks/sockets/useListingsSocket';
 import BidModal from '@/components/modals/BidModal';
 import PaymentModal from '@/components/modals/PaymentModal';
-import usePaymentHandler from '@/hooks/usePaymentHandler';
+import usePaymentHandler from '@/hooks/payments/usePaymentHandler';
 import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
 

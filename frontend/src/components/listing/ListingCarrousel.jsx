@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useMediaQuery } from '@/hooks/useMobile';
+import { useMediaQuery } from '@/hooks/common/useMobile';
 import { Button } from '@/components/ui/button';
 import { ListingCard } from '@/components/listing/ListingCard';
 

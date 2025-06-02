@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Lock, Loader2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import usePaymentForm from '@/hooks/usePaymentForm';
+import usePaymentForm from '@/hooks/payments/usePaymentForm';
 import { toast } from 'sonner';
 import { formatCurrency } from '@/lib/utils';
 

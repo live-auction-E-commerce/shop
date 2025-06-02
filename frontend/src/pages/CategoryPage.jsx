@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { ListingGrid } from '@/components/listing/ListingGrid';
-import useListings from '@/hooks/useListings';
+import useListings from '@/hooks/listings/useListings';
 
 const CategoryPage = () => {
   const handleClick = () => {

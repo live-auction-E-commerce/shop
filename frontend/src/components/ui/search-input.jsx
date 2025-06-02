@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounce } from '@/hooks/common/useDebounce';
 import { useNavigate } from 'react-router-dom';
 
 export function SearchInput({ placeholder = 'Search...', className, searchFunction }) {

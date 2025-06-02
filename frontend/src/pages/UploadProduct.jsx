@@ -1,8 +1,3 @@
-'use client';
-
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Card,
@@ -19,86 +14,23 @@ import AuctionForm from '@/components/forms/AuctionForm';
 import BuyNowForm from '@/components/forms/BuyNowForm';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { toast } from 'sonner';
-import { formSchema } from '@/lib/validations';
-import { createListing } from '@/services/listingService';
-import { createProduct, updateProduct } from '@/services/productService';
 import { useAuth } from '@/context/AuthContext';
+import { useUploadProductForm } from '@/hooks/listings/useUploadProductForm';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/routes/routes_consts';
+import { useEffect } from 'react';
 
 const UploadProduct = () => {
-  const [activeTab, setActiveTab] = useState('now');
-  const [images, setImages] = useState([]);
-
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const { form, activeTab, images, setImages, onTabChange, onSubmit } = useUploadProductForm();
 
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      saleType: 'now',
-      name: '',
-      description: '',
-      category: '',
-      brand: '',
-      condition: '',
-      size: '',
-      listing: {
-        startingBid: 0,
-      },
-    },
-  });
-
-  const onTabChange = (value) => {
-    setActiveTab(value);
-
-    if (value === 'auction') {
-      form.setValue('saleType', 'auction');
-      form.setValue('listing', { startingBid: 0, expiredAt: new Date() });
-    } else {
-      form.setValue('saleType', 'now');
-      form.setValue('listing', { price: 0 });
+  useEffect(() => {
+    if (!user) {
+      navigate(ROUTES.LOGIN);
+      toast.error('You must be logged in to upload a product.');
     }
-  };
-
-  const onSubmit = async (data) => {
-    try {
-      const productFormData = new FormData();
-      productFormData.append('ownerId', user._id);
-      productFormData.append('name', data.name);
-      productFormData.append('description', data.description || '');
-      productFormData.append('category', data.category);
-      productFormData.append('brand', data.brand);
-      productFormData.append('condition', data.condition);
-      productFormData.append('size', data.size);
-
-      images.forEach((file) => {
-        productFormData.append('images', file);
-      });
-
-      const savedProduct = await createProduct(productFormData);
-
-      const listingData = {
-        productId: savedProduct._id,
-        sellerId: user._id,
-        saleType: activeTab,
-        price: activeTab === 'now' ? Number(data.listing.price) : undefined,
-        startingBid: activeTab === 'auction' ? data.listing.startingBid : undefined,
-        expiredAt: activeTab === 'auction' ? data.listing.expiredAt : undefined,
-      };
-
-      const savedListing = await createListing(listingData);
-
-      await updateProduct(savedProduct._id, { listing: savedListing._id });
-      toast.success(`Your listing has been created!`);
-
-      form.reset();
-      setImages([]);
-    } catch (error) {
-      console.error(error.message);
-      toast('There was an error creating your listing. Please try again.', {
-        variant: 'destructive',
-      });
-    }
-  };
-
+  }, [user, navigate]);
   return (
     <div className="container mx-auto py-10">
       <Card className="max-w-4xl mx-auto">
