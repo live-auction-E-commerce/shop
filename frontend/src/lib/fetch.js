@@ -1,13 +1,26 @@
 import config from '../config.js';
 
-export const fetchAPI = async (url, options) => {
-  const fullUrl = `${config.API_BASE_URL}${url}`;
+const getToken = () => localStorage.getItem('token');
 
-  const response = await fetch(fullUrl, options);
+export const fetchAPI = async (url, options = {}, { requireAuth = false } = {}) => {
+  const fullUrl = `${config.API_BASE_URL}${url}`;
+  const token = requireAuth ? getToken() : null;
+
+  const headers = { ...(options.headers || {}) };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(fullUrl, {
+    ...options,
+    headers,
+  });
+
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(`${data?.error || 'Unknown error'}`);
+    throw new Error(data?.error || 'Unknown error');
   }
 
   return data;

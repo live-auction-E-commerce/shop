@@ -31,6 +31,8 @@ const UploadProduct = () => {
       toast.error('You must be logged in to upload a product.');
     }
   }, [user, navigate]);
+  };
+
   return (
     <div className="container mx-auto py-10">
       <Card className="max-w-4xl mx-auto">
