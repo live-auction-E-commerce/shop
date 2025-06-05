@@ -31,3 +31,13 @@ export const updateAddress = async (id, data) => {
     { requireAuth: true }
   );
 };
+
+export const deleteAddress = async (id) => {
+  return await fetchAPI(
+    `/api/addresses/${id}`,
+    {
+      method: 'DELETE',
+    },
+    { requireAuth: true }
+  );
+};
