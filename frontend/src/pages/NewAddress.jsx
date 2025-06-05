@@ -11,6 +11,7 @@ import { addressSchema } from '@/lib/validations';
 import AddressForm from '@/components/forms/AddressForm';
 import { useAuth } from '@/context/AuthContext';
 import { createAddress, updateAddress } from '@/services/addressService';
+import { toast } from 'sonner';
 
 const NewAddress = () => {
   const navigate = useNavigate();
@@ -52,8 +53,10 @@ const NewAddress = () => {
 
       if (isEditing) {
         await updateAddress(params.id, payload);
+        toast.success('you address has been updated');
       } else {
         await createAddress(payload);
+        toast.success('you address has been created');
       }
 
       navigate('/addresses');
