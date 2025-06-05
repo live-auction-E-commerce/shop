@@ -46,7 +46,8 @@ const ListingPage = () => {
       toast.error('You must be logged in to place a bid!');
       return;
     }
-    if (bidAmount <= listing.currentBid.amount) {
+    const currentBidAmount = listing.currentBid?.amount || listing.startingBid;
+    if (bidAmount <= currentBidAmount) {
       toast.error('Bid must be greater than current bid');
       return;
     }

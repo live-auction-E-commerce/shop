@@ -20,5 +20,5 @@ export const getNewToken = (user) => {
 };
 
 export const getPayload = (token) => {
-  return jwt.verify(token, config.SECRET_KEY);
+  return jwt.verify(token, config.JWT_SECRET_KEY);
 };
