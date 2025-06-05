@@ -5,7 +5,10 @@ export const createAddress = async (data) => {
   validateObjectId(data.userId);
 
   if (data.isDefault) {
-    await Address.updateMany({ userId: data.userId }, { $set: { isDefault: false } });
+    await Address.updateMany(
+      { userId: data.userId },
+      { $set: { isDefault: false } },
+    );
   }
 
   const address = new Address({
@@ -26,7 +29,10 @@ export const createAddress = async (data) => {
 export const getAllAddressByUser = async (userId) => {
   validateObjectId(userId);
 
-  const addresses = await Address.find({ userId }).sort({ isDefault: -1, createdAt: -1 });
+  const addresses = await Address.find({ userId }).sort({
+    isDefault: -1,
+    createdAt: -1,
+  });
 
   return addresses;
 };
@@ -42,13 +48,16 @@ export const updateAddress = async (addressId, data) => {
       throw new Error('Address not found');
     }
 
-    await Address.updateMany({ userId: address.userId }, { $set: { isDefault: false } });
+    await Address.updateMany(
+      { userId: address.userId },
+      { $set: { isDefault: false } },
+    );
   }
 
   const updatedAddress = await Address.findByIdAndUpdate(
     addressId,
     { $set: data },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   if (!updatedAddress) {
@@ -58,20 +67,20 @@ export const updateAddress = async (addressId, data) => {
   return updatedAddress;
 };
 
-export const setDefaultAddress = async (addressId,userId) => {
-  validateObjectId (userId);
-  validateObjectId (addressId);
+export const setDefaultAddress = async (addressId, userId) => {
+  validateObjectId(userId);
+  validateObjectId(addressId);
 
   //unset previos addresses
-  await Address.updateMany({userId}, { $set: { isDefault: false } });
+  await Address.updateMany({ userId }, { $set: { isDefault: false } });
 
   const updatedAddress = await Address.findByIdAndUpdate(
     { _id: addressId, userId },
     { $set: { isDefault: true } },
-    { new: true }
+    { new: true },
   );
 
-  if (!updatedAddress){
+  if (!updatedAddress) {
     throw new Error('address not found or not authorized');
   }
 
@@ -79,12 +88,25 @@ export const setDefaultAddress = async (addressId,userId) => {
 };
 
 export const getDefaultAddress = async (userId) => {
-    validateObjectId (userId);
+  validateObjectId(userId);
 
-    const defaultAddress = await Address.findOne ({
-      userId,
-      isDefault:true
-    });
+  const defaultAddress = await Address.findOne({
+    userId,
+    isDefault: true,
+  });
 
-    return defaultAddress; //might be null if none is default
-}
+  return defaultAddress; //might be null if none is default
+};
+
+export const deleteAddress = async (addressId, userId) => {
+  validateObjectId(addressId);
+  validateObjectId(userId);
+
+  const address = await Address.findByIdAndDelete(addressId);
+
+  if (!address) {
+    throw new Error('Address not found');
+  }
+
+  return { success: true, message: 'Address deleted successfully' };
+};
