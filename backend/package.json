@@ -1,7 +1,8 @@
 {
   "type": "module",
   "scripts": {
-    "seed": "node src/lib/seed.js"
+    "seed": "node src/lib/seed.js",
+    "start": "node server.js"
   },
   "dependencies": {
     "aws-sdk": "^2.1692.0",
