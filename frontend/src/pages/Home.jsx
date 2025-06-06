@@ -130,6 +130,7 @@ const Home = () => {
           listingId={activeListingId}
           onSuccess={handlePaymentSuccess}
           onCancel={handlePaymentCancel}
+          onClose={handlePaymentCancel}
         />
       )}
     </section>

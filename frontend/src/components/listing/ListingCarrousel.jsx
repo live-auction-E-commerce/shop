@@ -19,6 +19,7 @@ const ListingCarrousel = ({
   const [isHovering, setIsHovering] = useState(false);
   const carouselRef = useRef(null);
 
+
   const isMobile = useMediaQuery('(max-width: 640px)');
   const isTablet = useMediaQuery('(min-width: 641px) and (max-width: 1024px)');
 

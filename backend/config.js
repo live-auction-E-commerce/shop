@@ -11,6 +11,10 @@ const config = {
   JWT_SECRET_KEY: process.env.JWT_SECRET_KEY || '',
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '1d',
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+  AWS_REGION: process.env.AWS_REGION,
+  AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
 };
 
 if (!config.MONGO_URI) {
@@ -26,6 +30,28 @@ if (!config.JWT_SECRET_KEY) {
 if (!config.STRIPE_SECRET_KEY) {
   console.warn(
     '⚠️  Warning: STRIPE_SECRET_KEY is not set in your .env file. Stripe SDK will not work!.',
+  );
+}
+
+if (!config.AWS_ACCESS_KEY_ID) {
+  console.warn(
+    '⚠️  Warning: AWS_ACCESS_KEY_ID is not set in your .env file. AWS S3 uploads will not work.',
+  );
+}
+
+if (!config.AWS_SECRET_ACCESS_KEY) {
+  console.warn(
+    '⚠️  Warning: AWS_SECRET_ACCESS_KEY is not set in your .env file. AWS S3 uploads will not work.',
+  );
+}
+if (!config.AWS_REGION) {
+  console.warn(
+    '⚠️  Warning: AWS_REGION is not set in your .env file. AWS S3 uploads will not work.',
+  );
+}
+if (!config.AWS_S3_BUCKET_NAME) {
+  console.warn(
+    '⚠️  Warning: AWS_S3_BUCKET_NAME is not set in your .env file. AWS S3 uploads will not work.',
   );
 }
 
