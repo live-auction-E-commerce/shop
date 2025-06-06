@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/routes/routes_consts';
 import { useAuth } from '@/context/AuthContext';
-import { ProfileDropdown } from '@/components/layout/Header';
+import { ProfileDropdown } from '@/components/layout/Header/ProfileDropDown';
 
 const AuthSection = () => {
   const { isAuthenticated } = useAuth();
