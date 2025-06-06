@@ -5,16 +5,26 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import CountdownTimer from '@/components/ui/CountdownTimer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { getTimeRemaining, formatCurrency } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 
-function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
+// TODO : Need to refactor this component according to Gil`s suggestions
+// TODO : Need to add state for knowing if the listing was sold or not to handle disabling bid/buy buttons etc
+const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [bidAmount, setBidAmount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const { productId } = listing;
   const images = listing.productId?.images || [];
+
+  // TODO: Handle auction expiration logic in terms of UI updates, we would need to set the state reflecting sold status here
+  // We might need to consider using socket emit from the server to notify clients
+  // This function can be passed to CountdownTimer's onExpire prop
+  const handleAuctionExpire = () => {
+    console.log('Auction expired');
+  };
 
   useEffect(() => {
     if (listing) {
@@ -129,21 +139,12 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
           </div>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="flex items-center justify-between">
               <CardTitle>{isAuction ? 'Current Bid' : 'Price'}</CardTitle>
-              <CardDescription>
-                {isAuction && !isSold && (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Clock className="h-4 w-4" />
-                    <span>
-                      {getTimeRemaining(
-                        listing.expiredAt,
-                        new Date() > new Date(listing.expiredAt)
-                      )}
-                    </span>
-                  </div>
-                )}
-              </CardDescription>
+
+              {isAuction && !isSold && (
+                <CountdownTimer targetDate={listing.expiredAt} onExpire={handleAuctionExpire} />
+              )}
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -230,7 +231,7 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
       </div>
     </div>
   );
-}
+};
 
 // Consider using PropTypes
 
