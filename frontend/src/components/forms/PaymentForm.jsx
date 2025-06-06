@@ -1,55 +1,30 @@
-import React, { useState } from 'react';
-import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
+import { PaymentElement } from '@stripe/react-stripe-js';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Lock, Loader2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import usePaymentForm from '@/hooks/payments/usePaymentForm';
+import { toast } from 'sonner';
+import { formatCurrency } from '@/lib/utils';
 
-const PaymentForm = ({ amount, currency = 'usd', onClose, onSuccess, paymentIntentId }) => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+const PaymentForm = ({ amount, currency = 'usd', onSuccess, onError, paymentIntentId }) => {
   const { user } = useAuth();
+  const { email } = user;
+  const { handleSubmit, isLoading, error, stripe } = usePaymentForm({
+    amount,
+    currency,
+    email,
+    onSuccess,
+    onError,
+    paymentIntentId,
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const result = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: window.location.href,
-          payment_method_data: {
-            billing_details: {
-              email: user?.email,
-            },
-          },
-        },
-        redirect: 'if_required',
-      });
-
-      if (result.error) {
-        setError(result.error.message);
-      } else if (
-        result.paymentIntent?.status === 'succeeded' ||
-        result.paymentIntent?.status === 'requires_capture'
-      ) {
-        onSuccess?.(paymentIntentId);
-        onClose?.();
-      }
-    } catch (err) {
-      setError(err.message || 'Something went wrong');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  if (!user) {
+    toast.error('You must be logged in to make a payment!');
+    return null;
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -75,7 +50,7 @@ const PaymentForm = ({ amount, currency = 'usd', onClose, onSuccess, paymentInte
           Secured by Stripe
         </div>
         <div className="font-medium">
-          Total: ${amount.toFixed(2)} {currency.toUpperCase()}
+          Total: {formatCurrency(amount, undefined, currency.toUpperCase())}
         </div>
       </div>
 
@@ -86,7 +61,7 @@ const PaymentForm = ({ amount, currency = 'usd', onClose, onSuccess, paymentInte
             Processing...
           </>
         ) : (
-          <>Pay ${amount.toFixed(2)}</>
+          <>Pay {formatCurrency(amount, undefined, currency.toUpperCase())}</>
         )}
       </Button>
     </form>

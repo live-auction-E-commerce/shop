@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
 import { getListingById } from '@/services/listingService';
-import useSingleListingSocket from '@/hooks/useSingleListingSocket';
+import useSingleListingSocket from '@/hooks/sockets/useSingleListingSocket';
 import { toast } from 'sonner';
 import PaymentModal from '@/components/modals/PaymentModal';
-import usePaymentHandler from '@/hooks/usePaymentHandler';
+import usePaymentHandler from '@/hooks/payments/usePaymentHandler';
 import { useAuth } from '@/context/AuthContext';
 
 const ListingPage = () => {

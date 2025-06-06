@@ -1,4 +1,4 @@
-import useListings from '@/hooks/useListings';
+import useListings from '@/hooks/listings/useListings';
 import { ListingGrid } from '@/components/listing/ListingGrid';
 
 const LiveAuctions = () => {
