@@ -80,7 +80,6 @@ const useListingPaymentHandler = (initialListings = []) => {
     handlePaymentSuccess,
     handlePaymentCancel,
     closeBidModal,
-    setListings,
   };
 };
 
