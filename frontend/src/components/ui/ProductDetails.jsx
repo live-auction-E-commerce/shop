@@ -14,6 +14,7 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
   const [loading, setLoading] = useState(true);
 
   const { productId } = listing;
+  const images = listing.productId?.images || [];
 
   useEffect(() => {
     if (listing) {
@@ -44,14 +45,13 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
   const isSold = listing.isSold;
 
   const nextImage = () => {
-    console.log(listing.imageUrls);
-    if (!listing?.imageUrls.length) return;
-    setCurrentImageIndex((prev) => (prev === listing.imageUrls.length - 1 ? 0 : prev + 1));
+    if (!images.length) return;
+    setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
   const prevImage = () => {
-    if (!listing?.imageUrls?.length) return;
-    setCurrentImageIndex((prev) => (prev === 0 ? listing.imageUrls.length - 1 : prev - 1));
+    if (!images.length) return;
+    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   const handleBid = () => {
@@ -62,7 +62,6 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
   const handleBuyNow = () => {
     if (onBuyNowClick) onBuyNowClick();
   };
-
   return (
     // This component is very long. Separate the component to smaller components
     <div className="container mx-auto px-4 py-8">
@@ -72,7 +71,7 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
         <div className="space-y-4">
           <div className="relative aspect-square rounded-xl overflow-hidden border">
             <img
-              src={listing.imageUrls[currentImageIndex] || '/placeholder.svg'}
+              src={images[currentImageIndex] || '/placeholder.svg'}
               alt={listing.name}
               className="object-cover w-full h-full"
             />
@@ -99,7 +98,7 @@ function ProductDetails({ listing, onBidClick, onBuyNowClick }) {
 
           {/* Consider to export it to a component */}
           <div className="flex gap-2 overflow-x-auto pb-2">
-            {listing.imageUrls.map((image, index) => (
+            {images.map((image, index) => (
               <button
                 key={index}
                 className={`relative h-20 w-20 flex-shrink-0 rounded-md overflow-hidden border-2 ${

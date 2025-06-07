@@ -110,8 +110,6 @@ export const getListingById = async (listingId) => {
 export const getAllListings = async (queryParams, req) => {
   const { q } = queryParams;
 
-  const baseImageUrl = `${req.protocol}://${req.get('host')}/Images`;
-
   const pipeline = [
     {
       $lookup: {
@@ -153,18 +151,6 @@ export const getAllListings = async (queryParams, req) => {
       },
     });
   }
-
-  pipeline.push({
-    $addFields: {
-      imageUrls: {
-        $map: {
-          input: '$product.images',
-          as: 'image',
-          in: { $concat: [baseImageUrl + '/', '$$image'] },
-        },
-      },
-    },
-  });
 
   const results = await Listing.aggregate(pipeline);
   return results;

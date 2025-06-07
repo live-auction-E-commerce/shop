@@ -59,7 +59,6 @@ export const createBid = async (data) => {
   });
 
   const savedBid = await newBid.save();
-
   listing.currentBid = savedBid._id;
   await listing.save();
 

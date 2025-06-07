@@ -1,10 +1,9 @@
 import config from '../config.js';
 
-const getToken = () => localStorage.getItem('token');
-
 export const fetchAPI = async (url, options = {}, { requireAuth = false } = {}) => {
+  const userToken = localStorage.getItem('token');
   const fullUrl = `${config.API_BASE_URL}${url}`;
-  const token = requireAuth ? getToken() : null;
+  const token = requireAuth ? userToken : null;
 
   const headers = { ...(options.headers || {}) };
 

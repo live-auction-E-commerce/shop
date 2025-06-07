@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useMediaQuery } from '@/hooks/useMobile';
+import { useMediaQuery } from '@/hooks/common/useMobile';
 import { Button } from '@/components/ui/button';
 import { ListingCard } from '@/components/listing/ListingCard';
 
@@ -13,10 +13,12 @@ const ListingCarrousel = ({
   className = '',
   viewAllHref = '#',
   isLoading = false,
+  isPaused = false,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const carouselRef = useRef(null);
+
 
   const isMobile = useMediaQuery('(max-width: 640px)');
   const isTablet = useMediaQuery('(min-width: 641px) and (max-width: 1024px)');
@@ -38,14 +40,14 @@ const ListingCarrousel = ({
   };
 
   useEffect(() => {
-    if (isHovering || listingsLength <= cardsToShow) return;
+    if (isHovering || listingsLength <= cardsToShow || isPaused) return;
 
     const interval = setInterval(() => {
       nextSlide();
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isHovering, listingsLength, cardsToShow]);
+  }, [isHovering, listingsLength, cardsToShow, isPaused]);
 
   const showControls = listingsLength > cardsToShow;
 
