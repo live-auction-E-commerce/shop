@@ -51,7 +51,7 @@ const useListingPaymentHandler = (initialListings = []) => {
         setListings((prev) =>
           prev.map((l) => (l._id === newBid.listingId ? { ...l, currentBid: newBid } : l))
         );
-        setSelectedListing((prev) => ({ ...prev, currentBid: newBid }));
+        setSelectedListing(null);
       },
     });
   };
