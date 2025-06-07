@@ -16,6 +16,8 @@ const ListingPage = () => {
   const [bid, setBid] = useState(null);
   const { user } = useAuth();
 
+ 
+
   const {
     openPaymentModal,
     handlePaymentSuccess,
