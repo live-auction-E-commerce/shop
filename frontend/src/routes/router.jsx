@@ -6,8 +6,6 @@ import Register from '@/pages/Register.jsx';
 import ProductPage from '@/pages/ListingPage';
 import CategoryPage from '@/pages/CategoryPage';
 import LiveAuctions from '@/pages/LiveAuctions';
-import AddressesPage from '@/pages/AddressesPage';
-import NewAddress from '@/pages/NewAddress';
 import BuyNowPage from '@/pages/BuyNowPage';
 import ListingPage from '@/pages/ListingPage';
 import UploadProduct from '@/pages/UploadProduct';
@@ -24,9 +22,6 @@ const router = createBrowserRouter([
       { path: ROUTES.REGISTER, element: <Register /> },
       { path: ROUTES.CATEGORY, element: <CategoryPage /> },
       { path: ROUTES.LIVE, element: <LiveAuctions /> },
-      { path: ROUTES.ADDRESSES, element: <AddressesPage /> },
-      { path: ROUTES.NEW_ADDRESS, element: <NewAddress /> },
-      { path: ROUTES.EDIT_ADDRESS, element: <NewAddress /> },
       { path: ROUTES.BUY_NOW, element: <BuyNowPage /> },
       { path: ROUTES.LISTING_PAGE, element: <ListingPage /> },
       { path: ROUTES.NEW_PRODUCT, element: <UploadProduct /> },
