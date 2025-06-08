@@ -61,8 +61,8 @@ export const deleteAddress = async (req, res) => {
     const userId = req.user?._id; // assuming auth middleware adds `user`
 
     const result = await AddressLogic.deleteAddress(addressId, userId); // secure version
-    res.status(200).json(result);
+    res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
   }
 };
