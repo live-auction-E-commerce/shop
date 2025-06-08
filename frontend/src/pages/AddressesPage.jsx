@@ -1,22 +1,22 @@
-'use client';
-
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { PlusCircle, Pencil, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import useAddresses from '@/hooks/useAddresses';
+import { ROUTES } from '@/routes/routes_consts';
 
 const AddressesPage = () => {
   const navigate = useNavigate();
   const { addresses, isLoading, error } = useAddresses();
 
   const handleEdit = (address) => {
-    navigate(`/addresses/edit/${address._id}`, { state: { address } });
+    const editRoute = ROUTES.EDIT_ADDRESS.replace(':id', address._id);
+    navigate(editRoute, { state: { address } });
   };
 
   const handleAddNew = () => {
-    navigate('/addresses/new');
+    navigate(ROUTES.NEW_ADDRESS);
   };
 
   if (isLoading) {

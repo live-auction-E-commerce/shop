@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,6 +10,8 @@ import AddressForm from '@/components/forms/AddressForm';
 import { useAuth } from '@/context/AuthContext';
 import { createAddress, updateAddress } from '@/services/addressService';
 import { toast } from 'sonner';
+import { Routes } from 'react-router-dom';
+import { ROUTES } from '@/routes/routes_consts';
 
 const NewAddress = () => {
   const navigate = useNavigate();
@@ -36,7 +36,6 @@ const NewAddress = () => {
     },
   });
 
-  // Ensure number is a number on edit
   useEffect(() => {
     if (addressToEdit?.number && typeof addressToEdit.number === 'string') {
       form.setValue('number', Number.parseInt(addressToEdit.number, 10));
@@ -59,7 +58,7 @@ const NewAddress = () => {
         toast.success('you address has been created');
       }
 
-      navigate('/addresses');
+      navigate(ROUTES.ADDRESSES);
     } catch (error) {
       console.error('Error saving address:', error);
     }
@@ -69,7 +68,7 @@ const NewAddress = () => {
     <div className="container mx-auto py-8 max-w-3xl">
       <Button
         variant="ghost"
-        onClick={() => navigate('/addresses')}
+        onClick={() => navigate(ROUTES.ADDRESSES)}
         className="mb-6 flex items-center gap-2"
       >
         <ArrowLeft size={16} />
@@ -83,7 +82,7 @@ const NewAddress = () => {
           <AddressForm form={form} />
 
           <div className="flex justify-end gap-4">
-            <Button type="button" variant="outline" onClick={() => navigate('/addresses')}>
+            <Button type="button" variant="outline" onClick={() => navigate(ROUTES.ADDRESSES)}>
               Cancel
             </Button>
             <Button type="submit">{isEditing ? 'Update Address' : 'Save Address'}</Button>

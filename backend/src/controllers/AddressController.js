@@ -57,9 +57,9 @@ export const getDefaultAddress = async (req, res) => {
 export const deleteAddress = async (req, res) => {
   try {
     const addressId = req.params.id;
-    const userId = req.user?._id; // assuming auth middleware adds `user`
+    const userId = req.user?._id;
 
-    const result = await AddressLogic.deleteAddress(addressId, userId); // secure version
+    const result = await AddressLogic.deleteAddress(addressId, userId);
     res.status(200).json(result);
   } catch (error) {
     res.status(400).json({ error: error.message });
