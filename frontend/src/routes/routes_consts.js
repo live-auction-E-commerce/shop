@@ -11,7 +11,7 @@ export const ROUTES = {
   BUY_NOW: '/buy-now',
   ADDRESSES: '/addresses',
   NEW_ADDRESS: '/addresses/new',
-  EDIT: '/addresses/edit/:id',
+  EDIT_ADDRESS: '/addresses/edit/:id',
   LISTING_PAGE: `/listings/:id`,
   NEW_PRODUCT: `/new-product`,
   NOT_FOUND: '*',
