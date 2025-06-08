@@ -6,16 +6,6 @@ const paymentIntentSchema = new mongoose.Schema({
     required: [true, 'userId is required'],
     ref: 'User',
   },
-  bidId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: [true, 'bidId is required'],
-    ref: 'Bid',
-  },
-  paymentMethodId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: [true, 'paymentMethodId is required'],
-    ref: 'PaymentMethod',
-  },
   stripePaymentIntentId: {
     type: String,
     required: [true, 'stripePaymentIntentID is required'],
@@ -23,6 +13,15 @@ const paymentIntentSchema = new mongoose.Schema({
   amount: {
     type: Number,
     required: [true, 'amount is required'],
+  },
+  status: {
+    type: String,
+    enum: ['created', 'succeeded', 'processing', 'failed', 'canceled'],
+    default: 'created',
+  },
+  currency: {
+    type: String,
+    default: 'usd',
   },
   confirmedAt: {
     type: Date,

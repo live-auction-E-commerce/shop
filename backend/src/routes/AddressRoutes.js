@@ -9,8 +9,7 @@ router.put('/addresses/:id', AddressController.updateAddress);
 router.get('/addresses/:userId/default', AddressController.getDefaultAddress);
 router.put(
   '/addresses/:addressId/:userId',
-  AddressController.setDefaultAddress,
+  AddressController.setDefaultAddress
 );
-router.delete('/addresses/:id', AddressController.deleteAddress);
 
 export default router;

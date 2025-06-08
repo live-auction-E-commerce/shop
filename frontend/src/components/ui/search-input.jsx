@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounce } from '@/hooks/common/useDebounce';
 import { useNavigate } from 'react-router-dom';
 
 export function SearchInput({ placeholder = 'Search...', className, searchFunction }) {
@@ -132,7 +132,7 @@ export function SearchInput({ placeholder = 'Search...', className, searchFuncti
                   >
                     <div className="h-12 w-12 rounded-md overflow-hidden flex-shrink-0">
                       <img
-                        src={listing.imageUrls?.[0] || '/placeholder.svg?height=100&width=100'}
+                        src={listing.product.images?.[0] || '/placeholder.svg?height=100&width=100'}
                         alt={listing.product?.name || 'Product'}
                         className="h-full w-full object-cover"
                       />
