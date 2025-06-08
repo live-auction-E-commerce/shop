@@ -1,8 +1,9 @@
-import useListings from '@/hooks/useListings';
+import useListings from '@/hooks/listings/useListings';
 import { ListingGrid } from '@/components/listing/ListingGrid';
 
 const LiveAuctions = () => {
   const { listings, isLoading } = useListings();
+  console.log(listings);
   const filteredListings = listings.filter((listing) => listing.saleType === 'auction');
 
   const handleClick = () => {

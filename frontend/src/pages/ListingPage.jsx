@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
 import { getListingById } from '@/services/listingService';
-import { placeBid } from '@/services/bidService';
-import { emitNewBid } from '@/lib/socketEvents';
-import useSingleListingSocket from '@/hooks/useSingleListingSocket';
-import { useAuth } from '@/context/AuthContext';
+import useSingleListingSocket from '@/hooks/sockets/useSingleListingSocket';
 import { toast } from 'sonner';
+import PaymentModal from '@/components/modals/PaymentModal';
+import usePaymentHandler from '@/hooks/payments/usePaymentHandler';
+import { useAuth } from '@/context/AuthContext';
 
 const ListingPage = () => {
   const { id } = useParams();
@@ -14,8 +14,15 @@ const ListingPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [bid, setBid] = useState(null);
+  const { user } = useAuth();
 
-  const { user, isAuthenticated } = useAuth();
+  const {
+    openPaymentModal,
+    handlePaymentSuccess,
+    handlePaymentCancel,
+    isPaymentModalOpen,
+    pendingBidAmount,
+  } = usePaymentHandler();
 
   useEffect(() => {
     async function fetchListing() {
@@ -34,42 +41,51 @@ const ListingPage = () => {
 
   useSingleListingSocket(listing, setListing);
 
-  const handleBidClick = async (bidAmount) => {
-    if (!isAuthenticated) {
+  const handleBidClick = (bidAmount) => {
+    if (!user?._id) {
       toast.error('You must be logged in to place a bid!');
       return;
     }
-    try {
-      const fakePaymentIntentId = '664b4914c1234567890abce0'; // TODO: Create PaymentIntent with Stripe
-
-      const newBid = await placeBid({
-        listingId: id,
-        userId: user._id,
-        paymentIntentId: fakePaymentIntentId,
-        amount: bidAmount,
-      });
-
-      setBid(newBid);
-      emitNewBid(id, newBid);
-      setListing((prev) => ({
-        ...prev,
-        currentBid: {
-          _id: newBid._id,
-          amount: newBid.amount,
-          userId: newBid.userId,
-        },
-      }));
-    } catch (err) {
-      console.error('Failed to place bid:', err);
-      alert(err.message || 'Bid failed.');
+    const currentBidAmount = listing.currentBid?.amount || listing.startingBid;
+    if (bidAmount <= currentBidAmount) {
+      toast.error('Bid must be greater than current bid');
+      return;
     }
+
+    openPaymentModal({
+      listingId: id,
+      amount: bidAmount,
+      onSuccess: (newBid) => {
+        setBid(newBid);
+        setListing((prev) => ({
+          ...prev,
+          currentBid: {
+            _id: newBid._id,
+            amount: newBid.amount,
+            userId: newBid.userId,
+          },
+        }));
+      },
+    });
   };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
   if (!listing) return <p>Product not found</p>;
 
-  return <ProductDetails listing={listing} bid={bid} onBidClick={handleBidClick} />;
+  return (
+    <>
+      <ProductDetails listing={listing} bid={bid} onBidClick={handleBidClick} />
+
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={handlePaymentCancel}
+        amount={pendingBidAmount || 0}
+        description={`Bid for ${listing._id}`}
+        onSuccess={handlePaymentSuccess}
+      />
+    </>
+  );
 };
 
 export default ListingPage;

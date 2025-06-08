@@ -19,6 +19,7 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
   const navigate = useNavigate();
 
   const isAuction = listing?.saleType === 'auction';
+  const images = listing.product?.images || [];
 
   useEffect(() => {
     if (!listing) return;
@@ -50,7 +51,7 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
     >
       <div className={`relative ${isHovered ? 'scale-105 transition-transform duration-300' : ''}`}>
         <ImageCarrousel
-          imageUrls={listing.imageUrls}
+          imageUrls={images}
           currentIndex={currentImageIndex}
           setCurrentIndex={setCurrentImageIndex}
           productName={product.name}
