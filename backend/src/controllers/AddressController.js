@@ -43,14 +43,14 @@ export const setDefaultAddress = async (req, res) => {
     res.status(StatusCodes.OK).json(updatedAddress);
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
   }
 };
 
 export const getDefaultAddress = async (req, res) => {
   try {
-    const defaultAddress = await AddressLogic.getDefaultAddress(
-      req.params.userId,
-    );
+    const defaultAddress = await AddressLogic.getDefaultAddress();
+
     res.status(StatusCodes.OK).json(defaultAddress);
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
