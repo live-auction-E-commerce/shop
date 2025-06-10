@@ -21,7 +21,6 @@ const NewAddress = () => {
 
   const { user } = useAuth();
   const [loadingAddress, setLoadingAddress] = useState(isEditing);
-  const [formInitialized, setFormInitialized] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(addressSchema),
@@ -49,28 +48,31 @@ const NewAddress = () => {
         navigate(ROUTES.ADDRESSES);
       } finally {
         setLoadingAddress(false);
-        setFormInitialized(true);
       }
     };
 
-    if (isEditing) fetchAddress();
-    else setFormInitialized(true);
+    if (isEditing) {
+      setLoadingAddress(true);
+      fetchAddress();
+    } else {
+      setLoadingAddress(false);
+    }
   }, [isEditing, params.id, form, navigate]);
 
   const onSubmit = async (data) => {
     try {
       if (isEditing) {
         await updateAddress(params.id, data);
-        toast.success('address has been updating');
+        toast.success('Address has been updated');
       } else {
         await createAddress(data);
-        toast.success('address has been created');
+        toast.success('Address has been created');
       }
 
       navigate(ROUTES.ADDRESSES);
     } catch (error) {
       console.error('Error saving address:', error);
-      toast.error('Error saving address:', error);
+      toast.error('Error saving address');
     }
   };
 
@@ -91,7 +93,7 @@ const NewAddress = () => {
 
       <h1 className="text-2xl font-bold mb-6">{isEditing ? 'Edit Address' : 'Add New Address'}</h1>
 
-      {formInitialized && (
+      {!loadingAddress && (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <AddressForm form={form} />

@@ -52,7 +52,7 @@ const AddressesPage = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {addresses.map((address) => (
-            <Card key={address.id} className="overflow-hidden">
+            <Card key={address._id} className="overflow-hidden">
               <CardContent className="pt-6">
                 {address.isDefault && <Badge className="mb-2">Default</Badge>}
                 <h3 className="font-medium mb-1">{address.description}</h3>
