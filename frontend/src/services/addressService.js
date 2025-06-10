@@ -1,11 +1,15 @@
 import { fetchAPI } from '@/lib/fetch';
 
 export const getAllAddressesById = async (id) => {
-  return await fetchAPI(`/api/addresses/${id}`, {}, { requireAuth: true });
+  return await fetchAPI(`/api/addresses/user/${id}`, {}, { requireAuth: true });
+};
+
+export const getAddressById = async (id) => {
+  return await fetchAPI(`/api/addresses/${id}`);
 };
 
 export const createAddress = async (data) => {
-  return await fetchAPI(
+  await fetchAPI(
     '/api/addresses',
     {
       method: 'POST',
@@ -19,7 +23,7 @@ export const createAddress = async (data) => {
 };
 
 export const updateAddress = async (id, data) => {
-  return await fetchAPI(
+  await fetchAPI(
     `/api/addresses/${id}`,
     {
       method: 'PUT',
@@ -33,7 +37,7 @@ export const updateAddress = async (id, data) => {
 };
 
 export const deleteAddress = async (id) => {
-  return await fetchAPI(
+  await fetchAPI(
     `/api/addresses/${id}`,
     {
       method: 'DELETE',

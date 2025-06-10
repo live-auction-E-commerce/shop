@@ -25,6 +25,11 @@ export const createAddress = async (data) => {
 
   return address;
 };
+export const getAddressById = async (addressId) => {
+  validateObjectId(addressId);
+  const address = await Address.findById(addressId);
+  return address;
+};
 
 export const getAllAddressByUser = async (userId) => {
   validateObjectId(userId);

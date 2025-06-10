@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 
 const useAddresses = () => {
   const { user, isAuthenticated } = useAuth();
-  const [addresses, setAddresses] = useState([]);
+  const [addresses, setAddresses] = useState(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
