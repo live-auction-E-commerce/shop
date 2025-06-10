@@ -71,8 +71,7 @@ const NewAddress = () => {
 
       navigate(ROUTES.ADDRESSES);
     } catch (error) {
-      console.error('Error saving address:', error);
-      toast.error('Error saving address');
+      toast.error('Error saving address', error);
     }
   };
 

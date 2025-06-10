@@ -1,11 +1,11 @@
 import { fetchAPI } from '@/lib/fetch';
 
-export const getAllAddressesById = async (id) => {
-  return await fetchAPI(`/api/addresses/user/${id}`, {}, { requireAuth: true });
+export const getAllAddressesById = async (userId) => {
+  return await fetchAPI(`/api/addresses/user/${userId}`, {}, { requireAuth: true });
 };
 
-export const getAddressById = async (id) => {
-  return await fetchAPI(`/api/addresses/${id}`);
+export const getAddressById = async (AddressId) => {
+  return await fetchAPI(`/api/addresses/${AddressId}`);
 };
 
 export const createAddress = async (data) => {
