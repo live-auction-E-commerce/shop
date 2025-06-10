@@ -13,7 +13,6 @@ const ListingPage = () => {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [bid, setBid] = useState(null);
   const { user } = useAuth();
 
  
@@ -58,7 +57,6 @@ const ListingPage = () => {
       listingId: id,
       amount: bidAmount,
       onSuccess: (newBid) => {
-        setBid(newBid);
         setListing((prev) => ({
           ...prev,
           currentBid: {
@@ -71,13 +69,26 @@ const ListingPage = () => {
     });
   };
 
+  // TODO: Implement Buy Now Logic
+  const handleBuyNowClick = () => {
+    if (!user?._id) {
+      toast.error('You must be logged in to buy now!');
+      return;
+    }
+    toast.error('Buy Now functionality is not implemented yet.');
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
   if (!listing) return <p>Product not found</p>;
 
   return (
     <>
-      <ProductDetails listing={listing} bid={bid} onBidClick={handleBidClick} />
+      <ProductDetails
+        listing={listing}
+        onBidClick={handleBidClick}
+        onBuyNowClick={handleBuyNowClick}
+      />
 
       <PaymentModal
         isOpen={isPaymentModalOpen}
