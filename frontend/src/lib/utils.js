@@ -7,7 +7,7 @@ export const cn = (...inputs) => {
   return twMerge(clsx(inputs));
 };
 
-export function getBidProgress(listing) {
+export const getBidProgress = (listing) => {
   if (!listing || listing.saleType !== 'auction') return 0;
 
   // If there's no current bid, return 0
@@ -28,7 +28,7 @@ export function getBidProgress(listing) {
 
   // Cap at 100% and ensure it's at least 5% if there's any bid
   return Math.min(100, Math.max(currentBidAmount > 0 ? 5 : 0, progress));
-}
+};
 
 export const getListingStatus = (listing) => {
   if (listing.isSold) return 'sold';
@@ -41,11 +41,27 @@ export const getListingStatus = (listing) => {
   }
   return 'active';
 };
-export function getTimeRemaining(expiredAt, isExpired) {
+export const getTimeRemaining = (expiredAt, isExpired) => {
   if (!expiredAt) return null;
 
   return isExpired ? 'Expired' : formatDistanceToNow(new Date(expiredAt), { addSuffix: true });
-}
+};
+
+export const calculateTimeLeft = (targetDate) => {
+  const difference = +new Date(targetDate) - +new Date();
+
+  if (difference <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true };
+  }
+
+  return {
+    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((difference / 1000 / 60) % 60),
+    seconds: Math.floor((difference / 1000) % 60),
+    isExpired: false,
+  };
+};
 
 export const handleListingSearch = async (query) => {
   if (!query.trim()) return;
