@@ -20,6 +20,7 @@ export const getAllAddressByUser = async (req, res) => {
       .json({ error: error.message });
   }
 };
+
 export const getAddressById = async (req, res) => {
   try {
     const address = await AddressLogic.getAddressById(req.params.id);
