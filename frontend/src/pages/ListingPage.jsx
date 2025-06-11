@@ -42,7 +42,7 @@ const ListingPage = () => {
   useSingleListingSocket(listing, setListing);
 
   const handleBidClick = (bidAmount) => {
-    if (!user?._id) {
+    if (!user?.id) {
       toast.error('You must be logged in to place a bid!');
       return;
     }
@@ -55,12 +55,13 @@ const ListingPage = () => {
       toast.error(`Maximum bid is: $${maxPossibleBidAmount}`);
       return;
     }
-    if (user._id === listing.sellerId) {
+    if (user.id === listing.sellerId) {
+      console.log(user.id);
       toast.error('You can not bid on a listing you posted');
       return;
     }
-    if (user._id === listing.currentBid?.userId) {
-      toast.error('You own the highest bid allready');
+    if (user.id === listing.currentBid?.userId) {
+      toast.error('You own the highest bid already');
       return;
     }
 
@@ -82,7 +83,7 @@ const ListingPage = () => {
 
   // TODO: Implement Buy Now Logic
   const handleBuyNowClick = () => {
-    if (!user?._id) {
+    if (!user?.id) {
       toast.error('You must be logged in to buy now!');
       return;
     }

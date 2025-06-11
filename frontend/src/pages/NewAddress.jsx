@@ -25,7 +25,7 @@ const NewAddress = () => {
   const form = useForm({
     resolver: zodResolver(addressSchema),
     defaultValues: {
-      userId: user._id,
+      userId: user.id,
       description: '',
       street: '',
       number: '',
@@ -101,7 +101,9 @@ const NewAddress = () => {
               <Button type="button" variant="outline" onClick={() => navigate(ROUTES.ADDRESSES)}>
                 Cancel
               </Button>
-              <Button type="submit">{isEditing ? 'Update Address' : 'Save Address'}</Button>
+              <Button className="cursor-pointer" type="submit">
+                {isEditing ? 'Update Address' : 'Save Address'}
+              </Button>
             </div>
           </form>
         </Form>

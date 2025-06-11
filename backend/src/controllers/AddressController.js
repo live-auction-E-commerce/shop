@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 
 export const createAddress = async (req, res) => {
   try {
-    const address = await AddressLogic.createAddress(req.body);
+    const address = await AddressLogic.createAddress(req);
     res.status(StatusCodes.CREATED).json(address);
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
@@ -12,7 +12,7 @@ export const createAddress = async (req, res) => {
 
 export const getAllAddressByUser = async (req, res) => {
   try {
-    const addresses = await AddressLogic.getAllAddressByUser(req.params.id);
+    const addresses = await AddressLogic.getAllAddressByUser(req.user);
     res.status(StatusCodes.OK).json(addresses);
   } catch (error) {
     res

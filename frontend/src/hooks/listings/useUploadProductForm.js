@@ -76,6 +76,7 @@ export const useUploadProductForm = () => {
 
       form.reset();
       setImages([]);
+      return savedListing._id;
     } catch (error) {
       console.error(error);
       toast('There was an error creating your listing. Please try again.', {

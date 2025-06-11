@@ -29,10 +29,10 @@ const PaymentModal = ({
 
   useEffect(() => {
     const initializePayment = async () => {
-      if (isOpen && user?._id) {
+      if (isOpen && user?.id) {
         setLoading(true);
         try {
-          const response = await createPaymentIntent(amount, user._id);
+          const response = await createPaymentIntent(amount, user.id);
           setClientSecret(response.client_secret);
           setIntentId(response.newIntent._id);
         } catch (err) {

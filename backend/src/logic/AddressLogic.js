@@ -1,24 +1,25 @@
 import Address from '../models/Address.js';
 import { validateObjectId } from '../lib/validations.js';
 
-export const createAddress = async (data) => {
-  validateObjectId(data.userId);
+export const createAddress = async (req) => {
+  const { user, body } = req;
+  validateObjectId(user.id);
 
-  if (data.isDefault) {
+  if (body.isDefault) {
     await Address.updateMany(
-      { userId: data.userId },
+      { userId: user.id },
       { $set: { isDefault: false } },
     );
   }
 
   const address = new Address({
-    userId: data.userId,
-    description: data.description,
-    street: data.street,
-    number: data.number,
-    city: data.city,
-    country: data.country,
-    isDefault: data.isDefault || false,
+    userId: user.id,
+    description: body.description,
+    street: body.street,
+    number: body.number,
+    city: body.city,
+    country: body.country,
+    isDefault: body.isDefault || false,
   });
 
   await address.save();
@@ -32,10 +33,9 @@ export const getAddressById = async (addressId) => {
   return address;
 };
 
-export const getAllAddressByUser = async (userId) => {
-  validateObjectId(userId);
-
-  const addresses = await Address.find({ userId }).sort({
+export const getAllAddressByUser = async (user) => {
+  validateObjectId(user.id);
+  const addresses = await Address.find({ userId: user.id }).sort({
     isDefault: -1,
     createdAt: -1,
   });

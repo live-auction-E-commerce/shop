@@ -1,6 +1,5 @@
 import * as AuthLogic from '../logic/AuthLogic.js';
 import { StatusCodes } from 'http-status-codes';
-
 export const register = async (req, res) => {
   try {
     const { token, user } = await AuthLogic.register(req.body);
@@ -27,4 +26,8 @@ export const login = async (req, res) => {
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
   }
+};
+
+export const verifyToken = async (req, res) => {
+  res.json({ user: req.user });
 };

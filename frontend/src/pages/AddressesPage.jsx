@@ -5,8 +5,11 @@ import { PlusCircle, Pencil, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import useAddresses from '@/hooks/useAddresses';
 import { ROUTES } from '@/routes/routes_consts';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'sonner';
 
 const AddressesPage = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { addresses, isLoading, error } = useAddresses();
 
@@ -19,6 +22,10 @@ const AddressesPage = () => {
     navigate(ROUTES.NEW_ADDRESS);
   };
 
+  if (!user) {
+    toast.error('You must be logged in to access this page');
+    navigate(ROUTES.HOME);
+  }
   if (isLoading) {
     return <div className="flex justify-center items-center h-64">Loading addresses...</div>;
   }

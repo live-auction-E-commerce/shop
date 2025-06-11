@@ -44,7 +44,7 @@ const usePaymentHandler = () => {
     try {
       const newBid = await placeBid({
         listingId: state.activeListingId,
-        userId: user._id,
+        userId: user.id,
         paymentIntentId,
         amount: state.pendingBidAmount,
       });

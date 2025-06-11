@@ -38,7 +38,11 @@ const UploadProduct = () => {
   const handleSubmit = async (data) => {
     try {
       setLoading(true);
-      await onSubmit(data);
+      const listingId = await onSubmit(data);
+      console.log(listingId);
+      const listingRoute = ROUTES.LISTING_PAGE.replace(':id', listingId);
+      navigate(listingRoute);
+      navigate();
     } catch (err) {
       toast.error(`Failed to upload product: ${err}`);
     } finally {

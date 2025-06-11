@@ -9,10 +9,11 @@ import {
 import { attachImageUrlsToListing } from '../lib/image.js';
 
 export const createListing = async (body) => {
-  const { saleType, price, startingBid, expiredAt, productId, sellerId } = body;
+  const { saleType, price, startingBid, expiredAt, productId, user } = body;
   validateEnum(saleType, SaleTypes, 'Sale Type');
   validateObjectId(productId);
-  validateObjectId(sellerId);
+  validateObjectId(user._id);
+  console.log(body);
 
   if (saleType === 'now') {
     if (!price) {
@@ -28,7 +29,7 @@ export const createListing = async (body) => {
   }
   const newListing = new Listing({
     productId: productId,
-    sellerId: sellerId,
+    sellerId: user._id,
     saleType: saleType,
     price: saleType === 'now' ? price : null,
     startingBid: saleType === 'auction' ? startingBid : null,
@@ -107,6 +108,7 @@ export const getListingById = async (listingId) => {
   return attachImageUrlsToListing(listing);
 };
 
+// eslint-disable-next-line no-unused-vars
 export const getAllListings = async (queryParams, req) => {
   const { q } = queryParams;
 
