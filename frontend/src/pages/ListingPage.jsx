@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import PaymentModal from '@/components/modals/PaymentModal';
 import usePaymentHandler from '@/hooks/payments/usePaymentHandler';
 import { useAuth } from '@/context/AuthContext';
+import { maxPossibleBidAmount } from '@/constants/constants';
 
 const ListingPage = () => {
   const { id } = useParams();
@@ -14,8 +15,6 @@ const ListingPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useAuth();
-
- 
 
   const {
     openPaymentModal,
@@ -50,6 +49,10 @@ const ListingPage = () => {
     const currentBidAmount = listing.currentBid?.amount || listing.startingBid;
     if (bidAmount <= currentBidAmount) {
       toast.error('Bid must be greater than current bid');
+      return;
+    }
+    if (bidAmount >= maxPossibleBidAmount) {
+      toast.error(`Maximum bid is: $${maxPossibleBidAmount}`);
       return;
     }
     if (user._id === listing.sellerId) {
