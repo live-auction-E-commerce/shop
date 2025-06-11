@@ -51,6 +51,14 @@ const ListingPage = () => {
       toast.error('Bid must be greater than current bid');
       return;
     }
+    if (user._id === listing.sellerId) {
+      toast.error('You can not bid on a listing you posted');
+      return;
+    }
+    if (user._id === listing.currentBid?.userId) {
+      toast.error('You own the highest bid allready');
+      return;
+    }
 
     openPaymentModal({
       listingId: id,

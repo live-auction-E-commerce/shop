@@ -12,7 +12,7 @@ const AddressesPage = () => {
 
   const handleEdit = (address) => {
     const editRoute = ROUTES.EDIT_ADDRESS.replace(':id', address._id);
-    navigate(editRoute, { state: { address } });
+    navigate(editRoute);
   };
 
   const handleAddNew = () => {

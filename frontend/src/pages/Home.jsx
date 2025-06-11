@@ -39,6 +39,16 @@ const Home = () => {
       return;
     }
     const listing = localListings.find((l) => l._id === listingId);
+    if (user._id === listing.sellerId) {
+      toast.error('You can not bid on a listing you posted');
+      setIsBidModalOpen(false);
+      return;
+    }
+    if (user._id === listing.currentBid?.userId) {
+      toast.error('You own the highest bid allready');
+      setIsBidModalOpen(false);
+      return;
+    }
     if (listing) {
       setSelectedListing(listing);
       setIsBidModalOpen(true);
