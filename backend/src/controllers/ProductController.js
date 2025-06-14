@@ -3,16 +3,10 @@ import { StatusCodes } from 'http-status-codes';
 
 export const createProduct = async (req, res) => {
   try {
-    const {
-      category,
-      condition,
-      name,
-      brand,
-      description,
-      size,
-      listing,
-      ownerId,
-    } = req.body;
+    const { category, condition, name, brand, description, size, listing } =
+      req.body;
+    const { user } = req;
+    const ownerId = user.id;
     const images = req.files.map((file) => file.location);
     const productData = {
       category,

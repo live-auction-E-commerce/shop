@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 
 export const createListing = async (req, res) => {
   try {
-    const listing = await ListingLogic.createListing(req.body);
+    const listing = await ListingLogic.createListing(req);
     res.status(StatusCodes.CREATED).json(listing);
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
