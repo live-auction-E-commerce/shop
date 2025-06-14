@@ -42,6 +42,7 @@ const useListingPaymentHandler = (initialListings = []) => {
       toast.error('You own the highest bid allready');
       return;
     }
+    
     if (listing) {
       setSelectedListing(listing);
       setIsBidModalOpen(true);
