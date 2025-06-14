@@ -1,26 +1,47 @@
-import React, { createContext, useContext, useState } from 'react';
+import { useEffect, createContext, useContext, useState } from 'react';
+import { verifyToken } from '@/services/authService';
+import { toast } from 'sonner';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('token'));
-  const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem('user');
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
+  const [user, setUser] = useState(null);
 
-  const login = ({ token, user }) => {
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!token) {
+        return;
+      }
+
+      try {
+        const response = await verifyToken(token);
+        setUser(response.user);
+      } catch (error) {
+        console.error('Invalid token:', error);
+        logout();
+      }
+    };
+
+    fetchUser();
+  }, [token]);
+
+  const login = async ({ token }) => {
     localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
     setToken(token);
-    setUser(user);
+
+    try {
+      const response = await verifyToken(token);
+      setUser(response.user);
+    } catch (error) {
+      toast.error(error);
+      logout();
+    }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
     setToken(null);
-    setUser(null);
   };
 
   const isAuthenticated = !!token;

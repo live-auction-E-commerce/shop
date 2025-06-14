@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Card,
@@ -18,12 +19,14 @@ import { useAuth } from '@/context/AuthContext';
 import { useUploadProductForm } from '@/hooks/listings/useUploadProductForm';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/routes/routes_consts';
-import { useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
 
 const UploadProduct = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { form, activeTab, images, setImages, onTabChange, onSubmit } = useUploadProductForm();
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -31,6 +34,19 @@ const UploadProduct = () => {
       toast.error('You must be logged in to upload a product.');
     }
   }, [user, navigate]);
+
+  const handleSubmit = async (data) => {
+    try {
+      setLoading(true);
+      const listingId = await onSubmit(data);
+      const listingRoute = ROUTES.LISTING_PAGE.replace(':id', listingId);
+      navigate(listingRoute);
+    } catch (err) {
+      toast.error(`Failed to upload product: ${err}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="container mx-auto py-10">
@@ -41,7 +57,7 @@ const UploadProduct = () => {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
               <ImageUpload images={images} setImages={setImages} />
 
               <ProductForm form={form} />
@@ -60,7 +76,10 @@ const UploadProduct = () => {
               </Tabs>
 
               <CardFooter className="flex justify-end px-0">
-                <Button type="submit">List Product</Button>
+                <Button type="submit" disabled={loading}>
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  List Product
+                </Button>
               </CardFooter>
             </form>
           </Form>

@@ -19,3 +19,13 @@ export const login = async (data) => {
     body: JSON.stringify(data),
   });
 };
+
+export const verifyToken = async () => {
+  return await fetchAPI(
+    '/api/me',
+    {
+      method: 'GET',
+    },
+    { requireAuth: true }
+  );
+};

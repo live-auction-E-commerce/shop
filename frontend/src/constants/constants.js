@@ -1,3 +1,4 @@
+export const maxPossibleBidAmount = 100000;
 export const sampleProduct = {
   _id: 'product-1',
   ownerId: 'user-123',

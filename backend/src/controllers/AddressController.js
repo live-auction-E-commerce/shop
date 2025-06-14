@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 
 export const createAddress = async (req, res) => {
   try {
-    const address = await AddressLogic.createAddress(req.body);
+    const address = await AddressLogic.createAddress(req);
     res.status(StatusCodes.CREATED).json(address);
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
@@ -12,8 +12,19 @@ export const createAddress = async (req, res) => {
 
 export const getAllAddressByUser = async (req, res) => {
   try {
-    const addresses = await AddressLogic.getAllAddressByUser(req.params.id);
+    const addresses = await AddressLogic.getAllAddressByUser(req.user);
     res.status(StatusCodes.OK).json(addresses);
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
+export const getAddressById = async (req, res) => {
+  try {
+    const address = await AddressLogic.getAddressById(req.params.id);
+    res.status(StatusCodes.OK).json(address);
   } catch (error) {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -48,10 +59,20 @@ export const setDefaultAddress = async (req, res) => {
 
 export const getDefaultAddress = async (req, res) => {
   try {
-    const defaultAddress = await AddressLogic.getDefaultAddress(
-      req.params.userId,
-    );
+    const defaultAddress = await AddressLogic.getDefaultAddress();
     res.status(StatusCodes.OK).json(defaultAddress);
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+  }
+};
+
+export const deleteAddress = async (req, res) => {
+  try {
+    const addressId = req.params.id;
+    const userId = req.user?._id; // assuming auth middleware adds `user`
+
+    const result = await AddressLogic.deleteAddress(addressId, userId); // secure version
+    res.status(StatusCodes.OK).json(result);
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
   }

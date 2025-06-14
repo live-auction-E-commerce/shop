@@ -129,20 +129,33 @@ export const sortListings = (listings, sortBy) => {
   });
 };
 
-export const filterListings = (listings, searchTerm) => {
-  if (!searchTerm) return listings;
-
+export const filterListings = (
+  listings,
+  { searchTerm = '', saleType = 'all', status = 'all', condition = 'all' }
+) => {
   const searchLower = searchTerm.toLowerCase();
 
   return listings.filter((listing) => {
     const product = listing.product;
     if (!product) return false;
 
-    return (
+    const matchesSearch =
       product.name?.toLowerCase().includes(searchLower) ||
       product.description?.toLowerCase().includes(searchLower) ||
       product.category?.toLowerCase().includes(searchLower) ||
-      product.brand?.toLowerCase().includes(searchLower)
-    );
+      product.brand?.toLowerCase().includes(searchLower);
+
+    const matchesSaleType = saleType === 'all' || listing.saleType === saleType;
+
+    const matchesCondition = condition === 'all' || product.condition === condition;
+
+    const now = new Date();
+    const isExpired = new Date(listing.expiredAt) <= now;
+    const isActive = !listing.isSold && !isExpired;
+
+    const matchesStatus =
+      status === 'all' || (status === 'active' && isActive) || (status === 'expired' && isExpired);
+
+    return matchesSearch && matchesSaleType && matchesCondition && matchesStatus;
   });
 };

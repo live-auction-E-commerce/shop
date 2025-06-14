@@ -8,11 +8,13 @@ import {
 } from '../lib/validations.js';
 import { attachImageUrlsToListing } from '../lib/image.js';
 
-export const createListing = async (body) => {
-  const { saleType, price, startingBid, expiredAt, productId, sellerId } = body;
+export const createListing = async (req) => {
+  const { saleType, price, startingBid, expiredAt, productId } = req.body;
+  const { user } = req;
   validateEnum(saleType, SaleTypes, 'Sale Type');
   validateObjectId(productId);
-  validateObjectId(sellerId);
+  validateObjectId(user.id);
+  console.log(user);
 
   if (saleType === 'now') {
     if (!price) {
@@ -28,7 +30,7 @@ export const createListing = async (body) => {
   }
   const newListing = new Listing({
     productId: productId,
-    sellerId: sellerId,
+    sellerId: user.id,
     saleType: saleType,
     price: saleType === 'now' ? price : null,
     startingBid: saleType === 'auction' ? startingBid : null,
@@ -107,6 +109,7 @@ export const getListingById = async (listingId) => {
   return attachImageUrlsToListing(listing);
 };
 
+// eslint-disable-next-line no-unused-vars
 export const getAllListings = async (queryParams, req) => {
   const { q } = queryParams;
 

@@ -20,12 +20,20 @@ const ListingGrid = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [filtersVisible, setFiltersVisible] = useState(false);
+  const [saleType, setSaleType] = useState('all');
+  const [condition, setCondition] = useState('all');
+  const [status, setStatus] = useState('all');
 
   const toggleFilters = () => setFiltersVisible((prev) => !prev);
 
   const filteredListings = useMemo(() => {
-    return filterListings(listings, searchTerm);
-  }, [listings, searchTerm]);
+    return filterListings(listings, {
+      searchTerm,
+      saleType,
+      condition,
+      status,
+    });
+  }, [listings, searchTerm, saleType, condition, status]);
 
   const sortedListings = useMemo(() => {
     return sortListings(filteredListings, sortBy);
@@ -50,7 +58,16 @@ const ListingGrid = ({
           toggleFilters={toggleFilters}
         />
 
-        {filtersVisible && showFilters && <FilterPanel />}
+        {filtersVisible && showFilters && (
+          <FilterPanel
+            saleType={saleType}
+            setSaleType={setSaleType}
+            condition={condition}
+            setCondition={setCondition}
+            status={status}
+            setStatus={setStatus}
+          />
+        )}
 
         <GridBody
           isLoading={isLoading}

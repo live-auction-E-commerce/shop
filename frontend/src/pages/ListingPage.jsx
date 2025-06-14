@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import PaymentModal from '@/components/modals/PaymentModal';
 import usePaymentHandler from '@/hooks/payments/usePaymentHandler';
 import { useAuth } from '@/context/AuthContext';
+import { maxPossibleBidAmount } from '@/constants/constants';
 
 const ListingPage = () => {
   const { id } = useParams();
@@ -43,13 +44,26 @@ const ListingPage = () => {
   useSingleListingSocket(listing, setListing);
 
   const handleBidClick = (bidAmount) => {
-    if (!user?._id) {
+    if (!user?.id) {
       toast.error('You must be logged in to place a bid!');
       return;
     }
     const currentBidAmount = listing.currentBid?.amount || listing.startingBid;
     if (bidAmount <= currentBidAmount) {
       toast.error('Bid must be greater than current bid');
+      return;
+    }
+    if (bidAmount >= maxPossibleBidAmount) {
+      toast.error(`Maximum bid is: $${maxPossibleBidAmount}`);
+      return;
+    }
+    if (user.id === listing.sellerId) {
+      console.log(user.id);
+      toast.error('You can not bid on a listing you posted');
+      return;
+    }
+    if (user.id === listing.currentBid?.userId) {
+      toast.error('You own the highest bid already');
       return;
     }
 
@@ -71,7 +85,7 @@ const ListingPage = () => {
 
   // TODO: Implement Buy Now Logic
   const handleBuyNowClick = () => {
-    if (!user?._id) {
+    if (!user?.id) {
       toast.error('You must be logged in to buy now!');
       return;
     }

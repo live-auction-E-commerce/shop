@@ -46,7 +46,7 @@ export const useUploadProductForm = () => {
   const onSubmit = async (data) => {
     try {
       const productFormData = new FormData();
-      productFormData.append('ownerId', user._id);
+      productFormData.append('ownerId', user.id);
       productFormData.append('name', data.name);
       productFormData.append('description', data.description || '');
       productFormData.append('category', data.category);
@@ -62,7 +62,7 @@ export const useUploadProductForm = () => {
 
       const listingData = {
         productId: savedProduct._id,
-        sellerId: user._id,
+        sellerId: user.id,
         saleType: activeTab,
         price: activeTab === 'now' ? Number(data.listing.price) : undefined,
         startingBid: activeTab === 'auction' ? data.listing.startingBid : undefined,
@@ -76,6 +76,7 @@ export const useUploadProductForm = () => {
 
       form.reset();
       setImages([]);
+      return savedListing._id;
     } catch (error) {
       console.error(error);
       toast('There was an error creating your listing. Please try again.', {

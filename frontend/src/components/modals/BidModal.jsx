@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { maxPossibleBidAmount } from '@/constants/constants';
 
 const BidModal = ({ isOpen, onClose, onConfirm, currentBidAmount }) => {
   const [bidAmount, setBidAmount] = useState('');
@@ -11,6 +12,10 @@ const BidModal = ({ isOpen, onClose, onConfirm, currentBidAmount }) => {
     const amount = parseFloat(bidAmount);
     if (isNaN(amount) || amount <= currentBidAmount) {
       toast.error(`Bid must be greater than $${currentBidAmount}`);
+      return;
+    }
+    if (amount >= maxPossibleBidAmount) {
+      toast.error(`Maximum bid is: $${maxPossibleBidAmount}`);
       return;
     }
 

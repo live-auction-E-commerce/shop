@@ -1,14 +1,20 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { ChevronDownIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import TimePickerDropdown from '@/components/ui/time-picker-dropdown';
 
 const AuctionForm = ({ form }) => {
+  const [dateOpen, setDateOpen] = useState(false);
+  const [timeOpen, setTimeOpen] = useState(false);
+
   return (
     <Card>
       <CardContent className="pt-6">
@@ -43,35 +49,113 @@ const AuctionForm = ({ form }) => {
           <FormField
             control={form.control}
             name="listing.expiredAt"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Auction End Date</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        'w-full pl-3 text-left font-normal',
-                        !field.value && 'text-muted-foreground'
-                      )}
-                    >
-                      {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) => date < new Date()}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              const selectedDate =
+                field.value instanceof Date && !isNaN(field.value)
+                  ? new Date(field.value)
+                  : undefined;
+
+              const timeValue =
+                selectedDate && !isNaN(selectedDate)
+                  ? `${selectedDate.getHours().toString().padStart(2, '0')}:${selectedDate
+                      .getMinutes()
+                      .toString()
+                      .padStart(2, '0')}`
+                  : '23:59';
+
+              const handleDateSelect = (date) => {
+                if (date) {
+                  const newDateTime = new Date(date);
+                  newDateTime.setHours(23, 59, 0, 0); // Default time 23:59
+                  field.onChange(newDateTime);
+                }
+                setDateOpen(false);
+              };
+
+              const handleTimeChange = (timeString) => {
+                if (timeString === '') {
+                  if (selectedDate) {
+                    const newDateTime = new Date(selectedDate);
+                    newDateTime.setHours(0, 0, 0, 0);
+                    field.onChange(newDateTime);
+                  }
+                  return;
+                }
+
+                const [hoursStr = '', minutesStr = ''] = timeString.split(':');
+                const hours = hoursStr === '' ? null : Number(hoursStr);
+                const minutes = minutesStr === '' ? null : Number(minutesStr);
+
+                const newDateTime = selectedDate ? new Date(selectedDate) : new Date();
+
+                if (hours !== null && !isNaN(hours) && hours >= 0 && hours <= 23) {
+                  newDateTime.setHours(hours);
+                }
+
+                if (minutes !== null && !isNaN(minutes) && minutes >= 0 && minutes <= 59) {
+                  newDateTime.setMinutes(minutes);
+                }
+
+                newDateTime.setSeconds(0);
+                newDateTime.setMilliseconds(0);
+
+                field.onChange(newDateTime);
+              };
+
+              return (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Auction End Date & Time</FormLabel>
+                  <FormControl>
+                    <div className="flex gap-4">
+                      {/* Date Picker */}
+                      <div className="flex flex-col gap-2 flex-1">
+                        <Label className="text-sm text-muted-foreground">Date</Label>
+                        <Popover open={dateOpen} onOpenChange={setDateOpen}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                'justify-between font-normal',
+                                !selectedDate && 'text-muted-foreground'
+                              )}
+                            >
+                              {selectedDate ? format(selectedDate, 'PPP') : 'Select date'}
+                              <ChevronDownIcon className="h-4 w-4 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={selectedDate}
+                              onSelect={handleDateSelect}
+                              disabled={(date) => date < new Date()}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+
+                      {/* Time Picker */}
+                      <div className="flex flex-col gap-2 w-32">
+                        <Label className="text-sm text-muted-foreground">Time</Label>
+                        <TimePickerDropdown
+                          value={timeValue}
+                          onChange={handleTimeChange}
+                          open={timeOpen}
+                          onOpenChange={setTimeOpen}
+                        />
+                      </div>
+                    </div>
+                  </FormControl>
+                  {selectedDate && (
+                    <div className="text-sm text-muted-foreground mt-1">
+                      Auction ends: {format(selectedDate, 'PPP')} at {format(selectedDate, 'p')}
+                    </div>
+                  )}
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
         </div>
       </CardContent>
