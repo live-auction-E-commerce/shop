@@ -7,6 +7,9 @@ import {
   validateBuyNowUpdates,
 } from '../lib/validations.js';
 import { attachImageUrlsToListing } from '../lib/image.js';
+import { auctionQueue } from '../jobs/queue.js';
+
+const MAX_AUCTION_DURATION = 1000 * 60 * 60 * 24 * 30; // 30 days in milliseconds
 
 export const createListing = async (req) => {
   const { saleType, price, startingBid, expiredAt, productId } = req.body;
@@ -14,7 +17,6 @@ export const createListing = async (req) => {
   validateEnum(saleType, SaleTypes, 'Sale Type');
   validateObjectId(productId);
   validateObjectId(user.id);
-  console.log(user);
 
   if (saleType === 'now') {
     if (!price) {
@@ -24,10 +26,23 @@ export const createListing = async (req) => {
     if (!startingBid) {
       throw new Error('Starting bid is required for an auction listing');
     }
-    if (!expiredAt) {
-      throw new Error('Expiration date is required for an auction listing');
+    const expiryDate = new Date(expiredAt);
+
+    if (isNaN(expiryDate.getTime())) {
+      throw new Error('Expiration date is invalid.');
+    }
+
+    const now = Date.now();
+
+    if (expiryDate.getTime() <= now) {
+      throw new Error('Expiration date must be in the future.');
+    }
+
+    if (expiryDate.getTime() - now > MAX_AUCTION_DURATION) {
+      throw new Error('Expiration date cannot be more than 30 days from now.');
     }
   }
+
   const newListing = new Listing({
     productId: productId,
     sellerId: user.id,
@@ -38,6 +53,23 @@ export const createListing = async (req) => {
   });
 
   const savedListing = await newListing.save();
+
+  if (saleType === 'auction') {
+    const delay = new Date(expiredAt).getTime() - Date.now();
+    const fakeDelay = 40 * 1000;
+
+    if (delay > 0) {
+      await auctionQueue.add(
+        'endAuction',
+        { listingId: savedListing._id.toString() },
+        { delay: fakeDelay }, // Using fakeDelay for testing purposes,
+      );
+      console.log(`📦 Auction end job scheduled in ${fakeDelay} ms`);
+    } else {
+      console.warn('⚠️ Auction expiredAt is already past. Job not scheduled.');
+    }
+  }
+
   return savedListing;
 };
 
