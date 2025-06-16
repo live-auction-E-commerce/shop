@@ -56,14 +56,15 @@ export const createListing = async (req) => {
 
   if (saleType === 'auction') {
     const delay = new Date(expiredAt).getTime() - Date.now();
+    const fakeDelay = 40 * 1000;
 
     if (delay > 0) {
       await auctionQueue.add(
         'endAuction',
         { listingId: savedListing._id.toString() },
-        { delay },
+        { delay: fakeDelay },
       );
-      console.log(`📦 Auction end job scheduled in ${delay} ms`);
+      console.log(`📦 Auction end job scheduled in ${fakeDelay} ms`);
     } else {
       console.warn('⚠️ Auction expiredAt is already past. Job not scheduled.');
     }

@@ -73,6 +73,7 @@ const PaymentModal = ({
               onClose={onClose}
               onSuccess={onSuccess}
               paymentIntentId={intentId}
+              clientSecret={clientSecret}
             />
           </Elements>
         ) : (

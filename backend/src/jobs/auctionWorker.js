@@ -1,7 +1,7 @@
 import { Worker } from 'bullmq';
 import { redis } from './queue.js';
 import IORedis from 'ioredis';
-import { finishAuction } from '../lib/auction.js';
+import { finishAuction } from './auction.js';
 import config from '../../config.js';
 import connectDB from '../lib/db.js';
 

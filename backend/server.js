@@ -4,7 +4,7 @@ import app from './app.js';
 import config from './config.js';
 import './src/sockets/sockets.js';
 import { handleListingSocketConnection } from './src/sockets/sockets.js';
-import { startRedisSubscriber } from './src/sockets/redisSubscriber.js';
+import { startRedisSubscriber } from './src/lib/redisSubscriber.js';
 
 const server = http.createServer(app);
 

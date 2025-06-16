@@ -36,6 +36,5 @@ export function broadcastAuctionEnd(listingId, winnerData) {
     message: 'Auction has ended!',
     winner: winnerData,
   });
-
-  console.log(`Auction ended for listing ${listingId}. Winner:`, winnerData);
+  console.log(`Emitted auction-ended event for listing ${listingId}`);
 }

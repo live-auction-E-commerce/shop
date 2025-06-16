@@ -1,5 +1,5 @@
 import IORedis from 'ioredis';
-import { broadcastAuctionEnd } from './sockets.js';
+import { handleAuctionEnd } from './events.js';
 
 const redisSubscriber = new IORedis(process.env.REDIS_URL);
 
@@ -17,9 +17,7 @@ export async function startRedisSubscriber() {
       try {
         const { listingId, winnerData } = JSON.parse(message);
 
-        broadcastAuctionEnd(listingId, winnerData);
-
-        console.log(`Emitted auction-ended event for listing ${listingId}`);
+        handleAuctionEnd(listingId, winnerData);
       } catch (err) {
         console.error('Error parsing auction-ended message:', err);
       }

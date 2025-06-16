@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 
-const usePaymentForm = ({ email, onSuccess, onError, paymentIntentId }) => {
+const usePaymentForm = ({ email, onSuccess, onError, paymentIntentId, clientSecret }) => {
   const VALID_STATUSES = ['succeeded', 'requires_capture'];
 
   const stripe = useStripe();
@@ -17,7 +17,17 @@ const usePaymentForm = ({ email, onSuccess, onError, paymentIntentId }) => {
     setError(null);
 
     try {
+      // REQUIRED: Submit elements before confirmPayment (for deferred flow)
+      const submitResult = await elements.submit();
+      if (submitResult.error) {
+        setError(submitResult.error.message);
+        onError && onError(submitResult.error.message);
+        setIsLoading(false);
+        return;
+      }
+
       const result = await stripe.confirmPayment({
+        clientSecret,
         elements,
         confirmParams: {
           return_url: window.location.href,
