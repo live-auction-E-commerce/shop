@@ -43,7 +43,7 @@ const useSingleListingSocket = (listing, setListing) => {
           ...prev,
           isSold: true,
         }));
-        toast.success('This listing was purchased');
+        toast.warning('This listing was purchased');
       }
     };
     listenToPurchase(handlePurchase);
@@ -55,6 +55,7 @@ const useSingleListingSocket = (listing, setListing) => {
           isSold: true,
         }));
         alert(message);
+        toast.warning(`Auction ended!`);
       }
     });
     return () => {
