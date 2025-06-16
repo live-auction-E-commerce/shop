@@ -205,3 +205,31 @@ export const getAllListings = async (queryParams, req) => {
   const results = await Listing.aggregate(pipeline);
   return results;
 };
+
+// eslint-disable-next-line no-unused-vars
+export const markListingAsSold = async ({ listingId, amount, userId }) => {
+  validateObjectId(listingId);
+
+  const listing = await Listing.findById(listingId);
+  if (!listing) {
+    throw new Error('Listing not found');
+  }
+
+  if (listing.isSold) {
+    throw new Error('Listing has already been sold');
+  }
+
+  if (listing.saleType !== 'now') {
+    throw new Error('Only Buy Now listings can be marked as sold');
+  }
+
+  if (listing.price !== amount) {
+    throw new Error('Payment amount does not match listing price');
+  }
+
+  listing.isSold = true;
+
+  await listing.save();
+
+  return listing;
+};

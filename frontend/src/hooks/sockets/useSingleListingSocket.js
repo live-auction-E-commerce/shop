@@ -5,6 +5,7 @@ import {
   listenToNewBid,
   removeSocketListeners,
   listenToAuctionEnd,
+  listenToPurchase,
 } from '@/lib/socketEvents';
 
 const useSingleListingSocket = (listing, setListing) => {
@@ -35,9 +36,17 @@ const useSingleListingSocket = (listing, setListing) => {
         );
       }
     };
-
+    const handlePurchase = ({ listingId }) => {
+      if (listing?._id === listingId) {
+        setListing((prev) => ({
+          ...prev,
+          isSold: true,
+        }));
+        alert('This listing has been purchased!');
+      }
+    };
+    listenToPurchase(handlePurchase);
     listenToNewBid(handleNewBid);
-
     listenToAuctionEnd(({ message, winner }) => {
       if (listing?._id === winner.listingId) {
         setListing((prev) => ({

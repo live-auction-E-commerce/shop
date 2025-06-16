@@ -16,8 +16,6 @@ const ListingPage = () => {
   const [error, setError] = useState(null);
   const { user } = useAuth();
 
- 
-
   const {
     openPaymentModal,
     handlePaymentSuccess,
@@ -58,7 +56,6 @@ const ListingPage = () => {
       return;
     }
     if (user.id === listing.sellerId) {
-      console.log(user.id);
       toast.error('You can not bid on a listing you posted');
       return;
     }
@@ -89,7 +86,21 @@ const ListingPage = () => {
       toast.error('You must be logged in to buy now!');
       return;
     }
-    toast.error('Buy Now functionality is not implemented yet.');
+    if (user.id === listing.sellerId) {
+      toast.error('You can not buy a listing you posted');
+      return;
+    }
+    openPaymentModal({
+      listingId: id,
+      amount: listing.price,
+      onSuccess: () => {
+        setListing((prev) => ({
+          ...prev,
+          isSold: true,
+        }));
+      },
+      mode: 'buyNow',
+    });
   };
 
   if (loading) return <p>Loading...</p>;

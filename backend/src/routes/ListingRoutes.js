@@ -13,6 +13,11 @@ router.post(
   verifySeller,
   ListingController.createListing,
 );
+router.post(
+  '/listings/mark-sold',
+  verifyLoggedIn,
+  ListingController.markListingAsSold,
+);
 router.put('/listings/:id', verifyLoggedIn, ListingController.editListing);
 router.delete('/listings/:id', verifyLoggedIn, ListingController.deleteListing);
 

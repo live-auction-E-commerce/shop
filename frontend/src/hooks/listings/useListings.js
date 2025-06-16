@@ -21,7 +21,7 @@ const useListings = () => {
     fetchListings();
   }, []);
 
-  return { listings, isLoading, error };
+  return { listings, setListings, isLoading, error };
 };
 
 export default useListings;
