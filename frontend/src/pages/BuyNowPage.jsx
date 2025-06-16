@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useListings from '@/hooks/listings/useListings';
 import { ListingGrid } from '@/components/listing/ListingGrid';
 import PaymentModal from '@/components/modals/PaymentModal';
@@ -6,31 +6,32 @@ import useListingPaymentHandler from '@/hooks/payments/useListingPaymentHandler'
 import useListingsSocket from '@/hooks/sockets/useListingsSocket';
 
 const BuyNowPage = () => {
-  const { listings, isLoading } = useListings();
-  const [localListings, setLocalListings] = useState([]);
+  const { listings: allListings, isLoading } = useListings();
+  const [filteredListings, setFilteredListings] = useState([]);
 
   useEffect(() => {
-    if (listings.length) {
-      const filtered = listings.filter((listing) => listing.saleType === 'now');
-      setLocalListings(filtered);
+    if (allListings.length) {
+      const filtered = allListings.filter((l) => l.saleType === 'now');
+      setFilteredListings(filtered);
     }
-  }, [listings]);
+  }, [allListings]);
 
-  useListingsSocket(localListings, setLocalListings);
+  useListingsSocket(filteredListings, setFilteredListings);
 
   const {
+    listings,
     isPaymentModalOpen,
     pendingBidAmount,
     activeListingId,
     handleBuyNowClick,
     handlePaymentSuccess,
     handlePaymentCancel,
-  } = useListingPaymentHandler(localListings);
+  } = useListingPaymentHandler(filteredListings);
 
   return (
     <>
       <ListingGrid
-        listings={localListings}
+        listings={listings}
         onBuyNowClick={handleBuyNowClick}
         onBidClick={() => {}}
         title="Buy Now"

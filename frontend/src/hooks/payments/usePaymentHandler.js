@@ -2,6 +2,8 @@ import { useReducer } from 'react';
 import { toast } from 'sonner';
 import { placeBid } from '@/services/bidService';
 import { markListingAsSold } from '@/services/listingService';
+import { getDefaultAddressByUserId } from '@/services/addressService';
+import { createOrder } from '@/services/orderService';
 import { emitNewBid, emitPurchase } from '@/lib/socketEvents';
 import { useAuth } from '@/context/AuthContext';
 
@@ -61,15 +63,30 @@ const usePaymentHandler = () => {
         if (state.onSuccessCallback) state.onSuccessCallback(newBid);
         toast.success('Bid placed successfully!');
       } else if (state.mode === 'buyNow') {
+        const defaultAddress = await getDefaultAddressByUserId(user.id);
+        if (!defaultAddress || !defaultAddress._id) {
+          toast.error('No default address found. Please set one before purchasing.');
+          return;
+        }
+
         const result = await markListingAsSold({
           listingId: state.activeListingId,
           paymentIntentId,
           amount: state.pendingBidAmount,
         });
+
         emitPurchase({ listingId: result._id });
 
+        await createOrder({
+          buyerId: user.id,
+          sellerId: result.sellerId,
+          listingId: result._id,
+          addressId: defaultAddress._id,
+          price: result.price,
+        });
+
         if (state.onSuccessCallback) state.onSuccessCallback(result);
-        toast.success('Listing purchased successfully!');
+        toast.success('Listing purchased and order created successfully!');
       }
 
       dispatch({ type: 'CLOSE_MODAL' });

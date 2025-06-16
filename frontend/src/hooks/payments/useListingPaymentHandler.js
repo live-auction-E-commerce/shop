@@ -86,10 +86,10 @@ const useListingPaymentHandler = (initialListings = []) => {
     openPaymentModal({
       listingId: listing._id,
       amount: listing.price,
-      onSuccess: (purchasedListing) => {
-        setListings((prevListings) => prevListings.filter((l) => l._id !== purchasedListing._id));
-      },
       mode: 'buyNow',
+      onSuccess: (purchasedListing) => {
+        setListings((prev) => prev.filter((l) => l._id !== purchasedListing._id));
+      },
     });
   };
 

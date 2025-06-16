@@ -9,21 +9,22 @@ import PaymentModal from '@/components/modals/PaymentModal';
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
-  const { listings, isLoading } = useListings();
-  const [localListings, setLocalListings] = useState([]);
+  const { listings: allListings, isLoading } = useListings();
+  const [filteredListings, setFilteredListings] = useState([]);
 
   useEffect(() => {
-    if (listings.length) {
-      const filtered = listings.filter(
+    if (allListings.length) {
+      const filtered = allListings.filter(
         (listing) => listing.product?.category?.toLowerCase() === categoryName.toLowerCase()
       );
-      setLocalListings(filtered);
+      setFilteredListings(filtered);
     }
-  }, [listings, categoryName]);
+  }, [allListings, categoryName]);
 
-  useListingsSocket(localListings, setLocalListings);
+  useListingsSocket(filteredListings, setFilteredListings);
 
   const {
+    listings,
     isPaymentModalOpen,
     pendingBidAmount,
     activeListingId,
@@ -35,12 +36,12 @@ const CategoryPage = () => {
     handlePaymentSuccess,
     handlePaymentCancel,
     closeBidModal,
-  } = useListingPaymentHandler(localListings);
+  } = useListingPaymentHandler(filteredListings);
 
   return (
     <>
       <ListingGrid
-        listings={localListings}
+        listings={listings}
         title={categoryName}
         onBuyNowClick={handleBuyNowClick}
         onBidClick={handleBidClick}

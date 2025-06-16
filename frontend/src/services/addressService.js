@@ -45,3 +45,7 @@ export const deleteAddress = async (id) => {
     { requireAuth: true }
   );
 };
+
+export const getDefaultAddressByUserId = async (userId) => {
+  return await fetchAPI(`/api/addresses/${userId}/default`, {}, { requireAuth: true });
+};
