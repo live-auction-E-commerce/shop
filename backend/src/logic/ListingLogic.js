@@ -178,7 +178,7 @@ export const getAllListings = async (queryParams, req) => {
           {
             $or: [
               { saleType: { $ne: 'auction' } },
-              { expiredAt: { $gt: new Date() } },
+              { expiredAt: { $gt: now } },
             ],
           },
         ],
