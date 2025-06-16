@@ -1,3 +1,5 @@
+import { io } from '../../server.js';
+
 export function handleListingSocketConnection(socket) {
   // When a client joins a specific listing room
   socket.on('join-listing', (listingId) => {
@@ -29,7 +31,11 @@ export function handleListingSocketConnection(socket) {
   });
 }
 
-// Function to broadcast a new bid to all clients in that listing room
-export function broadcastNewBid(io, listingId, bid) {
-  io.to(listingId).emit('new-bid', bid);
+export function broadcastAuctionEnd(listingId, winnerData) {
+  io.to(listingId).emit('auction-ended', {
+    message: 'Auction has ended!',
+    winner: winnerData,
+  });
+
+  console.log(`Auction ended for listing ${listingId}. Winner:`, winnerData);
 }

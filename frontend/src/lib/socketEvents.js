@@ -29,4 +29,9 @@ export const listenToNewBid = (callback) => {
 export const removeSocketListeners = () => {
   socket.off('socket-joined-your-room');
   socket.off('new-bid');
+  socket.off('auction-ended');
+};
+
+export const listenToAuctionEnd = (callback) => {
+  socket.on('auction-ended', callback);
 };

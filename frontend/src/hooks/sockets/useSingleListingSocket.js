@@ -4,6 +4,7 @@ import {
   emitLeaveListing,
   listenToNewBid,
   removeSocketListeners,
+  listenToAuctionEnd,
 } from '@/lib/socketEvents';
 
 const useSingleListingSocket = (listing, setListing) => {
@@ -36,6 +37,17 @@ const useSingleListingSocket = (listing, setListing) => {
     };
 
     listenToNewBid(handleNewBid);
+
+    listenToAuctionEnd(({ message, winner }) => {
+      if (listing?._id === winner.listingId) {
+        setListing((prev) => ({
+          ...prev,
+          isSold: true,
+        }));
+        alert(message);
+        console.log('DEBUGGING*********');
+      }
+    });
     return () => {
       removeSocketListeners();
     };

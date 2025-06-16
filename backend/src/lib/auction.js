@@ -53,4 +53,9 @@ export const finishAuction = async (listingId) => {
 
   listing.isSold = true;
   await listing.save();
+
+  return {
+    listingId,
+    winnerData: { buyerId, price, listingId },
+  };
 };

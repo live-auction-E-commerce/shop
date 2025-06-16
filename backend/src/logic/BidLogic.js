@@ -1,11 +1,10 @@
 import Bid from '../models/Bid.js';
 import Listing from '../models/Listing.js';
 import User from '../models/User.js';
-//import PaymentIntent from '../models/PaymentIntent.js';
+import PaymentIntent from '../models/PaymentIntent.js';
 import { validateObjectId } from '../lib/validations.js';
 
 export const createBid = async (data) => {
-  //const { listingId, userId, paymentIntentId, amount } = data;
   validateObjectId(data.listingId);
   validateObjectId(data.userId);
   validateObjectId(data.paymentIntentId);
@@ -19,19 +18,15 @@ export const createBid = async (data) => {
     throw new Error('Listing not found.');
   }
 
-  /* We still dont have User logic so commenting this for now */
+  const user = await User.findById(data.userId);
+  if (!user) {
+    throw new Error('User not found.');
+  }
 
-  // const user = await User.findById(data.userId);
-  // if (!user) {
-  //   throw new Error('User not found.');
-  // }
-
-  /* TODO: We still don`t have paymentIntet logic so commenting this for now 
-   const paymentIntent = await PaymentIntent.findById(data.paymentIntentId);
-   if (!paymentIntent) {
-     throw new Error('PaymentIntent not found.');
-   }
-  */
+  const paymentIntent = await PaymentIntent.findById(data.paymentIntentId);
+  if (!paymentIntent) {
+    throw new Error('PaymentIntent not found.');
+  }
 
   if (!listing.currentBid) {
     if (data.amount <= listing.startingBid) {
