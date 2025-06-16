@@ -14,5 +14,6 @@ export const ROUTES = {
   EDIT_ADDRESS: '/addresses/edit/:id',
   LISTING_PAGE: `/listings/:id`,
   NEW_PRODUCT: `/new-product`,
+  ORDERS: '/orders',
   NOT_FOUND: '*',
 };

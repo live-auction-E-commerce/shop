@@ -11,6 +11,7 @@ import NewAddress from '@/pages/NewAddress';
 import BuyNowPage from '@/pages/BuyNowPage';
 import ListingPage from '@/pages/ListingPage';
 import UploadProduct from '@/pages/UploadProduct';
+import OrdersPage from '@/pages/OrdersPage';
 import NotFound from '@/pages/NotFound';
 import { ROUTES } from '@/routes/routes_consts';
 
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
       { path: ROUTES.BUY_NOW, element: <BuyNowPage /> },
       { path: ROUTES.LISTING_PAGE, element: <ListingPage /> },
       { path: ROUTES.NEW_PRODUCT, element: <UploadProduct /> },
+      { path: ROUTES.ORDERS, element: <OrdersPage /> },
       { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     ],
   },

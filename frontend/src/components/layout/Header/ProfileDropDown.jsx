@@ -51,12 +51,6 @@ const ProfileDropdown = () => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/payment-methods" className="flex items-center">
-            <CreditCard className="mr-2 h-4 w-4" />
-            Your Payment Methods
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
           <Link to="/change-password" className="flex items-center">
             <Lock className="mr-2 h-4 w-4" />
             Change Password

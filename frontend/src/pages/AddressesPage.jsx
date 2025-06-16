@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { PlusCircle, Pencil, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import useAddresses from '@/hooks/useAddresses';
+import useAddresses from '@/hooks/common/useAddresses';
 import { ROUTES } from '@/routes/routes_consts';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
@@ -27,7 +27,13 @@ const AddressesPage = () => {
     navigate(ROUTES.HOME);
   }
   if (isLoading) {
-    return <div className="flex justify-center items-center h-64">Loading addresses...</div>;
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="flex justify-center items-center h-screen">
+          <p className="text-lg text-muted-foreground">Loading orders...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {

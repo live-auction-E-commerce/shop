@@ -33,7 +33,18 @@ export const getAllOrdersBySeller = async (sellerId) => {
 export const getAllOrdersByBuyer = async (buyerId) => {
   validateObjectId(buyerId);
 
-  const Orders = await Order.find({ buyerId }).sort({ createdAt: -1 });
+  const Orders = await Order.find({ buyerId })
+    .populate({
+      path: 'listingId',
+      populate: {
+        path: 'productId',
+        model: 'Product',
+      },
+    })
+    .populate('buyerId')
+    .populate('sellerId')
+    .populate('addressId')
+    .sort({ createdAt: -1 });
 
   return Orders;
 };
