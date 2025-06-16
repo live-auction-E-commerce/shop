@@ -7,6 +7,7 @@ import {
   listenToAuctionEnd,
   listenToPurchase,
 } from '@/lib/socketEvents';
+import { toast } from 'sonner';
 
 const useSingleListingSocket = (listing, setListing) => {
   useEffect(() => {
@@ -42,7 +43,7 @@ const useSingleListingSocket = (listing, setListing) => {
           ...prev,
           isSold: true,
         }));
-        alert('This listing has been purchased!');
+        toast.success('This listing was purchased');
       }
     };
     listenToPurchase(handlePurchase);
