@@ -175,7 +175,12 @@ export const getAllListings = async (queryParams, req) => {
       $match: {
         $and: [
           { $or: [{ isSold: false }, { isSold: { $exists: false } }] },
-          { expiredAt: { $gt: now } },
+          {
+            $or: [
+              { saleType: { $ne: 'auction' } },
+              { expiredAt: { $gt: new Date() } },
+            ],
+          },
         ],
       },
     },
