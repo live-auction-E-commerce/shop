@@ -16,7 +16,6 @@ const useOrders = () => {
       try {
         if (user?.id) {
           const fetchedOrders = await getAllOrdersById(user.id);
-          console.log(fetchedOrders);
           setOrders(fetchedOrders);
         }
       } catch (err) {
