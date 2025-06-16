@@ -83,6 +83,10 @@ const useListingPaymentHandler = (initialListings = []) => {
       return;
     }
 
+    if (listing) {
+      setSelectedListing(listing);
+    }
+
     openPaymentModal({
       listingId: listing._id,
       amount: listing.price,

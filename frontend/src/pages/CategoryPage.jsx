@@ -62,6 +62,7 @@ const CategoryPage = () => {
           isOpen={isPaymentModalOpen}
           amount={pendingBidAmount}
           listingId={activeListingId}
+          listing={selectedListing}
           onSuccess={handlePaymentSuccess}
           onCancel={handlePaymentCancel}
           onClose={handlePaymentCancel}

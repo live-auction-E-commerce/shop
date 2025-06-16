@@ -17,10 +17,9 @@ export const createStripePaymentIntent = async ({
   return await stripe.paymentIntents.create({
     amount: amount * CENTS_IN_DOLLAR,
     currency: 'usd',
-    capture_method: 'manual',
     payment_method_types: ['card'],
     metadata: { bidId, userId },
-    ...(isBuyNow ? {} : { capture_method: 'manual' }),
+    capture_method: isBuyNow ? 'automatic' : 'manual',
   });
 };
 

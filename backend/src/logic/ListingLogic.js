@@ -61,7 +61,7 @@ export const createListing = async (req) => {
       await auctionQueue.add(
         'endAuction',
         { listingId: savedListing._id.toString() },
-        { delay: delay },
+        { delay },
       );
       console.log(`📦 Auction end job scheduled in ${delay} ms`);
     } else {

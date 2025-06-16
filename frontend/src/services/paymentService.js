@@ -1,6 +1,6 @@
 import { fetchAPI } from '@/lib/fetch';
 
-export const createPaymentIntent = async (amount) => {
+export const createPaymentIntent = async (amount, userId, mode) => {
   const paymentIntent = await fetchAPI(
     '/api/paymentintent',
     {
@@ -8,7 +8,7 @@ export const createPaymentIntent = async (amount) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ amount }),
+      body: JSON.stringify({ amount, userId, mode }),
     },
     { requireAuth: true }
   );

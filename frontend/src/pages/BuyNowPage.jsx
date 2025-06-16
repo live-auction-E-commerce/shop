@@ -20,6 +20,7 @@ const BuyNowPage = () => {
 
   const {
     listings,
+    selectedListing,
     isPaymentModalOpen,
     pendingBidAmount,
     activeListingId,
@@ -44,6 +45,7 @@ const BuyNowPage = () => {
           isOpen={isPaymentModalOpen}
           amount={pendingBidAmount}
           listingId={activeListingId}
+          listing={selectedListing}
           onSuccess={handlePaymentSuccess}
           onCancel={handlePaymentCancel}
           onClose={handlePaymentCancel}

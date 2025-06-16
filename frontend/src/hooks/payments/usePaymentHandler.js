@@ -51,7 +51,6 @@ const usePaymentHandler = () => {
   const handlePaymentSuccess = async (paymentIntentId) => {
     try {
       if (state.mode === 'bid') {
-        // Regular bid logic
         const newBid = await placeBid({
           listingId: state.activeListingId,
           userId: user.id,

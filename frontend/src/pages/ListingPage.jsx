@@ -121,6 +121,7 @@ const ListingPage = () => {
         amount={pendingBidAmount || 0}
         description={`Bid for ${listing._id}`}
         onSuccess={handlePaymentSuccess}
+        listing={listing}
       />
     </>
   );
