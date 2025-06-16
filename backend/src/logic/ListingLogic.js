@@ -145,6 +145,8 @@ export const getListingById = async (listingId) => {
 export const getAllListings = async (queryParams, req) => {
   const { q } = queryParams;
 
+  const now = new Date();
+
   const pipeline = [
     {
       $lookup: {
@@ -167,6 +169,14 @@ export const getAllListings = async (queryParams, req) => {
       $unwind: {
         path: '$currentBid',
         preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $match: {
+        $and: [
+          { $or: [{ isSold: false }, { isSold: { $exists: false } }] },
+          { expiredAt: { $gt: now } },
+        ],
       },
     },
   ];
