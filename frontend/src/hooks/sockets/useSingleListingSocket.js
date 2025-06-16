@@ -45,7 +45,6 @@ const useSingleListingSocket = (listing, setListing) => {
           isSold: true,
         }));
         alert(message);
-        console.log('DEBUGGING*********');
       }
     });
     return () => {
