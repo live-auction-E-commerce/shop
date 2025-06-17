@@ -76,11 +76,12 @@ export const handleListingSearch = async (query) => {
   }
 };
 
-export function formatCurrency(amount, locale = 'en-US', currency = 'USD') {
-  return new Intl.NumberFormat(locale, {
+export function formatCurrency(amount) {
+  const numAmount = typeof amount === 'string' ? Number.parseFloat(amount) : amount;
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
-  }).format(amount);
+    currency: 'USD',
+  }).format(numAmount);
 }
 
 export const getGridClass = (itemsPerRow) => {

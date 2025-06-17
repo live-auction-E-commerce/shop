@@ -1,5 +1,9 @@
 import { fetchAPI } from '@/lib/fetch';
 
+export const getAllBidsByListing = async (listingId) => {
+  return await fetchAPI(`/api/bids/${listingId}`);
+};
+
 export const placeBid = async ({ listingId, userId, paymentIntentId, amount }) => {
   return await fetchAPI(
     '/api/bids',

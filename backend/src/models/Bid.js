@@ -20,7 +20,7 @@ const bidSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'amount is required'],
   },
-  createAt: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },

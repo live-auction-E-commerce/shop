@@ -63,7 +63,10 @@ export const createBid = async (data) => {
 export const getAllBidsByListing = async (listingId) => {
   validateObjectId(listingId);
 
-  const bids = await Bid.find({ listingId }).sort({ createAt: -1 });
+  const bids = await Bid.find({ listingId })
+    .sort({ amount: -1 })
+    .populate('userId', 'email')
+    .lean();
   if (!bids) {
     throw new Error('Couldn`t find a bids with the specific ID.');
   }

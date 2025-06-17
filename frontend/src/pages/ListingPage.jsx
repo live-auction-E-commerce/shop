@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
+import BidChatbox from '@/components/ui/BidChatbox';
 import { getListingById } from '@/services/listingService';
 import useSingleListingSocket from '@/hooks/sockets/useSingleListingSocket';
 import { toast } from 'sonner';
@@ -80,7 +81,6 @@ const ListingPage = () => {
     });
   };
 
-  // TODO: Implement Buy Now Logic
   const handleBuyNowClick = () => {
     if (!user?.id) {
       toast.error('You must be logged in to buy now!');
@@ -108,12 +108,22 @@ const ListingPage = () => {
   if (!listing) return <p>Product not found</p>;
 
   return (
-    <>
-      <ProductDetails
-        listing={listing}
-        onBidClick={handleBidClick}
-        onBuyNowClick={handleBuyNowClick}
-      />
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main product details - takes up 2 columns on large screens */}
+        <div className="lg:col-span-2">
+          <ProductDetails
+            listing={listing}
+            onBidClick={handleBidClick}
+            onBuyNowClick={handleBuyNowClick}
+          />
+        </div>
+
+        {/* Bid chatbox - takes up 1 column on large screens */}
+        <div className="lg:col-span-1">
+          <BidChatbox listingId={id} className="sticky top-4" />
+        </div>
+      </div>
 
       <PaymentModal
         isOpen={isPaymentModalOpen}
@@ -123,7 +133,7 @@ const ListingPage = () => {
         onSuccess={handlePaymentSuccess}
         listing={listing}
       />
-    </>
+    </div>
   );
 };
 
