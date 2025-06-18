@@ -21,3 +21,17 @@ export const createListing = async (data) => {
     { requireAuth: true }
   );
 };
+
+export const markListingAsSold = async ({ listingId, amount }) => {
+  return await fetchAPI(
+    '/api/listings/mark-sold',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ listingId, amount }),
+    },
+    { requireAuth: true }
+  );
+};

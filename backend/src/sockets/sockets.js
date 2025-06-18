@@ -29,6 +29,12 @@ export function handleListingSocketConnection(socket) {
 
     console.log(`Broadcasting bid to room ${listingId}:`, bid);
   });
+
+  socket.on('listing-purchased', ({ listingId }) => {
+    socket.to(listingId).emit('listing-purchased', { listingId });
+
+    console.log(`Broadcasting purchase event to room ${listingId}`);
+  });
 }
 
 export function broadcastAuctionEnd(listingId, winnerData) {

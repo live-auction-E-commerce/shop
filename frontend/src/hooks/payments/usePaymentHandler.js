@@ -1,7 +1,10 @@
 import { useReducer } from 'react';
 import { toast } from 'sonner';
 import { placeBid } from '@/services/bidService';
-import { emitNewBid } from '@/lib/socketEvents';
+import { markListingAsSold } from '@/services/listingService';
+import { getDefaultAddressByUserId } from '@/services/addressService';
+import { createOrder } from '@/services/orderService';
+import { emitNewBid, emitPurchase } from '@/lib/socketEvents';
 import { useAuth } from '@/context/AuthContext';
 
 const initialState = {
@@ -9,6 +12,7 @@ const initialState = {
   pendingBidAmount: null,
   activeListingId: null,
   onSuccessCallback: null,
+  mode: 'bid',
 };
 
 const reducer = (state, action) => {
@@ -20,6 +24,7 @@ const reducer = (state, action) => {
         activeListingId: action.payload.listingId,
         pendingBidAmount: action.payload.amount,
         onSuccessCallback: action.payload.onSuccess,
+        mode: action.payload.mode || 'bid',
       };
     case 'CLOSE_MODAL':
       return initialState;
@@ -32,32 +37,61 @@ const usePaymentHandler = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { user, isAuthenticated } = useAuth();
 
-  const openPaymentModal = ({ listingId, amount, onSuccess }) => {
+  const openPaymentModal = ({ listingId, amount, onSuccess, mode = 'bid' }) => {
     if (!isAuthenticated) {
-      toast.error('You must be logged in to place a bid!');
+      toast.error('You must be logged in to make a payment!');
       return;
     }
-    dispatch({ type: 'OPEN_MODAL', payload: { listingId, amount, onSuccess } });
+    dispatch({
+      type: 'OPEN_MODAL',
+      payload: { listingId, amount, onSuccess, mode },
+    });
   };
 
   const handlePaymentSuccess = async (paymentIntentId) => {
     try {
-      const newBid = await placeBid({
-        listingId: state.activeListingId,
-        userId: user.id,
-        paymentIntentId,
-        amount: state.pendingBidAmount,
-      });
+      if (state.mode === 'bid') {
+        const newBid = await placeBid({
+          listingId: state.activeListingId,
+          userId: user.id,
+          paymentIntentId,
+          amount: state.pendingBidAmount,
+        });
 
-      emitNewBid(state.activeListingId, newBid);
+        emitNewBid(state.activeListingId, newBid);
+        if (state.onSuccessCallback) state.onSuccessCallback(newBid);
+        toast.success('Bid placed successfully!');
+      } else if (state.mode === 'buyNow') {
+        const defaultAddress = await getDefaultAddressByUserId(user.id);
+        if (!defaultAddress || !defaultAddress._id) {
+          toast.error('No default address found. Please set one before purchasing.');
+          return;
+        }
 
-      if (state.onSuccessCallback) state.onSuccessCallback(newBid);
+        const result = await markListingAsSold({
+          listingId: state.activeListingId,
+          paymentIntentId,
+          amount: state.pendingBidAmount,
+        });
 
-      toast.success('Bid placed successfully!');
+        emitPurchase({ listingId: result._id });
+
+        await createOrder({
+          buyerId: user.id,
+          sellerId: result.sellerId,
+          listingId: result._id,
+          addressId: defaultAddress._id,
+          price: result.price,
+        });
+
+        if (state.onSuccessCallback) state.onSuccessCallback(result);
+        toast.success('Listing purchased and order created successfully!');
+      }
+
       dispatch({ type: 'CLOSE_MODAL' });
     } catch (err) {
-      console.error('Failed to place bid:', err);
-      toast.error(err.message || 'Bid failed.');
+      console.error('Payment handler failed:', err);
+      toast.error(err.message || 'Something went wrong during payment.');
     }
   };
 

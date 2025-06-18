@@ -20,6 +20,7 @@ const PaymentModal = ({
   currency = 'usd',
   description = 'Payment',
   onSuccess,
+  listing,
 }) => {
   const { stripePromise } = useStripeContext();
   const { user } = useAuth();
@@ -27,12 +28,15 @@ const PaymentModal = ({
   const [intentId, setIntentId] = useState(null);
   const [_loading, setLoading] = useState(false);
 
+  const mode = listing?.saleType === 'now' ? 'buyNow' : 'bid';
+
   useEffect(() => {
     const initializePayment = async () => {
       if (isOpen && user?.id) {
         setLoading(true);
         try {
-          const response = await createPaymentIntent(amount, user.id);
+          console.log(mode);
+          const response = await createPaymentIntent(amount, user.id, mode);
           setClientSecret(response.client_secret);
           setIntentId(response.newIntent._id);
         } catch (err) {
@@ -44,7 +48,7 @@ const PaymentModal = ({
     };
 
     initializePayment();
-  }, [isOpen, amount, user]);
+  }, [isOpen, amount, user, mode]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

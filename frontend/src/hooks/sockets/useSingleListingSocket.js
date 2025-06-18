@@ -5,7 +5,9 @@ import {
   listenToNewBid,
   removeSocketListeners,
   listenToAuctionEnd,
+  listenToPurchase,
 } from '@/lib/socketEvents';
+import { toast } from 'sonner';
 
 const useSingleListingSocket = (listing, setListing) => {
   useEffect(() => {
@@ -35,9 +37,17 @@ const useSingleListingSocket = (listing, setListing) => {
         );
       }
     };
-
+    const handlePurchase = ({ listingId }) => {
+      if (listing?._id === listingId) {
+        setListing((prev) => ({
+          ...prev,
+          isSold: true,
+        }));
+        toast.warning('This listing was purchased');
+      }
+    };
+    listenToPurchase(handlePurchase);
     listenToNewBid(handleNewBid);
-
     listenToAuctionEnd(({ message, winner }) => {
       if (listing?._id === winner.listingId) {
         setListing((prev) => ({
@@ -45,6 +55,7 @@ const useSingleListingSocket = (listing, setListing) => {
           isSold: true,
         }));
         alert(message);
+        toast.warning(`Auction ended!`);
       }
     });
     return () => {

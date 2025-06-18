@@ -48,3 +48,22 @@ export const getAllListings = async (req, res) => {
     res.status(StatusCodes.NOT_FOUND).json({ error: error.message });
   }
 };
+export const markListingAsSold = async (req, res) => {
+  try {
+    const { listingId, amount } = req.body;
+    const userId = req.user.id;
+    console.log('markListingAsSold request:', { listingId, amount, userId });
+
+    const listing = await ListingLogic.markListingAsSold({
+      listingId,
+      userId,
+      amount,
+    });
+
+    res.status(StatusCodes.OK).json(listing);
+  } catch (error) {
+    console.error('markListingAsSold error:', error);
+
+    res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+  }
+};

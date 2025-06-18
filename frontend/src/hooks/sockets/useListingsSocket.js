@@ -4,6 +4,7 @@ import {
   emitLeaveListing,
   listenToNewBid,
   removeSocketListeners,
+  listenToPurchase,
 } from '@/lib/socketEvents';
 
 const useListingsSocket = (listings, setListings) => {
@@ -39,7 +40,10 @@ const useListingsSocket = (listings, setListings) => {
         )
       );
     };
-
+    const handlePurchase = ({ listingId }) => {
+      setListings((prevListings) => prevListings.filter((listing) => listing._id !== listingId));
+    };
+    listenToPurchase(handlePurchase);
     listenToNewBid(handleNewBid);
 
     return () => {

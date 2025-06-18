@@ -42,7 +42,7 @@ const useListingPaymentHandler = (initialListings = []) => {
       toast.error('You own the highest bid allready');
       return;
     }
-    
+
     if (listing) {
       setSelectedListing(listing);
       setIsBidModalOpen(true);
@@ -71,7 +71,30 @@ const useListingPaymentHandler = (initialListings = []) => {
       toast.error('You must be logged in to buy now!');
       return;
     }
-    console.log('Buy Now clicked for:', listingId);
+
+    const listing = listings.find((l) => l._id === listingId);
+    if (!listing) {
+      toast.error('Listing not found.');
+      return;
+    }
+
+    if (user.id === listing.sellerId) {
+      toast.error('You can’t buy your own listing.');
+      return;
+    }
+
+    if (listing) {
+      setSelectedListing(listing);
+    }
+
+    openPaymentModal({
+      listingId: listing._id,
+      amount: listing.price,
+      mode: 'buyNow',
+      onSuccess: (purchasedListing) => {
+        setListings((prev) => prev.filter((l) => l._id !== purchasedListing._id));
+      },
+    });
   };
 
   const closeBidModal = () => setIsBidModalOpen(false);

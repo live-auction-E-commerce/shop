@@ -1,10 +1,16 @@
 import PaymentIntent from '../models/PaymentIntent.js';
 import { createStripePaymentIntent } from '../lib/payments.js';
 
-export const createPaymentIntent = async ({ amount, userId }) => {
+export const createPaymentIntent = async ({ amount, userId, mode = 'bid' }) => {
+  console.log('Creating payment intent:', {
+    amount,
+    userId,
+    mode,
+  });
   const paymentIntent = await createStripePaymentIntent({
     amount,
     userId,
+    mode,
   });
   const savedIntent = await PaymentIntent.create({
     userId,
