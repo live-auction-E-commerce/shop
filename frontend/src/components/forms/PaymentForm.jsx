@@ -9,7 +9,14 @@ import usePaymentForm from '@/hooks/payments/usePaymentForm';
 import { toast } from 'sonner';
 import { formatCurrency } from '@/lib/utils';
 
-const PaymentForm = ({ amount, currency = 'usd', onSuccess, onError, paymentIntentId }) => {
+const PaymentForm = ({
+  amount,
+  currency = 'usd',
+  onSuccess,
+  onError,
+  paymentIntentId,
+  clientSecret,
+}) => {
   const { user } = useAuth();
   const { email } = user;
   const { handleSubmit, isLoading, error, stripe } = usePaymentForm({
@@ -19,6 +26,7 @@ const PaymentForm = ({ amount, currency = 'usd', onSuccess, onError, paymentInte
     onSuccess,
     onError,
     paymentIntentId,
+    clientSecret,
   });
 
   if (!user) {

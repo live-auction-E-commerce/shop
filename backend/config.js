@@ -15,6 +15,7 @@ const config = {
   AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
   AWS_REGION: process.env.AWS_REGION,
   AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
+  REDIS_URL: process.env.REDIS_URL,
 };
 
 if (!config.MONGO_URI) {
@@ -53,6 +54,9 @@ if (!config.AWS_S3_BUCKET_NAME) {
   console.warn(
     '⚠️  Warning: AWS_S3_BUCKET_NAME is not set in your .env file. AWS S3 uploads will not work.',
   );
+}
+if (!config.REDIS_URL) {
+  console.warn('⚠️  Warning: REDIS_URL is not set. BullMQ jobs won’t work.');
 }
 
 export default config;

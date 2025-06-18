@@ -15,3 +15,15 @@ export const createStripePaymentIntent = async ({ amount, bidId, userId }) => {
     metadata: { bidId, userId },
   });
 };
+
+export const captureStripePaymentIntent = async (stripePaymentIntentId) => {
+  try {
+    const capturedIntent = await stripe.paymentIntents.capture(
+      stripePaymentIntentId,
+    );
+    return capturedIntent;
+  } catch (err) {
+    console.error('Error capturing PaymentIntent:', err);
+    throw err;
+  }
+};
