@@ -1,19 +1,45 @@
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Clock, DollarSign } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import useBids from '@/hooks/common/UseBids';
+import useSingleBidSocket from '@/hooks/sockets/useSingleBidSocket';
 
-const BidChatbox = ({ listingId, className = '' }) => {
-  const { bids, isLoading, error } = useBids(listingId);
+const BidChatbox = ({ listingId, className = '', localNewBid }) => {
+  const { bids: initialBids, isLoading, error } = useBids(listingId);
+  const [bids, setBids] = useState([]);
+
+  useEffect(() => {
+    if (initialBids && initialBids.length > 0) {
+      setBids(initialBids);
+    }
+  }, [initialBids]);
+
+  // Socket updates: add new bid at the front
+  useSingleBidSocket(listingId, (bid) => {
+    setBids((prev) => {
+      // Avoid duplicate bids by _id
+      if (prev.find((b) => b._id === bid._id)) return prev;
+      return [bid, ...prev];
+    });
+  });
+
+  // Handle localNewBid prop updates (user's own new bid)
+  useEffect(() => {
+    if (!localNewBid) return;
+    setBids((prev) => {
+      // If bid already exists, don't add it again
+      if (prev.find((b) => b._id === localNewBid._id)) return prev;
+      return [localNewBid, ...prev];
+    });
+  }, [localNewBid]);
 
   const formatTimeAgo = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    console.log(diffInSeconds);
-
     if (diffInSeconds < 60) return 'Just now';
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
@@ -62,8 +88,6 @@ const BidChatbox = ({ listingId, className = '' }) => {
     );
   }
 
-  const bidList = bids || [];
-
   return (
     <Card className={className}>
       <CardHeader>
@@ -71,21 +95,21 @@ const BidChatbox = ({ listingId, className = '' }) => {
           <DollarSign className="h-5 w-5" />
           Bid History
           <Badge variant="secondary" className="ml-auto">
-            {bidList.length} {bidList.length === 1 ? 'bid' : 'bids'}
+            {bids.length} {bids.length === 1 ? 'bid' : 'bids'}
           </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <ScrollArea className="h-80 px-6 pb-6">
-          {bidList.length === 0 ? (
+          {bids.length === 0 ? (
             <div className="text-center text-muted-foreground py-8">
               <p>No bids yet. Be the first to bid!</p>
             </div>
           ) : (
             <div className="space-y-3">
-              {bidList.map((bid, index) => (
+              {bids.map((bid, index) => (
                 <div
-                  key={bid._id}
+                  key={bid._id || `bid-${index}`} // defensive fallback key
                   className={`flex items-start gap-3 p-3 rounded-lg border ${
                     index === 0 ? 'bg-primary/5 border-primary/20' : 'bg-muted/30'
                   }`}

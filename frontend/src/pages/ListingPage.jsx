@@ -15,6 +15,7 @@ const ListingPage = () => {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [localNewBid, setLocalNewBid] = useState(null);
   const { user } = useAuth();
 
   const {
@@ -77,6 +78,7 @@ const ListingPage = () => {
             userId: newBid.userId,
           },
         }));
+        setLocalNewBid(newBid);
       },
     });
   };
@@ -110,8 +112,8 @@ const ListingPage = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main product details - takes up 2 columns on large screens */}
-        <div className="lg:col-span-2">
+        {/* Adjust column span depending on sale type */}
+        <div className={listing.saleType === 'auction' ? 'lg:col-span-2' : 'lg:col-span-3'}>
           <ProductDetails
             listing={listing}
             onBidClick={handleBidClick}
@@ -119,10 +121,12 @@ const ListingPage = () => {
           />
         </div>
 
-        {/* Bid chatbox - takes up 1 column on large screens */}
-        <div className="lg:col-span-1">
-          <BidChatbox listingId={id} className="sticky top-4" />
-        </div>
+        {/* Only show bid chatbox if it's an auction */}
+        {listing.saleType === 'auction' && (
+          <div className="lg:col-span-1">
+            <BidChatbox listingId={id} className="sticky top-4" localNewBid={localNewBid} />
+          </div>
+        )}
       </div>
 
       <PaymentModal
