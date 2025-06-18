@@ -6,7 +6,6 @@ export default function useSingleBidSocket(listingId, onNewBid) {
     if (!listingId) return;
 
     emitJoinListing(listingId);
-    console.log('im here');
 
     const handleNewBid = ({ listingId: incomingId, bid }) => {
       if (incomingId === listingId) {
