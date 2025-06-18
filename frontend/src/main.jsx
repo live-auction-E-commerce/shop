@@ -5,12 +5,15 @@ import { RouterProvider } from 'react-router-dom';
 import router from './routes/router';
 import { AuthProvider } from './context/AuthContext';
 import { StripeProvider } from './context/StripeContext';
+import { BidProvider } from './context/BidContext';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <StripeProvider>
-        <RouterProvider router={router} />
+        <BidProvider>
+          <RouterProvider router={router} />
+        </BidProvider>
       </StripeProvider>
     </AuthProvider>
   </StrictMode>

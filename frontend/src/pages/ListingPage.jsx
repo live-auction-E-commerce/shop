@@ -9,14 +9,16 @@ import PaymentModal from '@/components/modals/PaymentModal';
 import usePaymentHandler from '@/hooks/payments/usePaymentHandler';
 import { useAuth } from '@/context/AuthContext';
 import { maxPossibleBidAmount } from '@/constants/constants';
+import { useBidContext } from '@/context/BidContext';
 
 const ListingPage = () => {
   const { id } = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [localNewBid, setLocalNewBid] = useState(null);
+
   const { user } = useAuth();
+  const { setLatestBid } = useBidContext();
 
   const {
     openPaymentModal,
@@ -78,7 +80,7 @@ const ListingPage = () => {
             userId: newBid.userId,
           },
         }));
-        setLocalNewBid(newBid);
+        setLatestBid(newBid);
       },
     });
   };
@@ -124,7 +126,7 @@ const ListingPage = () => {
         {/* Only show bid chatbox if it's an auction */}
         {listing.saleType === 'auction' && (
           <div className="lg:col-span-1">
-            <BidChatbox listingId={id} className="sticky top-4" localNewBid={localNewBid} />
+            <BidChatbox listingId={id} className="sticky top-4" />
           </div>
         )}
       </div>
