@@ -52,6 +52,4 @@ function Button({
   );
 }
 
-// Consider using PropTypes
-
 export { Button, buttonVariants }

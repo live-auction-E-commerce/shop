@@ -76,11 +76,12 @@ export const handleListingSearch = async (query) => {
   }
 };
 
-export function formatCurrency(amount, locale = 'en-US', currency = 'USD') {
-  return new Intl.NumberFormat(locale, {
+export function formatCurrency(amount) {
+  const numAmount = typeof amount === 'string' ? Number.parseFloat(amount) : amount;
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
-  }).format(amount);
+    currency: 'USD',
+  }).format(numAmount);
 }
 
 export const getGridClass = (itemsPerRow) => {
@@ -191,3 +192,19 @@ export const formatDate = (dateString) => {
     day: 'numeric',
   });
 };
+
+export function formatTimeAgo(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  if (diffInSeconds < 60) return 'Just now';
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+  return `${Math.floor(diffInSeconds / 86400)}d ago`;
+}
+
+export function maskEmail(email) {
+  const [username, domain] = email.split('@');
+  if (username.length <= 2) return email;
+  return `${username.slice(0, 2)}***@${domain}`;
+}

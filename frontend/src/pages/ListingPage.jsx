@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
+import BidChatbox from '@/components/bid/BidChatbox';
 import { getListingById } from '@/services/listingService';
 import useSingleListingSocket from '@/hooks/sockets/useSingleListingSocket';
 import { toast } from 'sonner';
@@ -8,13 +9,16 @@ import PaymentModal from '@/components/modals/PaymentModal';
 import usePaymentHandler from '@/hooks/payments/usePaymentHandler';
 import { useAuth } from '@/context/AuthContext';
 import { maxPossibleBidAmount } from '@/constants/constants';
+import { useBidContext } from '@/context/BidContext';
 
 const ListingPage = () => {
   const { id } = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const { user } = useAuth();
+  const { setLatestBid } = useBidContext();
 
   const {
     openPaymentModal,
@@ -76,11 +80,11 @@ const ListingPage = () => {
             userId: newBid.userId,
           },
         }));
+        setLatestBid(newBid);
       },
     });
   };
 
-  // TODO: Implement Buy Now Logic
   const handleBuyNowClick = () => {
     if (!user?.id) {
       toast.error('You must be logged in to buy now!');
@@ -108,12 +112,24 @@ const ListingPage = () => {
   if (!listing) return <p>Product not found</p>;
 
   return (
-    <>
-      <ProductDetails
-        listing={listing}
-        onBidClick={handleBidClick}
-        onBuyNowClick={handleBuyNowClick}
-      />
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Adjust column span depending on sale type */}
+        <div className={listing.saleType === 'auction' ? 'lg:col-span-2' : 'lg:col-span-3'}>
+          <ProductDetails
+            listing={listing}
+            onBidClick={handleBidClick}
+            onBuyNowClick={handleBuyNowClick}
+          />
+        </div>
+
+        {/* Only show bid chatbox if it's an auction */}
+        {listing.saleType === 'auction' && (
+          <div className="lg:col-span-1">
+            <BidChatbox listingId={id} className="sticky top-4" />
+          </div>
+        )}
+      </div>
 
       <PaymentModal
         isOpen={isPaymentModalOpen}
@@ -123,7 +139,7 @@ const ListingPage = () => {
         onSuccess={handlePaymentSuccess}
         listing={listing}
       />
-    </>
+    </div>
   );
 };
 
