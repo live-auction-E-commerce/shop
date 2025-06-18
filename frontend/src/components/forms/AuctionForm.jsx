@@ -101,6 +101,8 @@ const AuctionForm = ({ form }) => {
 
                 field.onChange(newDateTime);
               };
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
 
               return (
                 <FormItem className="flex flex-col">
@@ -128,7 +130,7 @@ const AuctionForm = ({ form }) => {
                               mode="single"
                               selected={selectedDate}
                               onSelect={handleDateSelect}
-                              disabled={(date) => date < new Date()}
+                              disabled={(date) => date < today}
                               initialFocus
                             />
                           </PopoverContent>

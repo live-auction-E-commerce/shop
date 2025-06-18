@@ -10,13 +10,17 @@ import usePaymentHandler from '@/hooks/payments/usePaymentHandler';
 import { useAuth } from '@/context/AuthContext';
 import { maxPossibleBidAmount } from '@/constants/constants';
 import { useBidContext } from '@/context/BidContext';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 const ListingPage = () => {
   const { id } = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showConfetti, setShowConfetti] = useState(false);
 
+  const { width, height } = useWindowSize();
   const { user } = useAuth();
   const { setLatestBid } = useBidContext();
 
@@ -27,6 +31,13 @@ const ListingPage = () => {
     isPaymentModalOpen,
     pendingBidAmount,
   } = usePaymentHandler();
+
+  useEffect(() => {
+    if (showConfetti) {
+      const timeout = setTimeout(() => setShowConfetti(false), 10000);
+      return () => clearTimeout(timeout);
+    }
+  }, [showConfetti]);
 
   useEffect(() => {
     async function fetchListing() {
@@ -43,7 +54,7 @@ const ListingPage = () => {
     if (id) fetchListing();
   }, [id]);
 
-  useSingleListingSocket(listing, setListing);
+  useSingleListingSocket(listing, setListing, setShowConfetti);
 
   const handleBidClick = (bidAmount) => {
     if (!user?.id) {
@@ -112,34 +123,47 @@ const ListingPage = () => {
   if (!listing) return <p>Product not found</p>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Adjust column span depending on sale type */}
-        <div className={listing.saleType === 'auction' ? 'lg:col-span-2' : 'lg:col-span-3'}>
-          <ProductDetails
-            listing={listing}
-            onBidClick={handleBidClick}
-            onBuyNowClick={handleBuyNowClick}
-          />
+    <>
+      {showConfetti && (
+        <Confetti
+          width={width}
+          height={height}
+          numberOfPieces={500} // More confetti
+          gravity={0.3} // Slower fall for a fun effect
+          wind={0.01} // Slight drift
+          recycle={false} // Stop after one explosion
+          initialVelocityX={10}
+          initialVelocityY={15}
+          tweenDuration={7000} // Smoother, longer animation
+        />
+      )}
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className={listing.saleType === 'auction' ? 'lg:col-span-2' : 'lg:col-span-3'}>
+            <ProductDetails
+              listing={listing}
+              onBidClick={handleBidClick}
+              onBuyNowClick={handleBuyNowClick}
+            />
+          </div>
+
+          {listing.saleType === 'auction' && (
+            <div className="lg:col-span-1">
+              <BidChatbox listingId={id} className="sticky top-4" />
+            </div>
+          )}
         </div>
 
-        {/* Only show bid chatbox if it's an auction */}
-        {listing.saleType === 'auction' && (
-          <div className="lg:col-span-1">
-            <BidChatbox listingId={id} className="sticky top-4" />
-          </div>
-        )}
+        <PaymentModal
+          isOpen={isPaymentModalOpen}
+          onClose={handlePaymentCancel}
+          amount={pendingBidAmount || 0}
+          description={`Bid for ${listing._id}`}
+          onSuccess={handlePaymentSuccess}
+          listing={listing}
+        />
       </div>
-
-      <PaymentModal
-        isOpen={isPaymentModalOpen}
-        onClose={handlePaymentCancel}
-        amount={pendingBidAmount || 0}
-        description={`Bid for ${listing._id}`}
-        onSuccess={handlePaymentSuccess}
-        listing={listing}
-      />
-    </div>
+    </>
   );
 };
 
