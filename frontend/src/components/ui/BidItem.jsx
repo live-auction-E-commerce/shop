@@ -1,7 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Clock } from 'lucide-react';
-import { formatCurrency } from '@/lib/utils';
-import { formatTimeAgo, maskEmail } from '@/lib/bidHelpers';
+import { formatCurrency, formatTimeAgo, maskEmail } from '@/lib/utils';
 
 const BidItem = ({ bid, isHighest }) => {
   return (
