@@ -6,7 +6,7 @@ import { DollarSign } from 'lucide-react';
 import useBids from '@/hooks/common/UseBids';
 import useSingleBidSocket from '@/hooks/sockets/useSingleBidSocket';
 import { useBidContext } from '@/context/BidContext';
-import BidItem from '@/components/ui/BidItem';
+import BidItem from '@/components/bid/BidItem';
 
 const BidChatbox = ({ listingId, className = '' }) => {
   const { bids: initialBids, isLoading, error } = useBids(listingId);
