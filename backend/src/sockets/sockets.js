@@ -39,7 +39,6 @@ export function handleListingSocketConnection(socket) {
 
 export function broadcastAuctionEnd(listingId, winnerData) {
   io.to(listingId).emit('auction-ended', {
-    message: 'Auction has ended!',
     winner: winnerData,
   });
   console.log(`Emitted auction-ended event for listing ${listingId}`);

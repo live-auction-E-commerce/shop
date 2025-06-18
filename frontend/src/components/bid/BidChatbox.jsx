@@ -27,7 +27,7 @@ const BidChatbox = ({ listingId, className = '' }) => {
   });
 
   useEffect(() => {
-    if (!latestBid) return;
+    if (!latestBid || latestBid.listingId !== listingId) return;
     setBids((prev) => {
       if (prev.find((b) => b._id === latestBid._id)) return prev;
       return [latestBid, ...prev];

@@ -9,7 +9,7 @@ import {
 } from '@/lib/socketEvents';
 import { toast } from 'sonner';
 
-const useSingleListingSocket = (listing, setListing) => {
+const useSingleListingSocket = (listing, setListing, setShowConfetti) => {
   const listingIdRef = useRef(null);
 
   useEffect(() => {
@@ -53,14 +53,14 @@ const useSingleListingSocket = (listing, setListing) => {
       }
     };
 
-    const handleAuctionEnd = ({ message, winner }) => {
+    const handleAuctionEnd = ({ winner }) => {
       if (winner.listingId === listingIdRef.current) {
         setListing((prev) => ({
           ...prev,
           isSold: true,
         }));
-        alert(message);
         toast.warning(`Auction ended!`);
+        setShowConfetti(true);
       }
     };
 
@@ -71,7 +71,7 @@ const useSingleListingSocket = (listing, setListing) => {
     return () => {
       removeSocketListeners();
     };
-  }, [setListing]);
+  }, [setListing, setShowConfetti]);
 };
 
 export default useSingleListingSocket;
