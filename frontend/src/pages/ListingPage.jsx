@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
-import BidChatbox from '@/components/ui/BidChatbox';
+import BidChatbox from '@/components/bid/BidChatbox';
 import { getListingById } from '@/services/listingService';
 import useSingleListingSocket from '@/hooks/sockets/useSingleListingSocket';
 import { toast } from 'sonner';
