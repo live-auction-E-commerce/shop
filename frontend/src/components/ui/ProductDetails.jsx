@@ -52,6 +52,7 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
   }
 
   const isAuction = listing.saleType === 'auction';
+  const isExpired = new Date(listing.expiredAt) < new Date();
   const isSold = listing.isSold;
 
   const nextImage = () => {
@@ -156,7 +157,7 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
                   </span>
                 </div>
 
-                {isAuction && !isSold ? (
+                {isAuction && !isSold && !isExpired ? (
                   <div className="space-y-3">
                     <div className="flex gap-2">
                       <Input
@@ -181,6 +182,10 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
                       )}
                     </p>
                   </div>
+                ) : isAuction && isExpired ? (
+                  <Badge variant="destructive" className="text-md py-2 px-4">
+                    Auction expired
+                  </Badge>
                 ) : !isSold ? (
                   <Button className="w-full" onClick={handleBuyNow}>
                     Buy Now

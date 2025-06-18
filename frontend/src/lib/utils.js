@@ -159,3 +159,35 @@ export const filterListings = (
     return matchesSearch && matchesSaleType && matchesCondition && matchesStatus;
   });
 };
+
+export const filterOrders = (orders, searchTerm) => {
+  return orders.filter((order) => {
+    const matchesSearch =
+      order.listingId.productId.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.listingId.productId.brand.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
+};
+
+export const sortOrders = (orders, sortBy) => {
+  return [...orders].sort((a, b) => {
+    if (sortBy === 'newest') {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    } else if (sortBy === 'oldest') {
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    } else if (sortBy === 'price-high') {
+      return b.price - a.price;
+    } else if (sortBy === 'price-low') {
+      return a.price - b.price;
+    }
+    return 0;
+  });
+};
+
+export const formatDate = (dateString) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
