@@ -129,14 +129,10 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
 
         {/* Product Details */}
         {/* Export to component */}
-        <div className="space-y-6">
+        <div className="">
           <div>
             <h1 className="text-3xl font-bold">{listing.name}</h1>
             <p className="text-lg text-muted-foreground mt-1">{listing.brand}</p>
-            <div className="flex items-center gap-2 mt-2">
-              <Badge variant="outline">{listing.category}</Badge>
-              <Badge variant="outline">{listing.condition}</Badge>
-            </div>
           </div>
 
           <Card>
