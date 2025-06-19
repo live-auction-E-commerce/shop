@@ -43,3 +43,18 @@ export const verifyToken = async () => {
     { requireAuth: true }
   );
 };
+
+export const verifySellerEmail = async (token) => {
+  console.log(token);
+  return await fetchAPI(
+    '/api/verify-seller-email',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token }),
+    },
+    { requireAuth: true }
+  );
+};

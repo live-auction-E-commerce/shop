@@ -12,11 +12,20 @@ import { auctionQueue } from '../jobs/queue.js';
 const MAX_AUCTION_DURATION = 1000 * 60 * 60 * 24 * 30; // 30 days in milliseconds
 
 export const createListing = async (req) => {
+  const SELLER_ROLE = 'Seller';
   const { saleType, price, startingBid, expiredAt, productId } = req.body;
   const { user } = req;
   validateEnum(saleType, SaleTypes, 'Sale Type');
   validateObjectId(productId);
   validateObjectId(user.id);
+
+  if (user.role !== SELLER_ROLE) {
+    throw new Error('You must be a seller to post a new listing!');
+  }
+
+  if (!user.isEmailVerified) {
+    throw new Error('You must verify your email to post new listings!');
+  }
 
   if (saleType === 'now') {
     if (!price) {

@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
         const response = await verifyToken(token);
         const verifiedUser = response.user;
         setUser(verifiedUser);
-        const address = await getDefaultAddress(verifiedUser.id);
+        const address = await getDefaultAddress(verifiedUser._id);
         setDefaultAddress(address);
       } catch (error) {
         console.error('Invalid token:', error);
@@ -39,11 +39,10 @@ export const AuthProvider = ({ children }) => {
       const response = await verifyToken(token);
       const verifiedUser = response.user;
       setUser(verifiedUser);
-
-      const address = await getDefaultAddress(verifiedUser.id);
+      const address = await getDefaultAddress(verifiedUser._id);
       setDefaultAddress(address);
     } catch (error) {
-      toast.error(error);
+      toast.error(error?.message || 'Login failed');
       logout();
     }
   };
@@ -65,11 +64,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await verifyToken(token);
+      setUser(response.user);
+    } catch (err) {
+      console.error('Failed to refresh user', err);
+    }
+  };
+
   const isAuthenticated = !!token;
 
   return (
     <AuthContext.Provider
-      value={{ token, user, defaultAddress, login, logout, isAuthenticated, refreshDefaultAddress }}
+      value={{
+        token,
+        user,
+        defaultAddress,
+        login,
+        logout,
+        isAuthenticated,
+        refreshDefaultAddress,
+        fetchCurrentUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

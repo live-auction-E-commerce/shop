@@ -2,6 +2,7 @@ export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
   REGISTER: '/register',
+  VERIFY_EMAIL: '/verify-seller-email',
   CHANGE_PASSWORD: '/change-password',
   CATEGORY: '/categories/:categoryName',
   CATEGORY_SHIRTS: '/categories/shirts',

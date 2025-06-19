@@ -16,6 +16,10 @@ const config = {
   AWS_REGION: process.env.AWS_REGION,
   AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
   REDIS_URL: process.env.REDIS_URL,
+  EMAIL_HOST: process.env.EMAIL_HOST,
+  EMAIL_PORT: process.env.EMAIL_PORT,
+  EMAIL_USER: process.env.EMAIL_USER,
+  EMAIL_PASS: process.env.EMAIL_PASS,
 };
 
 if (!config.MONGO_URI) {
@@ -57,6 +61,29 @@ if (!config.AWS_S3_BUCKET_NAME) {
 }
 if (!config.REDIS_URL) {
   console.warn('⚠️  Warning: REDIS_URL is not set. BullMQ jobs won’t work.');
+}
+if (!config.EMAIL_USER) {
+  console.warn(
+    '⚠️  Warning: EMAIL_USER is not set in your .env file. Emails won’t send.',
+  );
+}
+
+if (!config.EMAIL_PASS) {
+  console.warn(
+    '⚠️  Warning: EMAIL_PASS is not set in your .env file. Emails won’t send.',
+  );
+}
+
+if (!config.EMAIL_HOST) {
+  console.warn(
+    '⚠️  Warning: EMAIL_HOST is not set in your .env file. Emails won’t send.',
+  );
+}
+
+if (!config.EMAIL_PORT) {
+  console.warn(
+    '⚠️  Warning: EMAIL_PORT is not set in your .env file. Emails won’t send.',
+  );
 }
 
 export default config;

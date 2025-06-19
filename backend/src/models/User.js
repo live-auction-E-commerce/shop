@@ -18,6 +18,16 @@ const userSchema = new mongoose.Schema({
     enum: ['User', 'Seller'],
     default: 'User',
   },
+  isEmailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  emailVerificationToken: {
+    type: String,
+  },
+  emailVerificationTokenExpires: {
+    type: Date,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

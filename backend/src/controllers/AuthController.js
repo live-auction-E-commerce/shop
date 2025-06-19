@@ -47,5 +47,10 @@ export const changePassword = async (req, res) => {
 };
 
 export const verifyToken = async (req, res) => {
-  res.json({ user: req.user });
+  try {
+    const user = await AuthLogic.verifyTokenLogic(req.user.id);
+    res.status(StatusCodes.OK).json({ message: 'User verified', user });
+  } catch (error) {
+    res.status(StatusCodes.NOT_FOUND).json({ error: error.message });
+  }
 };
