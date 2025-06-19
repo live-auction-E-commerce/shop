@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Eye, EyeOff, Lock, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
-import { useChangePassword } from '@/hooks/common/useChangePassword';
+import useChangePassword from '@/hooks/common/useChangePassword';
 
 const ChangePasswordForm = () => {
   const [showPasswords, setShowPasswords] = useState({

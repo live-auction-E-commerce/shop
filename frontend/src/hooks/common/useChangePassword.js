@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { changePasswordSchema } from '@/lib/validations';
 import { changePassword } from '@/services/authService';
 import { ROUTES } from '@/routes/routes_consts';
-
-export function useChangePasswordForm() {
+const useChangePasswordForm = () => {
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
   const [serverError, setServerError] = useState('');
@@ -52,4 +51,6 @@ export function useChangePasswordForm() {
   };
 
   return { form, onSubmit, success, serverError, setServerError };
-}
+};
+
+export default useChangePasswordForm;
