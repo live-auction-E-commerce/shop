@@ -37,11 +37,6 @@ const useListingPaymentHandler = (initialListings = []) => {
       navigate(ROUTES.LOGIN);
       return;
     }
-    if (!defaultAddress) {
-      toast.error('You must have a default address to place a bid');
-      navigate(ROUTES.ADDRESSES);
-      return;
-    }
     const listing = listings.find((l) => l._id === listingId);
     if (user.id === listing.sellerId) {
       toast.error('You can not bid on a listing you posted');
@@ -49,6 +44,10 @@ const useListingPaymentHandler = (initialListings = []) => {
     }
     if (user.id === listing.currentBid?.userId) {
       toast.error('You own the highest bid allready');
+      return;
+    }
+    if (!defaultAddress) {
+      toast.error('You must have a default address to place a bid');
       return;
     }
 

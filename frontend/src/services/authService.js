@@ -20,6 +20,21 @@ export const login = async (data) => {
   });
 };
 
+export const changePassword = async (data) => {
+  const respone = await fetchAPI(
+    '/api/password',
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    },
+    { requireAuth: true }
+  );
+  return respone;
+};
+
 export const verifyToken = async () => {
   return await fetchAPI(
     '/api/me',

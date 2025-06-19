@@ -70,11 +70,6 @@ const ListingPage = () => {
       navigate(ROUTES.LOGIN);
       return;
     }
-    if (!defaultAddress) {
-      toast.error('You must have a default address to place a bid');
-      navigate(ROUTES.ADDRESSES);
-      return;
-    }
     const currentBidAmount = listing.currentBid?.amount || listing.startingBid;
     if (bidAmount <= currentBidAmount) {
       toast.error('Bid must be greater than current bid');
@@ -90,6 +85,10 @@ const ListingPage = () => {
     }
     if (user.id === listing.currentBid?.userId) {
       toast.error('You own the highest bid already');
+      return;
+    }
+    if (!defaultAddress) {
+      toast.error('You must have a default address to place a bid');
       return;
     }
 
