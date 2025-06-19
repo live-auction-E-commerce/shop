@@ -21,7 +21,7 @@ export const login = async (data) => {
 };
 
 export const changePassword = async (data) => {
-  const respone = await fetchAPI(
+  return await fetchAPI(
     '/api/password',
     {
       method: 'PATCH',
@@ -32,7 +32,6 @@ export const changePassword = async (data) => {
     },
     { requireAuth: true }
   );
-  return respone;
 };
 
 export const verifyToken = async () => {
