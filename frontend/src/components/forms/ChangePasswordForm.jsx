@@ -19,14 +19,18 @@ const ChangePasswordForm = () => {
   const navigate = useNavigate();
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
+    form: {
+      register,
+      handleSubmit,
+      formState: { errors, isSubmitting },
+    },
     onSubmit,
     serverError,
     success,
   } = useChangePassword(() => {
-    setTimeout(() => navigate(ROUTES.HOME), 2000);
+    setTimeout(() => {
+      navigate(ROUTES.HOME);
+    }, 3000);
   });
 
   const togglePasswordVisibility = (field) => {
