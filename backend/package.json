@@ -4,7 +4,6 @@
     "seed": "node src/lib/seed.js",
     "start": "node server.js",
     "start:worker": "node src/jobs/auctionWorker.js"
-
   },
   "dependencies": {
     "aws-sdk": "^2.1692.0",
