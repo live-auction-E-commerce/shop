@@ -129,7 +129,7 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
 
         {/* Product Details */}
         {/* Export to component */}
-        <div className="">
+        <div className="space-y-4 ">
           <div>
             <h1 className="text-3xl font-bold">{listing.name}</h1>
             <p className="text-lg text-muted-foreground mt-1">{listing.brand}</p>
