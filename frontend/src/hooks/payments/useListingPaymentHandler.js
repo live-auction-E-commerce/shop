@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
 
 const useListingPaymentHandler = (initialListings = []) => {
-  const { user } = useAuth();
+  const { user, defaultAddress } = useAuth();
 
   const {
     isPaymentModalOpen,
@@ -31,6 +31,10 @@ const useListingPaymentHandler = (initialListings = []) => {
   const handleBidClick = (listingId) => {
     if (!user) {
       toast.error('You must be logged in to place a bid!');
+      return;
+    }
+    if (!defaultAddress) {
+      toast.error('You must have a default address to place a bid');
       return;
     }
     const listing = listings.find((l) => l._id === listingId);

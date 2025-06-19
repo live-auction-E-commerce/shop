@@ -13,7 +13,7 @@ router.get(
 router.get('/addresses/:id', AddressController.getAddressById);
 router.put('/addresses/:id', verifyLoggedIn, AddressController.updateAddress);
 router.get(
-  '/addresses/:userId/default',
+  '/addresses/default/:userId',
   verifyLoggedIn,
   AddressController.getDefaultAddress,
 );

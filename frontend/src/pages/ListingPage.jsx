@@ -22,7 +22,7 @@ const ListingPage = () => {
   const [showConfetti, setShowConfetti] = useState(false);
 
   const { width, height } = useWindowSize();
-  const { user } = useAuth();
+  const { user, defaultAddress } = useAuth();
   const { setLatestBid } = useBidContext();
 
   const {
@@ -64,6 +64,10 @@ const ListingPage = () => {
   const handleBidClick = (bidAmount) => {
     if (!user?.id) {
       toast.error('You must be logged in to place a bid!');
+      return;
+    }
+    if (!defaultAddress) {
+      toast.error('You must have a default address to place a bid');
       return;
     }
     const currentBidAmount = listing.currentBid?.amount || listing.startingBid;
