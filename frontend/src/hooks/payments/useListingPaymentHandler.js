@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react';
 import usePaymentHandler from '@/hooks/payments/usePaymentHandler';
 import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
+import { ROUTES } from '@/routes/routes_consts';
+import { useNavigate } from 'react-router-dom';
 
 const useListingPaymentHandler = (initialListings = []) => {
   const { user, defaultAddress } = useAuth();
+  const navigate = useNavigate();
 
   const {
     isPaymentModalOpen,
@@ -31,10 +34,12 @@ const useListingPaymentHandler = (initialListings = []) => {
   const handleBidClick = (listingId) => {
     if (!user) {
       toast.error('You must be logged in to place a bid!');
+      navigate(ROUTES.LOGIN);
       return;
     }
     if (!defaultAddress) {
       toast.error('You must have a default address to place a bid');
+      navigate(ROUTES.ADDRESSES);
       return;
     }
     const listing = listings.find((l) => l._id === listingId);
