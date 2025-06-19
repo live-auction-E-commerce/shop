@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
 import BidChatbox from '@/components/bid/BidChatbox';
+import WinnerModal from '@/components/modals/WinnerModal';
 import { getListingById } from '@/services/listingService';
 import useSingleListingSocket from '@/hooks/sockets/useSingleListingSocket';
 import { toast } from 'sonner';
@@ -54,7 +55,11 @@ const ListingPage = () => {
     if (id) fetchListing();
   }, [id]);
 
-  useSingleListingSocket(listing, setListing, setShowConfetti);
+  const { winnerData, clearWinnerData } = useSingleListingSocket(
+    listing,
+    setListing,
+    setShowConfetti
+  );
 
   const handleBidClick = (bidAmount) => {
     if (!user?.id) {
@@ -161,6 +166,11 @@ const ListingPage = () => {
           description={`Bid for ${listing._id}`}
           onSuccess={handlePaymentSuccess}
           listing={listing}
+        />
+        <WinnerModal
+          isVisible={!!winnerData}
+          winnerEmail={winnerData?.buyerEmail}
+          onClose={clearWinnerData}
         />
       </div>
     </>

@@ -182,7 +182,7 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
                       )}
                     </p>
                   </div>
-                ) : isAuction && isExpired ? (
+                ) : isAuction && isExpired && !isSold ? (
                   <Badge variant="destructive" className="text-md py-2 px-4">
                     Auction expired
                   </Badge>

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   emitJoinListing,
   emitLeaveListing,
@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 
 const useSingleListingSocket = (listing, setListing, setShowConfetti) => {
   const listingIdRef = useRef(null);
+  const [winnerData, setWinnerData] = useState(null);
 
   useEffect(() => {
     if (!listing?._id) return;
@@ -26,7 +27,6 @@ const useSingleListingSocket = (listing, setListing, setShowConfetti) => {
 
   useEffect(() => {
     const handleNewBid = ({ listingId, bid }) => {
-      console.log('Received new bid via socket:', bid);
       if (listingId === listingIdRef.current) {
         setListing((prev) =>
           prev
@@ -59,7 +59,8 @@ const useSingleListingSocket = (listing, setListing, setShowConfetti) => {
           ...prev,
           isSold: true,
         }));
-        toast.warning(`Auction ended!`);
+        setWinnerData(winner);
+        toast.success(`🎉 Auction won by ${winner?.buyerEmail}`);
         setShowConfetti(true);
       }
     };
@@ -72,6 +73,11 @@ const useSingleListingSocket = (listing, setListing, setShowConfetti) => {
       removeSocketListeners();
     };
   }, [setListing, setShowConfetti]);
+
+  return {
+    winnerData,
+    clearWinnerData: () => setWinnerData(null),
+  };
 };
 
 export default useSingleListingSocket;

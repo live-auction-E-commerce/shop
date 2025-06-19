@@ -3,6 +3,8 @@ import Address from '../models/Address.js';
 import Order from '../models/Order.js';
 import PaymentIntent from '../models/PaymentIntent.js';
 // eslint-disable-next-line no-unused-vars
+import User from '../models/User.js';
+// eslint-disable-next-line no-unused-vars
 import Bid from '../models/Bid.js';
 import { validateObjectId } from '../lib/validations.js';
 
@@ -16,7 +18,13 @@ TODO:
 export const finishAuction = async (listingId) => {
   validateObjectId(listingId);
 
-  const listing = await Listing.findById(listingId).populate('currentBid');
+  const listing = await Listing.findById(listingId).populate({
+    path: 'currentBid',
+    populate: {
+      path: 'userId',
+      model: 'User',
+    },
+  });
   if (!listing) {
     throw new Error('Listing not found');
   }
@@ -26,7 +34,8 @@ export const finishAuction = async (listingId) => {
     throw new Error('No bids found on this listing');
   }
 
-  const buyerId = currentBid.userId;
+  const buyerId = currentBid.userId._id;
+  const buyerEmail = currentBid.userId.email;
   const sellerId = listing.sellerId;
   const price = currentBid.amount || listing.startingBid;
 
@@ -64,6 +73,7 @@ export const finishAuction = async (listingId) => {
     listingId,
     winnerData: {
       buyerId,
+      buyerEmail,
       price,
       listingId,
       paymentIntentId: paymentIntent.stripePaymentIntentId,
