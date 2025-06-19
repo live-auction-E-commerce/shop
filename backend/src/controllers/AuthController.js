@@ -28,6 +28,24 @@ export const login = async (req, res) => {
   }
 };
 
+export const changePassword = async (req, res) => {
+  try {
+    const { token, user } = await AuthLogic.changePassword({
+      userId: req.user.id,
+      currentPassword: req.body.currentPassword,
+      newPassword: req.body.newPassword,
+    });
+
+    res.status(StatusCodes.OK).json({
+      message: 'Password changed successfully',
+      token,
+      user,
+    });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+  }
+};
+
 export const verifyToken = async (req, res) => {
   res.json({ user: req.user });
 };

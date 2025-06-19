@@ -7,6 +7,11 @@ export const getAllAddressesById = async (userId) => {
 export const getAddressById = async (AddressId) => {
   return await fetchAPI(`/api/addresses/${AddressId}`);
 };
+export const getDefaultAddress = async (userId) => {
+  return await fetchAPI(`/api/addresses/default/${userId}`, undefined, {
+    requireAuth: true,
+  });
+};
 
 export const createAddress = async (data) => {
   await fetchAPI(

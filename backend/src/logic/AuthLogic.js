@@ -52,6 +52,33 @@ export const login = async (data) => {
   return { token, user: userWithoutPassword };
 };
 
+export const changePassword = async ({
+  userId,
+  currentPassword,
+  newPassword,
+}) => {
+  const user = await User.findById(userId);
+  if (!user) throw new Error('User not found');
+
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
+  if (!isMatch) throw new Error('Current password is incorrect');
+
+  const hashedPassword = await hashPassword(newPassword);
+  user.password = hashedPassword;
+  await user.save();
+
+  // eslint-disable-next-line no-unused-vars
+  const { password: _, ...userWithoutPassword } = user.toObject();
+
+  const token = getNewToken({
+    id: user._id,
+    email: user.email,
+    role: user.role,
+  });
+
+  return { token, user: userWithoutPassword };
+};
+
 export const isEmailTaken = async (email) => {
   const user = await User.findOne({ email });
   return !!user; // returns true if user exists, false otherwise

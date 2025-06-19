@@ -13,6 +13,8 @@ import { maxPossibleBidAmount } from '@/constants/constants';
 import { useBidContext } from '@/context/BidContext';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
+import { ROUTES } from '@/routes/routes_consts';
+import { useNavigate } from 'react-router-dom';
 
 const ListingPage = () => {
   const { id } = useParams();
@@ -22,8 +24,9 @@ const ListingPage = () => {
   const [showConfetti, setShowConfetti] = useState(false);
 
   const { width, height } = useWindowSize();
-  const { user } = useAuth();
+  const { user, defaultAddress } = useAuth();
   const { setLatestBid } = useBidContext();
+  const navigate = useNavigate();
 
   const {
     openPaymentModal,
@@ -64,6 +67,7 @@ const ListingPage = () => {
   const handleBidClick = (bidAmount) => {
     if (!user?.id) {
       toast.error('You must be logged in to place a bid!');
+      navigate(ROUTES.LOGIN);
       return;
     }
     const currentBidAmount = listing.currentBid?.amount || listing.startingBid;
@@ -81,6 +85,10 @@ const ListingPage = () => {
     }
     if (user.id === listing.currentBid?.userId) {
       toast.error('You own the highest bid already');
+      return;
+    }
+    if (!defaultAddress) {
+      toast.error('You must have a default address to place a bid');
       return;
     }
 

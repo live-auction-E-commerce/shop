@@ -19,7 +19,7 @@ const NewAddress = () => {
   const params = useParams();
   const isEditing = !!params.id;
 
-  const { user } = useAuth();
+  const { user, refreshDefaultAddress } = useAuth();
   const [loadingAddress, setLoadingAddress] = useState(isEditing);
 
   const form = useForm({
@@ -63,9 +63,11 @@ const NewAddress = () => {
     try {
       if (isEditing) {
         await updateAddress(params.id, data);
+        await refreshDefaultAddress();
         toast.success('Address has been updated');
       } else {
         await createAddress(data);
+        await refreshDefaultAddress();
         toast.success('Address has been created');
       }
 

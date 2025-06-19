@@ -14,6 +14,7 @@ import UploadProduct from '@/pages/UploadProduct';
 import OrdersPage from '@/pages/OrdersPage';
 import NotFound from '@/pages/NotFound';
 import { ROUTES } from '@/routes/routes_consts';
+import ChangePasswordPage from '@/pages/ChangePasswordPage';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
       { path: ROUTES.HOME, element: <Home /> },
       { path: ROUTES.LOGIN, element: <Login /> },
       { path: ROUTES.REGISTER, element: <Register /> },
+      { path: ROUTES.CHANGE_PASSWORD, element: <ChangePasswordPage /> },
       { path: ROUTES.CATEGORY, element: <CategoryPage /> },
       { path: ROUTES.LIVE, element: <LiveAuctions /> },
       { path: ROUTES.ADDRESSES, element: <AddressesPage /> },
