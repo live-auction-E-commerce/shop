@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { listenToNewBid, removeNewBidListener } from '@/lib/socketEvents';
+import { listenToNewBid } from '@/lib/socketEvents';
 
 export default function useSingleBidSocket(listingId, onNewBid) {
   useEffect(() => {
@@ -13,8 +13,6 @@ export default function useSingleBidSocket(listingId, onNewBid) {
 
     listenToNewBid(handleNewBid);
 
-    return () => {
-      removeNewBidListener(handleNewBid);
-    };
+    return () => {};
   }, [listingId, onNewBid]);
 }
