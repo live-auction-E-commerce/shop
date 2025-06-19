@@ -2,6 +2,8 @@ import socket from '@/services/socket';
 
 export const emitJoinListing = (listingId) => {
   socket.emit('join-listing', listingId);
+  console.log('hello?');
+  console.trace();
 };
 
 export const emitLeaveListing = (listingId) => {
@@ -24,6 +26,10 @@ export const listenToJoinRoom = (callback) => {
 
 export const listenToNewBid = (callback) => {
   socket.on('new-bid', callback);
+};
+
+export const removeNewBidListener = (callback) => {
+  socket.off('new-bid', callback);
 };
 
 export const removeSocketListeners = () => {
