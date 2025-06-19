@@ -12,6 +12,7 @@ export const emitNewBid = (listingId, bid) => {
   socket.emit('new-bid', {
     listingId,
     bid: {
+      _id: bid._id,
       userId: bid.userId,
       amount: bid.amount,
       createdAt: bid.createdAt,

@@ -21,7 +21,9 @@ const BidChatbox = ({ listingId, className = '' }) => {
 
   useSingleBidSocket(listingId, (bid) => {
     setBids((prev) => {
-      if (prev.find((b) => b._id === bid._id)) return prev;
+      if (prev.find((b) => b._id === bid._id)) {
+        return prev;
+      }
       return [bid, ...prev];
     });
   });
