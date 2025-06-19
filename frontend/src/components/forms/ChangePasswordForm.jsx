@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Eye, EyeOff, Lock, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useChangePassword } from '@/hooks/common/useChangePassword';
 
-export function ChangePasswordForm() {
+const ChangePasswordForm = () => {
   const [showPasswords, setShowPasswords] = useState({
     current: false,
     new: false,
@@ -156,4 +156,6 @@ export function ChangePasswordForm() {
       </CardContent>
     </Card>
   );
-}
+};
+
+export default ChangePasswordForm;
