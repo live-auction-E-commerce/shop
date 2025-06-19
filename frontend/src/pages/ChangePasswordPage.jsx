@@ -1,6 +1,6 @@
-import { ChangePasswordForm } from '@/components/forms/changePasswordForm';
+import ChangePasswordForm from '@/components/forms/ChangePasswordForm';
 
-export default function ChangePasswordPage() {
+const ChangePasswordPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
@@ -12,4 +12,6 @@ export default function ChangePasswordPage() {
       </div>
     </div>
   );
-}
+};
+
+export default ChangePasswordPage;
