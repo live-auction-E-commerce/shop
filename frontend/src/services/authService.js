@@ -45,7 +45,6 @@ export const verifyToken = async () => {
 };
 
 export const verifySellerEmail = async (token) => {
-  console.log(token);
   return await fetchAPI(
     '/api/verify-seller-email',
     {
