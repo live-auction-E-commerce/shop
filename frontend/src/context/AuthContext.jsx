@@ -1,7 +1,6 @@
 import { useEffect, createContext, useContext, useState } from 'react';
 import { verifyToken } from '@/services/authService';
 import { getDefaultAddress } from '@/services/addressService';
-import { toast } from 'sonner';
 
 const AuthContext = createContext();
 
@@ -34,17 +33,6 @@ export const AuthProvider = ({ children }) => {
   const login = async ({ token }) => {
     localStorage.setItem('token', token);
     setToken(token);
-
-    try {
-      const response = await verifyToken(token);
-      const verifiedUser = response.user;
-      setUser(verifiedUser);
-      const address = await getDefaultAddress(verifiedUser._id);
-      setDefaultAddress(address);
-    } catch (error) {
-      toast.error(error?.message || 'Login failed');
-      logout();
-    }
   };
 
   const logout = () => {
