@@ -7,7 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 
 const VerifySellerEmail = () => {
   const [searchParams] = useSearchParams();
-  const { fetchCurrentUser } = useAuth();
+  const { loginWithToken } = useAuth();
 
   const token = searchParams.get('token');
   const navigate = useNavigate();
@@ -16,8 +16,8 @@ const VerifySellerEmail = () => {
   useEffect(() => {
     const verify = async () => {
       try {
-        await verifySellerEmail(token);
-        await fetchCurrentUser();
+        const response = await verifySellerEmail(token);
+        await loginWithToken(response.token);
         toast.success('Your email has been verified!');
         setStatus('Verified successfully!');
         setTimeout(() => navigate(ROUTES.HOME), 1500);
@@ -33,7 +33,7 @@ const VerifySellerEmail = () => {
     } else {
       setStatus('Missing verification token.');
     }
-  }, [token, navigate]);
+  }, [token, navigate, loginWithToken]);
 
   return (
     <div className="text-center py-20">

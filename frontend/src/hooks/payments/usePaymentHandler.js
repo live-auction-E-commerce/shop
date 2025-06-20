@@ -53,7 +53,7 @@ const usePaymentHandler = () => {
       if (state.mode === 'bid') {
         const newBid = await placeBid({
           listingId: state.activeListingId,
-          userId: user.id,
+          userId: user._id,
           paymentIntentId,
           amount: state.pendingBidAmount,
         });
@@ -62,7 +62,7 @@ const usePaymentHandler = () => {
         if (state.onSuccessCallback) state.onSuccessCallback(newBid);
         toast.success('Bid placed successfully!');
       } else if (state.mode === 'buyNow') {
-        const defaultAddress = await getDefaultAddressByUserId(user.id);
+        const defaultAddress = await getDefaultAddressByUserId(user._id);
         if (!defaultAddress || !defaultAddress._id) {
           toast.error('No default address found. Please set one before purchasing.');
           return;
@@ -77,7 +77,7 @@ const usePaymentHandler = () => {
         emitPurchase({ listingId: result._id });
 
         await createOrder({
-          buyerId: user.id,
+          buyerId: user._id,
           sellerId: result.sellerId,
           listingId: result._id,
           addressId: defaultAddress._id,

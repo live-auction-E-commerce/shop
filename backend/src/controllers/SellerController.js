@@ -12,8 +12,10 @@ export const becomeSeller = async (req, res) => {
 
 export const verifySellerEmail = async (req, res) => {
   try {
-    await SellerLogic.verifySellerEmailToken(req.body.token);
-    res.status(StatusCodes.OK).json({ message: 'Verification Completed' });
+    const response = await SellerLogic.verifySellerEmailToken(req.body.token);
+    res
+      .status(StatusCodes.OK)
+      .json({ message: 'Verification Completed', token: response.token });
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
   }

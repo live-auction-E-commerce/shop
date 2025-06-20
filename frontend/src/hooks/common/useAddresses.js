@@ -17,7 +17,7 @@ const useAddresses = () => {
 
     const fetchAddresses = async () => {
       try {
-        const data = await getAllAddressesById(user.id);
+        const data = await getAllAddressesById(user._id);
         setAddresses(data);
       } catch (err) {
         console.error('Failed to fetch addresses:', err);

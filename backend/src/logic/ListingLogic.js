@@ -18,7 +18,7 @@ export const createListing = async (req) => {
   validateEnum(saleType, SaleTypes, 'Sale Type');
   validateObjectId(productId);
   validateObjectId(user.id);
-
+  console.log(user);
   if (user.role !== SELLER_ROLE) {
     throw new Error('You must be a seller to post a new listing!');
   }

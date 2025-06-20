@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import crypto from 'crypto';
 import sendEmail from '../lib/emailSender.js';
+import { getNewToken } from '../lib/vault.js';
 import config from '../../config.js';
 
 // TODO : Create a user for nodemailer to work!
@@ -38,4 +39,13 @@ export const verifySellerEmailToken = async (token) => {
   user.emailVerificationToken = undefined;
   user.emailVerificationTokenExpires = undefined;
   await user.save();
+
+  const newToken = getNewToken({
+    id: user._id,
+    email: user.email,
+    role: user.role,
+    isEmailVerified: true,
+  });
+
+  return { token: newToken };
 };

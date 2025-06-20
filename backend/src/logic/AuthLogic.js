@@ -27,6 +27,7 @@ export const register = async (data) => {
     id: newUser._id,
     email: newUser.email,
     role: newUser.role,
+    isEmailVerified: false,
   });
 
   // eslint-disable-next-line no-unused-vars
@@ -83,6 +84,7 @@ export const changePassword = async ({
     id: user._id,
     email: user.email,
     role: user.role,
+    isEmailVerified: user.isEmailVerified,
   });
 
   return { token, user: userWithoutPassword };

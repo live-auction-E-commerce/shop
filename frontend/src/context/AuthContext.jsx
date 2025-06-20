@@ -55,21 +55,24 @@ export const AuthProvider = ({ children }) => {
   };
 
   const refreshDefaultAddress = async () => {
-    if (!user?.id) return;
+    if (!user?._id) return;
     try {
-      const address = await getDefaultAddress(user.id);
+      const address = await getDefaultAddress(user._id);
       setDefaultAddress(address);
     } catch (err) {
       console.error('Failed to refresh default address:', err);
     }
   };
 
-  const fetchCurrentUser = async () => {
+  const loginWithToken = async (token) => {
+    localStorage.setItem('token', token);
+    setToken(token);
     try {
       const response = await verifyToken(token);
       setUser(response.user);
     } catch (err) {
-      console.error('Failed to refresh user', err);
+      console.error('Failed to fetch user with token', err);
+      logout();
     }
   };
 
@@ -85,7 +88,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         isAuthenticated,
         refreshDefaultAddress,
-        fetchCurrentUser,
+        loginWithToken,
       }}
     >
       {children}
