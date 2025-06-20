@@ -25,7 +25,18 @@ export const createOrder = async (data) => {
 export const getAllOrdersBySeller = async (sellerId) => {
   validateObjectId(sellerId);
 
-  const Orders = await Order.find({ sellerId }).sort({ createdAt: -1 });
+  const Orders = await Order.find({ sellerId })
+    .populate({
+      path: 'listingId',
+      populate: {
+        path: 'productId',
+        model: 'Product',
+      },
+    })
+    .populate('buyerId')
+    .populate('sellerId')
+    .populate('addressId')
+    .sort({ createdAt: -1 });
 
   return Orders;
 };

@@ -12,6 +12,7 @@ import BuyNowPage from '@/pages/BuyNowPage';
 import ListingPage from '@/pages/ListingPage';
 import UploadProduct from '@/pages/UploadProduct';
 import OrdersPage from '@/pages/OrdersPage';
+import SalesPage from '@/pages/SalesPage';
 import NotFound from '@/pages/NotFound';
 import { ROUTES } from '@/routes/routes_consts';
 import ChangePasswordPage from '@/pages/ChangePasswordPage';
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
       { path: ROUTES.LISTING_PAGE, element: <ListingPage /> },
       { path: ROUTES.NEW_PRODUCT, element: <UploadProduct /> },
       { path: ROUTES.ORDERS, element: <OrdersPage /> },
+      { path: ROUTES.SALES, element: <SalesPage /> },
       { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     ],
   },
