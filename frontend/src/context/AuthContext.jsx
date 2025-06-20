@@ -64,18 +64,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const loginWithToken = async (token) => {
-    localStorage.setItem('token', token);
-    setToken(token);
-    try {
-      const response = await verifyToken(token);
-      setUser(response.user);
-    } catch (err) {
-      console.error('Failed to fetch user with token', err);
-      logout();
-    }
-  };
-
   const isAuthenticated = !!token;
 
   return (
@@ -88,7 +76,6 @@ export const AuthProvider = ({ children }) => {
         logout,
         isAuthenticated,
         refreshDefaultAddress,
-        loginWithToken,
       }}
     >
       {children}
