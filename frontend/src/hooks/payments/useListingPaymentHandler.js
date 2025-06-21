@@ -38,11 +38,11 @@ const useListingPaymentHandler = (initialListings = []) => {
       return;
     }
     const listing = listings.find((l) => l._id === listingId);
-    if (user.id === listing.sellerId) {
+    if (user._id === listing.sellerId) {
       toast.error('You can not bid on a listing you posted');
       return;
     }
-    if (user.id === listing.currentBid?.userId) {
+    if (user._id === listing.currentBid?.userId) {
       toast.error('You own the highest bid allready');
       return;
     }
@@ -75,7 +75,7 @@ const useListingPaymentHandler = (initialListings = []) => {
 
   // TODO : Implement Buy Now Logic
   const handleBuyNowClick = (listingId) => {
-    if (!user?.id) {
+    if (!user?._id) {
       toast.error('You must be logged in to buy now!');
       return;
     }
@@ -86,7 +86,7 @@ const useListingPaymentHandler = (initialListings = []) => {
       return;
     }
 
-    if (user.id === listing.sellerId) {
+    if (user._id === listing.sellerId) {
       toast.error('You can’t buy your own listing.');
       return;
     }

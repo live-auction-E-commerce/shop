@@ -65,7 +65,7 @@ const ListingPage = () => {
   );
 
   const handleBidClick = (bidAmount) => {
-    if (!user?.id) {
+    if (!user?._id) {
       toast.error('You must be logged in to place a bid!');
       navigate(ROUTES.LOGIN);
       return;
@@ -79,11 +79,11 @@ const ListingPage = () => {
       toast.error(`Maximum bid is: $${maxPossibleBidAmount}`);
       return;
     }
-    if (user.id === listing.sellerId) {
+    if (user._id === listing.sellerId) {
       toast.error('You can not bid on a listing you posted');
       return;
     }
-    if (user.id === listing.currentBid?.userId) {
+    if (user._id === listing.currentBid?.userId) {
       toast.error('You own the highest bid already');
       return;
     }
@@ -110,11 +110,11 @@ const ListingPage = () => {
   };
 
   const handleBuyNowClick = () => {
-    if (!user?.id) {
+    if (!user?._id) {
       toast.error('You must be logged in to buy now!');
       return;
     }
-    if (user.id === listing.sellerId) {
+    if (user._id === listing.sellerId) {
       toast.error('You can not buy a listing you posted');
       return;
     }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Card,
@@ -15,25 +15,19 @@ import AuctionForm from '@/components/forms/AuctionForm';
 import BuyNowForm from '@/components/forms/BuyNowForm';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { toast } from 'sonner';
-import { useAuth } from '@/context/AuthContext';
-import { useUploadProductForm } from '@/hooks/listings/useUploadProductForm';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/routes/routes_consts';
 import { Loader2 } from 'lucide-react';
+import { useUploadProductForm } from '@/hooks/listings/useUploadProductForm';
+import useRequireVerifiedUser from '@/hooks/auth/useVerifiedUser';
 
 const UploadProduct = () => {
-  const { user } = useAuth();
+  const isAllowed = useRequireVerifiedUser();
+
   const navigate = useNavigate();
   const { form, activeTab, images, setImages, onTabChange, onSubmit } = useUploadProductForm();
 
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!user) {
-      navigate(ROUTES.LOGIN);
-      toast.error('You must be logged in to upload a product.');
-    }
-  }, [user, navigate]);
 
   const handleSubmit = async (data) => {
     try {
@@ -47,6 +41,8 @@ const UploadProduct = () => {
       setLoading(false);
     }
   };
+
+  if (!isAllowed) return null;
 
   return (
     <div className="container mx-auto py-10">

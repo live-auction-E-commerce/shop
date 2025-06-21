@@ -13,9 +13,10 @@ import ListingPage from '@/pages/ListingPage';
 import UploadProduct from '@/pages/UploadProduct';
 import OrdersPage from '@/pages/OrdersPage';
 import SalesPage from '@/pages/SalesPage';
+import ChangePasswordPage from '@/pages/ChangePasswordPage';
+import VerifySellerEmail from '@/pages/VerifySellerEmail';
 import NotFound from '@/pages/NotFound';
 import { ROUTES } from '@/routes/routes_consts';
-import ChangePasswordPage from '@/pages/ChangePasswordPage';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       { path: ROUTES.HOME, element: <Home /> },
       { path: ROUTES.LOGIN, element: <Login /> },
       { path: ROUTES.REGISTER, element: <Register /> },
+      { path: ROUTES.VERIFY_EMAIL, element: <VerifySellerEmail /> },
       { path: ROUTES.CHANGE_PASSWORD, element: <ChangePasswordPage /> },
       { path: ROUTES.CATEGORY, element: <CategoryPage /> },
       { path: ROUTES.LIVE, element: <LiveAuctions /> },

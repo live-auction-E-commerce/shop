@@ -14,8 +14,8 @@ const useOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        if (user?.id) {
-          const fetchedOrders = await getAllOrdersById(user.id);
+        if (user?._id) {
+          const fetchedOrders = await getAllOrdersById(user._id);
           setOrders(fetchedOrders);
         }
       } catch (err) {

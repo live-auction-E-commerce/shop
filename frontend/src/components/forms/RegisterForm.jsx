@@ -54,6 +54,7 @@ const RegisterForm = ({ onSubmit, isLoading = false }) => {
     try {
       setError(null);
       await onSubmit(data);
+      
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred during registration');
     }
