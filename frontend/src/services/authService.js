@@ -57,3 +57,16 @@ export const verifySellerEmail = async (token) => {
     { requireAuth: true }
   );
 };
+
+export const requestSellerVerification = async () => {
+  return await fetchAPI(
+    '/api/become-seller',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+    { requireAuth: true }
+  );
+};

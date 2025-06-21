@@ -36,6 +36,7 @@ export const verifySellerEmailToken = async (token) => {
   if (!user) throw new Error('Invalid or expired verification link.');
 
   user.isEmailVerified = true;
+  user.role = 'Seller';
   user.emailVerificationToken = undefined;
   user.emailVerificationTokenExpires = undefined;
   await user.save();
