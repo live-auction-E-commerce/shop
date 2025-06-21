@@ -2,7 +2,7 @@ import RegisterForm from '@/components/forms/RegisterForm';
 import { register } from '@/services/authService';
 import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { ROUTES } from '@/routes/routes_consts';
 
 const Register = () => {
@@ -29,9 +29,9 @@ const Register = () => {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{' '}
-            <a href="/login" className="font-medium text-primary hover:underline">
+            <Link to={ROUTES.LOGIN} className="font-medium text-primary hover:underline">
               Sign in here
-            </a>
+            </Link>
           </p>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import LoginForm from '@/components/forms/LoginForm';
 import { login as loginService } from '@/services/authService';
 import { useAuth } from '@/context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { ROUTES } from '@/routes/routes_consts';
 
@@ -25,9 +25,9 @@ const Login = () => {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             {"Don't have an account? "}
-            <a href="/register" className="font-medium text-primary hover:underline">
+            <Link to={ROUTES.REGISTER} className="font-medium text-primary hover:underline">
               Sign up here
-            </a>
+            </Link>
           </p>
         </div>
       </div>
