@@ -8,6 +8,7 @@ import BidRoutes from './src/routes/BidRoutes.js';
 import OrderRoutes from './src/routes/OrderRoutes.js';
 import AuthRoutes from './src/routes/AuthRoutes.js';
 import PaymentIntentRoutes from './src/routes/PaymentIntentRoutes.js';
+import SellerRoutes from './src/routes/SellerRoutes.js';
 import connectDB from './src/lib/db.js';
 import { multerErrorHandler } from './src/middlewares/ErrorHandlers.js';
 import config from './config.js';
@@ -33,6 +34,7 @@ app.use('/api', BidRoutes);
 app.use('/api', OrderRoutes);
 app.use('/api', AuthRoutes);
 app.use('/api', PaymentIntentRoutes);
+app.use('/api', SellerRoutes);
 
 // Middlewares
 app.use(multerErrorHandler);

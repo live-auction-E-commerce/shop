@@ -2,7 +2,6 @@ import { useReducer } from 'react';
 import { toast } from 'sonner';
 import { placeBid } from '@/services/bidService';
 import { markListingAsSold } from '@/services/listingService';
-import { getDefaultAddressByUserId } from '@/services/addressService';
 import { createOrder } from '@/services/orderService';
 import { emitNewBid, emitPurchase } from '@/lib/socketEvents';
 import { useAuth } from '@/context/AuthContext';
@@ -35,7 +34,7 @@ const reducer = (state, action) => {
 
 const usePaymentHandler = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, defaultAddress } = useAuth();
 
   const openPaymentModal = ({ listingId, amount, onSuccess, mode = 'bid' }) => {
     if (!isAuthenticated) {
@@ -53,7 +52,7 @@ const usePaymentHandler = () => {
       if (state.mode === 'bid') {
         const newBid = await placeBid({
           listingId: state.activeListingId,
-          userId: user.id,
+          userId: user._id,
           paymentIntentId,
           amount: state.pendingBidAmount,
         });
@@ -62,7 +61,6 @@ const usePaymentHandler = () => {
         if (state.onSuccessCallback) state.onSuccessCallback(newBid);
         toast.success('Bid placed successfully!');
       } else if (state.mode === 'buyNow') {
-        const defaultAddress = await getDefaultAddressByUserId(user.id);
         if (!defaultAddress || !defaultAddress._id) {
           toast.error('No default address found. Please set one before purchasing.');
           return;
@@ -77,7 +75,7 @@ const usePaymentHandler = () => {
         emitPurchase({ listingId: result._id });
 
         await createOrder({
-          buyerId: user.id,
+          buyerId: user._id,
           sellerId: result.sellerId,
           listingId: result._id,
           addressId: defaultAddress._id,

@@ -5,13 +5,12 @@ import { PlusCircle, Pencil, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import useAddresses from '@/hooks/common/useAddresses';
 import { ROUTES } from '@/routes/routes_consts';
-import { useAuth } from '@/context/AuthContext';
-import { toast } from 'sonner';
+import useRequireAuth from '@/hooks/auth/useRequireAuth';
 
 const AddressesPage = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { addresses, isLoading, error } = useAddresses();
+  const isAllowed = useRequireAuth();
 
   const handleEdit = (address) => {
     const editRoute = ROUTES.EDIT_ADDRESS.replace(':id', address._id);
@@ -22,10 +21,7 @@ const AddressesPage = () => {
     navigate(ROUTES.NEW_ADDRESS);
   };
 
-  if (!user) {
-    toast.error('You must be logged in to access this page');
-    navigate(ROUTES.HOME);
-  }
+  if (!isAllowed) return null;
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-6xl">
