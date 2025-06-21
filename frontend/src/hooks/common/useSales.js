@@ -15,7 +15,7 @@ const useSales = () => {
     const fetchSales = async () => {
       try {
         if (user?._id) {
-          const fetchedSales = await getAllSalesById(user.id);
+          const fetchedSales = await getAllSalesById(user._id);
           setSales(fetchedSales);
         }
       } catch (err) {
