@@ -3,6 +3,9 @@ import { fetchAPI } from '@/lib/fetch';
 export const getAllOrdersById = async (userId) => {
   return await fetchAPI(`/api/orders/buyer/${userId}`, {}, { requireAuth: true });
 };
+export const getAllSalesById = async (userId) => {
+  return await fetchAPI(`/api/orders/seller/${userId}`, {}, { requireAuth: true });
+};
 
 export const createOrder = async ({ buyerId, sellerId, listingId, addressId, price }) => {
   return await fetchAPI(

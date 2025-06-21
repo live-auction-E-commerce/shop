@@ -14,7 +14,7 @@ export const validateImages = (images) => {
     const ext = image.slice(image.lastIndexOf('.')).toLowerCase();
     if (!AllowedExtensions.includes(ext)) {
       throw new Error(
-        `Invalid image formet: ${image}. Allowed formats are: ${AllowedExtensions.join(',')}`
+        `Invalid image formet: ${image}. Allowed formats are: ${AllowedExtensions.join(',')}`,
       );
     }
   }
@@ -22,10 +22,9 @@ export const validateImages = (images) => {
 
 export const validateEnum = (value, validEnum, name) => {
   if (!value || !validEnum.includes(value.toLowerCase())) {
-    console.log('Value:', value);
-    console.log('Normalized:', value?.toLowerCase());
-    console.log('Enum:', validEnum);
-    throw new Error(`Invalid ${name}, Valid ${name}s are: ${validEnum.join(',')} `);
+    throw new Error(
+      `Invalid ${name}, Valid ${name}s are: ${validEnum.join(',')} `,
+    );
   }
 };
 
@@ -39,7 +38,10 @@ export const validateObjectId = (id) => {
 };
 
 export const validateAuctionUpdates = (listing, updates) => {
-  if (updates.expiredAt && new Date(updates.expiredAt) <= new Date(listing.expiredAt)) {
+  if (
+    updates.expiredAt &&
+    new Date(updates.expiredAt) <= new Date(listing.expiredAt)
+  ) {
     throw new Error('New expiredAt must be later than the current one');
   }
 
