@@ -14,7 +14,7 @@ const useSales = () => {
   useEffect(() => {
     const fetchSales = async () => {
       try {
-        if (user?.id) {
+        if (user?._id) {
           const fetchedSales = await getAllSalesById(user.id);
           setSales(fetchedSales);
         }
