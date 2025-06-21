@@ -33,8 +33,8 @@ export const getAllOrdersBySeller = async (sellerId) => {
         model: 'Product',
       },
     })
-    .populate('buyerId')
-    .populate('sellerId')
+    .populate('buyerId', 'email')
+    .populate('sellerId', 'email')
     .populate('addressId')
     .sort({ createdAt: -1 });
 
@@ -52,8 +52,8 @@ export const getAllOrdersByBuyer = async (buyerId) => {
         model: 'Product',
       },
     })
-    .populate('buyerId')
-    .populate('sellerId')
+    .populate('buyerId', 'email')
+    .populate('sellerId', 'email')
     .populate('addressId')
     .sort({ createdAt: -1 });
 

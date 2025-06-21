@@ -9,6 +9,7 @@ import SaleInfo from './SaleInfo';
 const SaleCard = ({ sale }) => {
   const { listingId, buyerId, addressId, price, createdAt, _id } = sale;
   const { productId } = listingId;
+  console.log(buyerId);
 
   return (
     <Card className="overflow-hidden">

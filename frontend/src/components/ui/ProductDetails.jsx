@@ -22,9 +22,7 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
   // TODO: Handle auction expiration logic in terms of UI updates, we would need to set the state reflecting sold status here
   // We might need to consider using socket emit from the server to notify clients
   // This function can be passed to CountdownTimer's onExpire prop
-  const handleAuctionExpire = () => {
-    console.log('Auction expired');
-  };
+  const handleAuctionExpire = () => {};
 
   useEffect(() => {
     if (listing) {
