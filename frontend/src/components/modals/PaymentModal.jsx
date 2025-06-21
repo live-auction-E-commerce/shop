@@ -35,7 +35,6 @@ const PaymentModal = ({
       if (isOpen && user?.id) {
         setLoading(true);
         try {
-          console.log(mode);
           const response = await createPaymentIntent(amount, user.id, mode);
           setClientSecret(response.client_secret);
           setIntentId(response.newIntent._id);

@@ -2,7 +2,6 @@ import { Card, CardContent } from '@/components/ui/card';
 
 const SalesSummary = ({ saleStats }) => {
   const { totalSales, totalEarned, averageSale } = saleStats;
-  console.log(saleStats);
 
   if (totalSales === 0) return null;
 

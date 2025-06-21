@@ -68,7 +68,6 @@ export const handleListingSearch = async (query) => {
 
   try {
     const data = await fetchAPI(`/api/listings?q=${encodeURIComponent(query)}`);
-    console.log(data);
     return data;
   } catch (err) {
     console.error('Search failed:', err);
