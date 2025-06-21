@@ -5,7 +5,7 @@ import { PlusCircle, Pencil, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import useAddresses from '@/hooks/common/useAddresses';
 import { ROUTES } from '@/routes/routes_consts';
-import useRequireAuth from '@/hooks/common/useRequireAuth';
+import useRequireAuth from '@/hooks/auth/useRequireAuth';
 
 const AddressesPage = () => {
   const navigate = useNavigate();

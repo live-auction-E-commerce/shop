@@ -19,12 +19,10 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/routes/routes_consts';
 import { Loader2 } from 'lucide-react';
 import { useUploadProductForm } from '@/hooks/listings/useUploadProductForm';
-import useRequireVerifiedUser from '@/hooks/common/useVerifiedUser';
-import useRequireAuth from '@/hooks/common/useRequireAuth';
+import useRequireVerifiedUser from '@/hooks/auth/useVerifiedUser';
 
 const UploadProduct = () => {
   const isAllowed = useRequireVerifiedUser();
-  const isLoggedIn = useRequireAuth();
 
   const navigate = useNavigate();
   const { form, activeTab, images, setImages, onTabChange, onSubmit } = useUploadProductForm();
@@ -44,7 +42,7 @@ const UploadProduct = () => {
     }
   };
 
-  if (!isAllowed || !isLoggedIn) return null;
+  if (!isAllowed) return null;
 
   return (
     <div className="container mx-auto py-10">

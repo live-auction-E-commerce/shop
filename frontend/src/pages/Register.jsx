@@ -14,7 +14,9 @@ const Register = () => {
 
     login({ token, user });
 
-    toast.success('Registration successful!');
+    if (user.role === 'Seller') {
+      toast.success('Registration successful!, Please check your email for verification link!');
+    } else if (toast.success('Registration successful!'));
 
     setTimeout(() => {
       navigate(ROUTES.HOME);

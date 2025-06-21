@@ -1,5 +1,5 @@
 import ChangePasswordForm from '@/components/forms/ChangePasswordForm';
-import useRequireAuth from '@/hooks/common/useRequireAuth';
+import useRequireAuth from '@/hooks/auth/useRequireAuth';
 
 const ChangePasswordPage = () => {
   const isAllowed = useRequireAuth();

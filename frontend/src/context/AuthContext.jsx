@@ -6,12 +6,14 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('token'));
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState();
+  const [loading, setLoading] = useState(true);
   const [defaultAddress, setDefaultAddress] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       if (!token) {
+        setLoading(false);
         return;
       }
 
@@ -21,9 +23,12 @@ export const AuthProvider = ({ children }) => {
         setUser(verifiedUser);
         const address = await getDefaultAddress(verifiedUser._id);
         setDefaultAddress(address);
+        setLoading(false);
       } catch (error) {
         console.error('Invalid token:', error);
         logout();
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -31,6 +36,7 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = async ({ token }) => {
+    setLoading(true);
     localStorage.setItem('token', token);
     setToken(token);
   };
@@ -59,6 +65,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         token,
         user,
+        loading,
         defaultAddress,
         login,
         logout,
