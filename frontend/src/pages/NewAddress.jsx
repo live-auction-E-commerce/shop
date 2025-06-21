@@ -25,7 +25,7 @@ const NewAddress = () => {
   const form = useForm({
     resolver: zodResolver(addressSchema),
     defaultValues: {
-      userId: user.id,
+      userId: user._id,
       description: '',
       street: '',
       number: '',

@@ -52,7 +52,7 @@ const usePaymentHandler = () => {
       if (state.mode === 'bid') {
         const newBid = await placeBid({
           listingId: state.activeListingId,
-          userId: user.id,
+          userId: user._id,
           paymentIntentId,
           amount: state.pendingBidAmount,
         });
@@ -75,7 +75,7 @@ const usePaymentHandler = () => {
         emitPurchase({ listingId: result._id });
 
         await createOrder({
-          buyerId: user.id,
+          buyerId: user._id,
           sellerId: result.sellerId,
           listingId: result._id,
           addressId: defaultAddress._id,
