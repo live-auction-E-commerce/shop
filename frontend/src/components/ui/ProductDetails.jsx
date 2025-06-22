@@ -129,8 +129,8 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
         {/* Export to component */}
         <div className="space-y-4 ">
           <div>
-            <h1 className="text-3xl font-bold">{listing.name}</h1>
-            <p className="text-lg text-muted-foreground mt-1">{listing.brand}</p>
+            <h1 className="text-3xl font-bold">{productId.name}</h1>
+            <p className="text-lg text-muted-foreground mt-1">{productId.brand}</p>
           </div>
 
           <Card>
@@ -215,7 +215,7 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
                 <TabsTrigger value="shipping">Shipping</TabsTrigger>
               </TabsList>
               <TabsContent value="description" className="mt-4">
-                <p className="text-sm">{listing.description}</p>
+                <p className="text-sm">{productId.description}</p>
               </TabsContent>
               <TabsContent value="shipping" className="mt-4">
                 <div className="space-y-2 text-sm">
