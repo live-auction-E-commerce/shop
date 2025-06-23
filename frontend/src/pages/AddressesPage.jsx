@@ -53,10 +53,6 @@ const AddressesPage = () => {
       {addresses.length === 0 ? (
         <div className="text-center py-12 bg-muted/50 rounded-lg">
           <p className="text-muted-foreground mb-4">You don't have any saved addresses yet</p>
-          <Button onClick={handleAddNew} variant="outline" className="flex items-center gap-2">
-            <PlusCircle size={18} />
-            Add Your First Address
-          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
