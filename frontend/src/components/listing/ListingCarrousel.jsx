@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/common/useMobile';
 import { Button } from '@/components/ui/button';
-import { ListingCard } from '@/components/listing/ListingCard';
+import { ListingCard, ListingCardSkeleton } from '@/components/listing/ListingCard';
 
 const ListingCarrousel = ({
   title,
@@ -19,37 +19,34 @@ const ListingCarrousel = ({
   const [isHovering, setIsHovering] = useState(false);
   const carouselRef = useRef(null);
 
-
   const isMobile = useMediaQuery('(max-width: 640px)');
   const isTablet = useMediaQuery('(min-width: 641px) and (max-width: 1024px)');
 
   const cardsToShow = isMobile ? 1 : isTablet ? 2 : 5;
-  const dummyListings = Array.from({ length: cardsToShow }).map((_, i) => ({
-    _id: `loading-${i}`,
-  }));
-  const displayedListings = isLoading ? dummyListings : listings;
-  const listingsLength = displayedListings.length;
-  const maxIndex = Math.max(0, listingsLength - cardsToShow);
 
-  const nextSlide = () => {
+  const itemsToRender = isLoading ? Array.from({ length: cardsToShow }) : listings;
+  const totalItems = isLoading ? cardsToShow : listings.length;
+  const maxIndex = useMemo(() => Math.max(0, totalItems - cardsToShow), [totalItems, cardsToShow]);
+
+  const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-  };
+  }, [maxIndex]);
 
-  const prevSlide = () => {
+  const prevSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
-  };
+  }, [maxIndex]);
 
   useEffect(() => {
-    if (isHovering || listingsLength <= cardsToShow || isPaused) return;
+    if (isHovering || totalItems <= cardsToShow || isPaused) return;
 
     const interval = setInterval(() => {
       nextSlide();
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isHovering, listingsLength, cardsToShow, isPaused]);
+  }, [isHovering, totalItems, cardsToShow, isPaused, nextSlide]);
 
-  const showControls = listingsLength > cardsToShow;
+  const showControls = totalItems > cardsToShow;
 
   return (
     <div
@@ -95,30 +92,32 @@ const ListingCarrousel = ({
           ref={carouselRef}
           className="flex transition-transform duration-500 ease-out"
           style={{
-            width: `${(listingsLength * 100) / cardsToShow}%`,
-            transform: `translateX(-${(currentIndex * 100) / listingsLength}%)`,
+            width: `${(totalItems * 100) / cardsToShow}%`,
+            transform: `translateX(-${(currentIndex * 100) / totalItems}%)`,
           }}
         >
-          {displayedListings.map((listing) => (
+          {itemsToRender.map((item, i) => (
             <div
-              key={listing._id}
+              key={isLoading ? `skeleton-${i}` : item._id}
               className="flex-shrink-0"
-              style={{ width: `${100 / listingsLength}%`, padding: '0 8px' }}
+              style={{
+                width: `${100 / totalItems}%`,
+                padding: '0 8px',
+              }}
             >
-              <ListingCard
-                listing={listing}
-                onBidClick={onBidClick}
-                onBuyNowClick={onBuyNowClick}
-                isLoading={isLoading}
-              />
+              {isLoading ? (
+                <ListingCardSkeleton />
+              ) : (
+                <ListingCard listing={item} onBidClick={onBidClick} onBuyNowClick={onBuyNowClick} />
+              )}
             </div>
           ))}
         </div>
       </div>
 
-      {isMobile && listingsLength > 1 && !isLoading && (
+      {isMobile && itemsToRender > 1 && !isLoading && (
         <div className="mt-4 flex justify-center gap-2">
-          {Array.from({ length: listingsLength }).map((_, index) => (
+          {Array.from({ length: itemsToRender }).map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
@@ -135,4 +134,4 @@ const ListingCarrousel = ({
   );
 };
 
-export default ListingCarrousel;
+export default memo(ListingCarrousel);

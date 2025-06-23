@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { ArrowLeft, ArrowRight, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -234,4 +234,4 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
 
 // Consider using PropTypes
 
-export default ProductDetails;
+export default memo(ProductDetails);

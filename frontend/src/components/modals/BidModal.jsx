@@ -1,6 +1,4 @@
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { useCallback, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { maxPossibleBidAmount } from '@/constants/constants';
@@ -8,7 +6,7 @@ import { maxPossibleBidAmount } from '@/constants/constants';
 const BidModal = ({ isOpen, onClose, onConfirm, currentBidAmount }) => {
   const [bidAmount, setBidAmount] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     const amount = parseFloat(bidAmount);
     if (isNaN(amount) || amount <= currentBidAmount) {
       toast.error(`Bid must be greater than $${currentBidAmount}`);
@@ -21,7 +19,7 @@ const BidModal = ({ isOpen, onClose, onConfirm, currentBidAmount }) => {
 
     onConfirm(amount);
     setBidAmount('');
-  };
+  }, [bidAmount, currentBidAmount, onConfirm]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

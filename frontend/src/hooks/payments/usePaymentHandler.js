@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useReducer, useCallback } from 'react';
 import { toast } from 'sonner';
 import { placeBid } from '@/services/bidService';
 import { markListingAsSold } from '@/services/listingService';
@@ -36,66 +36,74 @@ const usePaymentHandler = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { user, isAuthenticated, defaultAddress } = useAuth();
 
-  const openPaymentModal = ({ listingId, amount, onSuccess, mode = 'bid' }) => {
-    if (!isAuthenticated) {
-      toast.error('You must be logged in to make a payment!');
-      return;
-    }
-    dispatch({
-      type: 'OPEN_MODAL',
-      payload: { listingId, amount, onSuccess, mode },
-    });
-  };
+  const openPaymentModal = useCallback(
+    ({ listingId, amount, onSuccess, mode = 'bid' }) => {
+      if (!isAuthenticated) {
+        toast.error('You must be logged in to make a payment!');
+        return;
+      }
+      dispatch({
+        type: 'OPEN_MODAL',
+        payload: { listingId, amount, onSuccess, mode },
+      });
+    },
+    [isAuthenticated]
+  );
 
-  const handlePaymentSuccess = async (paymentIntentId) => {
-    try {
-      if (state.mode === 'bid') {
-        const newBid = await placeBid({
-          listingId: state.activeListingId,
-          userId: user._id,
-          paymentIntentId,
-          amount: state.pendingBidAmount,
-        });
+  const { mode, activeListingId, pendingBidAmount, onSuccessCallback } = state;
 
-        emitNewBid(state.activeListingId, newBid);
-        if (state.onSuccessCallback) state.onSuccessCallback(newBid);
-        toast.success('Bid placed successfully!');
-      } else if (state.mode === 'buyNow') {
-        if (!defaultAddress || !defaultAddress._id) {
-          toast.error('No default address found. Please set one before purchasing.');
-          return;
+  const handlePaymentSuccess = useCallback(
+    async (paymentIntentId) => {
+      try {
+        if (mode === 'bid') {
+          const newBid = await placeBid({
+            listingId: activeListingId,
+            userId: user._id,
+            paymentIntentId,
+            amount: pendingBidAmount,
+          });
+
+          emitNewBid(activeListingId, newBid);
+          onSuccessCallback?.(newBid);
+          toast.success('Bid placed successfully!');
+        } else if (mode === 'buyNow') {
+          if (!defaultAddress || !defaultAddress._id) {
+            toast.error('No default address found. Please set one before purchasing.');
+            return;
+          }
+
+          const result = await markListingAsSold({
+            listingId: activeListingId,
+            paymentIntentId,
+            amount: pendingBidAmount,
+          });
+
+          emitPurchase({ listingId: result._id });
+
+          await createOrder({
+            buyerId: user._id,
+            sellerId: result.sellerId,
+            listingId: result._id,
+            addressId: defaultAddress._id,
+            price: result.price,
+          });
+
+          onSuccessCallback?.(result);
+          toast.success('Listing purchased and order created successfully!');
         }
 
-        const result = await markListingAsSold({
-          listingId: state.activeListingId,
-          paymentIntentId,
-          amount: state.pendingBidAmount,
-        });
-
-        emitPurchase({ listingId: result._id });
-
-        await createOrder({
-          buyerId: user._id,
-          sellerId: result.sellerId,
-          listingId: result._id,
-          addressId: defaultAddress._id,
-          price: result.price,
-        });
-
-        if (state.onSuccessCallback) state.onSuccessCallback(result);
-        toast.success('Listing purchased and order created successfully!');
+        dispatch({ type: 'CLOSE_MODAL' });
+      } catch (err) {
+        console.error('Payment handler failed:', err);
+        toast.error(err.message || 'Something went wrong during payment.');
       }
+    },
+    [mode, activeListingId, pendingBidAmount, onSuccessCallback, user, defaultAddress]
+  );
 
-      dispatch({ type: 'CLOSE_MODAL' });
-    } catch (err) {
-      console.error('Payment handler failed:', err);
-      toast.error(err.message || 'Something went wrong during payment.');
-    }
-  };
-
-  const handlePaymentCancel = () => {
+  const handlePaymentCancel = useCallback(() => {
     dispatch({ type: 'CLOSE_MODAL' });
-  };
+  }, []);
 
   return {
     openPaymentModal,
