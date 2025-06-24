@@ -73,23 +73,28 @@ const ListingPage = () => {
         navigate(ROUTES.LOGIN);
         return;
       }
+
       const currentBidAmount = listing?.currentBid?.amount || listing.startingBid;
       if (bidAmount <= currentBidAmount) {
         toast.error('Bid must be greater than current bid');
         return;
       }
+
       if (bidAmount >= maxPossibleBidAmount) {
         toast.error(`Maximum bid is: $${maxPossibleBidAmount.toLocaleString()}`);
         return;
       }
+
       if (user._id === listing.sellerId) {
         toast.error('You can not bid on a listing you posted');
         return;
       }
+
       if (user._id === listing.currentBid?.userId) {
         toast.error('You own the highest bid already');
         return;
       }
+
       if (!defaultAddress) {
         toast.error('You must have a default address to place a bid');
         return;
@@ -108,12 +113,10 @@ const ListingPage = () => {
             },
           }));
           setLatestBid(newBid);
-          console.log(listing);
-          console.log(newBid);
         },
       });
     },
-    [defaultAddress, id, navigate, openPaymentModal, setLatestBid, user?._id, listing]
+    [defaultAddress, id, listing, navigate, openPaymentModal, setLatestBid, user?._id]
   );
 
   const handleBuyNowClick = useCallback(() => {

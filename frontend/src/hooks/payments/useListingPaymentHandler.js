@@ -43,7 +43,7 @@ const useListingPaymentHandler = (initialListings = []) => {
         toast.error('You can not bid on a listing you posted');
         return;
       }
-      if (user._id === listing.currentBid?.userId) {
+      if (user._id === listing.currentBid?.userId._id) {
         toast.error('You own the highest bid already');
         return;
       }
@@ -92,15 +92,15 @@ const useListingPaymentHandler = (initialListings = []) => {
         return;
       }
 
-    if (user._id === listing.sellerId) {
-      toast.error('You can’t buy your own listing.');
-      return;
-    }
+      if (user._id === listing.sellerId) {
+        toast.error('You can’t buy your own listing.');
+        return;
+      }
 
-    if (!defaultAddress) {
-      toast.error('You must have a default address to place a bid');
-      return;
-    }
+      if (!defaultAddress) {
+        toast.error('You must have a default address to place a bid');
+        return;
+      }
 
       if (listing) {
         setSelectedListing(listing);
