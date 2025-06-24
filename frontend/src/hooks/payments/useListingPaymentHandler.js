@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import usePaymentHandler from '@/hooks/payments/usePaymentHandler';
 import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
@@ -31,59 +31,66 @@ const useListingPaymentHandler = (initialListings = []) => {
     }
   }, [initialListings]);
 
-  const handleBidClick = (listingId) => {
-    if (!user) {
-      toast.error('You must be logged in to place a bid!');
-      navigate(ROUTES.LOGIN);
-      return;
-    }
-    const listing = listings.find((l) => l._id === listingId);
-    if (user._id === listing.sellerId) {
-      toast.error('You can not bid on a listing you posted');
-      return;
-    }
-    if (user._id === listing.currentBid?.userId) {
-      toast.error('You own the highest bid allready');
-      return;
-    }
-    if (!defaultAddress) {
-      toast.error('You must have a default address to place a bid');
-      return;
-    }
+  const handleBidClick = useCallback(
+    (listingId) => {
+      if (!user) {
+        toast.error('You must be logged in to place a bid!');
+        navigate(ROUTES.LOGIN);
+        return;
+      }
+      const listing = listings.find((l) => l._id === listingId);
+      if (user._id === listing.sellerId) {
+        toast.error('You can not bid on a listing you posted');
+        return;
+      }
+      if (user._id === listing.currentBid?.userId) {
+        toast.error('You own the highest bid already');
+        return;
+      }
+      if (!defaultAddress) {
+        toast.error('You must have a default address to place a bid');
+        return;
+      }
 
-    if (listing) {
-      setSelectedListing(listing);
-      setIsBidModalOpen(true);
-    }
-  };
+      if (listing) {
+        setSelectedListing(listing);
+        setIsBidModalOpen(true);
+      }
+    },
+    [user, listings, defaultAddress, navigate]
+  );
 
-  const handleBidConfirm = (bidAmount) => {
-    setIsBidModalOpen(false);
-    if (!selectedListing) return;
+  const handleBidConfirm = useCallback(
+    (bidAmount) => {
+      setIsBidModalOpen(false);
+      if (!selectedListing) return;
 
-    openPaymentModal({
-      listingId: selectedListing._id,
-      amount: bidAmount,
-      onSuccess: (newBid) => {
-        setListings((prev) =>
-          prev.map((l) => (l._id === newBid.listingId ? { ...l, currentBid: newBid } : l))
-        );
-        setSelectedListing(null);
-      },
-    });
-  };
+      openPaymentModal({
+        listingId: selectedListing._id,
+        amount: bidAmount,
+        onSuccess: (newBid) => {
+          setListings((prev) =>
+            prev.map((l) => (l._id === newBid.listingId ? { ...l, currentBid: newBid } : l))
+          );
+          setSelectedListing(null);
+        },
+      });
+    },
+    [openPaymentModal, selectedListing]
+  );
 
-  const handleBuyNowClick = (listingId) => {
-    if (!user?._id) {
-      toast.error('You must be logged in to buy now!');
-      return;
-    }
+  const handleBuyNowClick = useCallback(
+    (listingId) => {
+      if (!user?._id) {
+        toast.error('You must be logged in to buy now!');
+        return;
+      }
 
-    const listing = listings.find((l) => l._id === listingId);
-    if (!listing) {
-      toast.error('Listing not found.');
-      return;
-    }
+      const listing = listings.find((l) => l._id === listingId);
+      if (!listing) {
+        toast.error('Listing not found.');
+        return;
+      }
 
     if (user._id === listing.sellerId) {
       toast.error('You can’t buy your own listing.');
@@ -95,36 +102,54 @@ const useListingPaymentHandler = (initialListings = []) => {
       return;
     }
 
-    if (listing) {
-      setSelectedListing(listing);
-    }
+      if (listing) {
+        setSelectedListing(listing);
+      }
 
-    openPaymentModal({
-      listingId: listing._id,
-      amount: listing.price,
-      mode: 'buyNow',
-      onSuccess: (purchasedListing) => {
-        setListings((prev) => prev.filter((l) => l._id !== purchasedListing._id));
-      },
-    });
-  };
+      openPaymentModal({
+        listingId: listing._id,
+        amount: listing.price,
+        mode: 'buyNow',
+        onSuccess: (purchasedListing) => {
+          setListings((prev) => prev.filter((l) => l._id !== purchasedListing._id));
+        },
+      });
+    },
+    [listings, openPaymentModal, user?._id]
+  );
 
-  const closeBidModal = () => setIsBidModalOpen(false);
+  const closeBidModal = useCallback(() => setIsBidModalOpen(false), []);
 
-  return {
-    listings,
-    isBidModalOpen,
-    selectedListing,
-    isPaymentModalOpen,
-    pendingBidAmount,
-    activeListingId,
-    handleBidClick,
-    handleBidConfirm,
-    handleBuyNowClick,
-    handlePaymentSuccess,
-    handlePaymentCancel,
-    closeBidModal,
-  };
+  return useMemo(
+    () => ({
+      listings,
+      isBidModalOpen,
+      selectedListing,
+      isPaymentModalOpen,
+      pendingBidAmount,
+      activeListingId,
+      handleBidClick,
+      handleBidConfirm,
+      handleBuyNowClick,
+      handlePaymentSuccess,
+      handlePaymentCancel,
+      closeBidModal,
+    }),
+    [
+      listings,
+      isBidModalOpen,
+      selectedListing,
+      isPaymentModalOpen,
+      pendingBidAmount,
+      activeListingId,
+      handleBidClick,
+      handleBidConfirm,
+      handleBuyNowClick,
+      handlePaymentSuccess,
+      handlePaymentCancel,
+      closeBidModal,
+    ]
+  );
 };
 
 export default useListingPaymentHandler;

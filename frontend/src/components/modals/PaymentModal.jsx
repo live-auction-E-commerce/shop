@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -87,4 +88,4 @@ const PaymentModal = ({
   );
 };
 
-export default PaymentModal;
+export default memo(PaymentModal);

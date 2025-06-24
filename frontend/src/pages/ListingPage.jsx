@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
 import BidChatbox from '@/components/bid/BidChatbox';
@@ -64,52 +64,66 @@ const ListingPage = () => {
     setShowConfetti
   );
 
-  const handleBidClick = (bidAmount) => {
-    if (!user?._id) {
-      toast.error('You must be logged in to place a bid!');
-      navigate(ROUTES.LOGIN);
-      return;
-    }
-    const currentBidAmount = listing.currentBid?.amount || listing.startingBid;
-    if (bidAmount <= currentBidAmount) {
-      toast.error('Bid must be greater than current bid');
-      return;
-    }
-    if (bidAmount >= maxPossibleBidAmount) {
-      toast.error(`Maximum bid is: $${maxPossibleBidAmount}`);
-      return;
-    }
-    if (user._id === listing.sellerId) {
-      toast.error('You can not bid on a listing you posted');
-      return;
-    }
-    if (user._id === listing.currentBid?.userId) {
-      toast.error('You own the highest bid already');
-      return;
-    }
-    if (!defaultAddress) {
-      toast.error('You must have a default address to place a bid');
-      return;
-    }
+  const handleBidClick = useCallback(
+    (bidAmount) => {
+      if (!user?._id) {
+        toast.error('You must be logged in to place a bid!');
+        navigate(ROUTES.LOGIN);
+        return;
+      }
+      const currentBidAmount = listing?.currentBid?.amount || listing.startingBid;
+      if (bidAmount <= currentBidAmount) {
+        toast.error('Bid must be greater than current bid');
+        return;
+      }
+      if (bidAmount >= maxPossibleBidAmount) {
+        toast.error(`Maximum bid is: $${maxPossibleBidAmount}`);
+        return;
+      }
+      if (user._id === listing.sellerId) {
+        toast.error('You can not bid on a listing you posted');
+        return;
+      }
+      if (user._id === listing.currentBid?.userId) {
+        toast.error('You own the highest bid already');
+        return;
+      }
+      if (!defaultAddress) {
+        toast.error('You must have a default address to place a bid');
+        return;
+      }
 
-    openPaymentModal({
-      listingId: id,
-      amount: bidAmount,
-      onSuccess: (newBid) => {
-        setListing((prev) => ({
-          ...prev,
-          currentBid: {
-            _id: newBid._id,
-            amount: newBid.amount,
-            userId: newBid.userId,
-          },
-        }));
-        setLatestBid(newBid);
-      },
-    });
-  };
+      openPaymentModal({
+        listingId: id,
+        amount: bidAmount,
+        onSuccess: (newBid) => {
+          setListing((prev) => ({
+            ...prev,
+            currentBid: {
+              _id: newBid._id,
+              amount: newBid.amount,
+              userId: newBid.userId,
+            },
+          }));
+          setLatestBid(newBid);
+        },
+      });
+    },
+    [
+      defaultAddress,
+      id,
+      listing?.currentBid?.amount,
+      listing?.currentBid?.userId,
+      listing?.sellerId,
+      listing?.startingBid,
+      navigate,
+      openPaymentModal,
+      setLatestBid,
+      user?._id,
+    ]
+  );
 
-  const handleBuyNowClick = () => {
+  const handleBuyNowClick = useCallback(() => {
     if (!user?._id) {
       toast.error('You must be logged in to buy now!');
       return;
@@ -129,7 +143,7 @@ const ListingPage = () => {
       },
       mode: 'buyNow',
     });
-  };
+  }, [id, listing?.price, listing?.sellerId, openPaymentModal, user?._id]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;

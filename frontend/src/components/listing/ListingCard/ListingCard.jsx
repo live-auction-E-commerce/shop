@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { Card } from '@/components/ui/card';
 import { getBidProgress, getListingStatus, getTimeRemaining } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -18,8 +18,14 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
 
   const navigate = useNavigate();
 
-  const isAuction = listing?.saleType === 'auction';
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+  const handleClick = useCallback(
+    () => navigate(`/listings/${listing._id}`),
+    [navigate, listing._id]
+  );
   const images = listing.product?.images || [];
+  const isAuction = useMemo(() => listing?.saleType === 'auction', [listing]);
 
   useEffect(() => {
     if (!listing) return;
@@ -31,8 +37,6 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
     setIsSold(listing.isSold || false);
   }, [listing, isAuction]);
 
-  if (isLoading) return <ListingCardSkeleton />;
-
   const status = getListingStatus(listing);
   const timeRemaining = isAuction ? getTimeRemaining(listing.expiredAt, isExpired) : null;
   const progressPercentage = getBidProgress(listing);
@@ -40,14 +44,16 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
 
   if (!listing || !product) return null;
 
+  if (isLoading) return <ListingCardSkeleton />;
+
   return (
     <Card
       className={`flex flex-col h-full overflow-hidden transition-all duration-200 cursor-pointer ${
         isHovered ? 'shadow-md' : ''
       } ${className}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={() => navigate(`/listings/${listing._id}`)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
     >
       <div className={`relative ${isHovered ? 'scale-105 transition-transform duration-300' : ''}`}>
         <ImageCarrousel
@@ -84,4 +90,4 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
   );
 };
 
-export default ListingCard;
+export default memo(ListingCard);
