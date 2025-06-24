@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "seed": "node src/lib/seed.js",
+    "clear": "node src/lib/clearData.js",
     "start": "node server.js",
     "start:worker": "node src/jobs/auctionWorker.js"
   },

@@ -1,4 +1,4 @@
-import { useEffect, createContext, useContext, useState } from 'react';
+import { useEffect, createContext, useContext, useState, useMemo, useCallback } from 'react';
 import { verifyToken } from '@/services/authService';
 import { getDefaultAddress } from '@/services/addressService';
 
@@ -23,7 +23,6 @@ export const AuthProvider = ({ children }) => {
         setUser(verifiedUser);
         const address = await getDefaultAddress(verifiedUser._id);
         setDefaultAddress(address);
-        setLoading(false);
       } catch (error) {
         console.error('Invalid token:', error);
         logout();
@@ -36,7 +35,6 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = async ({ token }) => {
-    setLoading(true);
     localStorage.setItem('token', token);
     setToken(token);
   };
@@ -46,9 +44,10 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setToken(null);
     setDefaultAddress(null);
+    setLoading(false);
   };
 
-  const refreshDefaultAddress = async () => {
+  const refreshDefaultAddress = useCallback(async () => {
     if (!user?._id) return;
     try {
       const address = await getDefaultAddress(user._id);
@@ -56,26 +55,25 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error('Failed to refresh default address:', err);
     }
-  };
+  }, [user?._id]);
 
-  const isAuthenticated = !!token;
+  const isAuthenticated = !!user;
 
-  return (
-    <AuthContext.Provider
-      value={{
-        token,
-        user,
-        loading,
-        defaultAddress,
-        login,
-        logout,
-        isAuthenticated,
-        refreshDefaultAddress,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      token,
+      user,
+      loading,
+      defaultAddress,
+      login,
+      logout,
+      isAuthenticated,
+      refreshDefaultAddress,
+    }),
+    [token, user, loading, defaultAddress, isAuthenticated, refreshDefaultAddress]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

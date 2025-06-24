@@ -9,15 +9,10 @@ const useAddresses = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!isAuthenticated || !user) {
-      setIsLoading(false);
-      setError(new Error('User not authenticated'));
-      return;
-    }
-
     const fetchAddresses = async () => {
+      setIsLoading(true);
       try {
-        const data = await getAllAddressesById(user._id);
+        const data = await getAllAddressesById(user?._id);
         setAddresses(data);
       } catch (err) {
         console.error('Failed to fetch addresses:', err);
@@ -30,7 +25,7 @@ const useAddresses = () => {
     fetchAddresses();
   }, [isAuthenticated, user]);
 
-  return { addresses, isLoading, error };
+  return { addresses, setAddresses, isLoading, error };
 };
 
 export default useAddresses;

@@ -3,22 +3,15 @@ import SaleFilters from '@/components/sales/SaleFilters';
 import SaleCard from '@/components/sales/SaleCard';
 import SalesSummary from '@/components/sales/SalesSummary';
 import EmptyState from '@/components/sales/EmptyState';
-import { useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/routes/routes_consts';
-import { toast } from 'sonner';
+import useRequireSeller from '@/hooks/auth/useVerifiedUser';
 
 const SalesPage = () => {
   const { sales, searchTerm, setSearchTerm, sortBy, setSortBy, salesStats, loading } = useSales();
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!user) {
-      navigate(ROUTES.LOGIN);
-      toast.error('You must be logged in to upload a product.');
-    }
-  }, [user, navigate]);
+  const isSeller = useRequireSeller();
+
+  if (!isSeller) {
+    return null;
+  }
 
   if (loading) {
     return (

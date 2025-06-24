@@ -5,20 +5,23 @@ import { toast } from 'sonner';
 import { ROUTES } from '@/routes/routes_consts';
 
 const useRequireAuth = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [isAllowed, setIsAllowed] = useState(false);
 
   useEffect(() => {
+    if (loading) return;
+
     if (!user) {
       toast.error('You must be logged in to access this page.');
       navigate(ROUTES.LOGIN);
+      setIsAllowed(false);
     } else {
       setIsAllowed(true);
     }
-  }, [user, navigate]);
+  }, [user, loading, navigate]);
 
-  return isAllowed;
+  return loading ? null : isAllowed; // This avoids flickering
 };
 
 export default useRequireAuth;

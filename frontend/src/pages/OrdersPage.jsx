@@ -3,22 +3,15 @@ import OrderFilters from '@/components/orders/OrderFilters';
 import OrderCard from '@/components/orders/OrderCard';
 import OrderSummary from '@/components/orders/OrderSummary';
 import EmptyState from '@/components/orders/EmptyState';
-import { useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/routes/routes_consts';
-import { toast } from 'sonner';
+import useRequireAuth from '@/hooks/auth/useRequireAuth';
 
 const OrdersPage = () => {
   const { orders, searchTerm, setSearchTerm, sortBy, setSortBy, orderStats, loading } = useOrders();
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!user) {
-      navigate(ROUTES.LOGIN);
-      toast.error('You must be logged in to upload a product.');
-    }
-  }, [user, navigate]);
+  const isAllowed = useRequireAuth();
+
+  if (!isAllowed) {
+    return null;
+  }
 
   if (loading) {
     return (
