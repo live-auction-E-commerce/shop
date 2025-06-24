@@ -73,7 +73,6 @@ const useListingPaymentHandler = (initialListings = []) => {
     });
   };
 
-  // TODO : Implement Buy Now Logic
   const handleBuyNowClick = (listingId) => {
     if (!user?._id) {
       toast.error('You must be logged in to buy now!');
@@ -88,6 +87,11 @@ const useListingPaymentHandler = (initialListings = []) => {
 
     if (user._id === listing.sellerId) {
       toast.error('You can’t buy your own listing.');
+      return;
+    }
+
+    if (!defaultAddress) {
+      toast.error('You must have a default address to place a bid');
       return;
     }
 
