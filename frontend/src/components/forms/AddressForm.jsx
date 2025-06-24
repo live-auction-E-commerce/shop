@@ -9,7 +9,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 
-const AddressForm = ({ form }) => {
+const AddressForm = ({ form, hideDefaultOption }) => {
   return (
     <div className="space-y-6">
       <div className="text-xl font-semibold">Address Details</div>
@@ -94,23 +94,29 @@ const AddressForm = ({ form }) => {
         />
       </div>
 
-      <FormField
-        control={form.control}
-        name="isDefault"
-        render={({ field }) => (
-          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-            <FormControl>
-              <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-            </FormControl>
-            <div className="space-y-1 leading-none">
-              <FormLabel>Set as default address</FormLabel>
-              <FormDescription>
-                This address will be used as your default shipping address
-              </FormDescription>
-            </div>
-          </FormItem>
-        )}
-      />
+      {hideDefaultOption ? (
+        <div className="rounded-md border p-4 bg-muted text-muted-foreground text-sm">
+          This will be set as your default shipping address.
+        </div>
+      ) : (
+        <FormField
+          control={form.control}
+          name="isDefault"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormControl>
+                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Set as default address</FormLabel>
+                <FormDescription>
+                  This address will be used as your default shipping address
+                </FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+      )}
     </div>
   );
 };
