@@ -13,6 +13,7 @@ const useSales = () => {
 
   useEffect(() => {
     const fetchSales = async () => {
+      setLoading(true);
       try {
         if (user?._id) {
           const fetchedSales = await getAllSalesById(user._id);

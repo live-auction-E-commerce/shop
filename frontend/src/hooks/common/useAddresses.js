@@ -10,6 +10,7 @@ const useAddresses = () => {
 
   useEffect(() => {
     const fetchAddresses = async () => {
+      setIsLoading(true);
       try {
         const data = await getAllAddressesById(user?._id);
         setAddresses(data);

@@ -13,6 +13,7 @@ const useOrders = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
+      setLoading(true);
       try {
         if (user?._id) {
           const fetchedOrders = await getAllOrdersById(user._id);
