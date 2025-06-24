@@ -60,7 +60,12 @@ const PaymentModal = ({
             Complete Payment
           </DialogTitle>
           <DialogDescription>
-            {description} - ${amount.toFixed(2)} {currency.toUpperCase()}
+            {description} - $
+            {Number(amount).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}{' '}
+            {currency.toUpperCase()}
           </DialogDescription>
         </DialogHeader>
         {clientSecret && stripePromise ? (
