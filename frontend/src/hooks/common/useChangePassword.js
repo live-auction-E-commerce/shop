@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
@@ -19,36 +19,39 @@ const useChangePasswordForm = () => {
     },
   });
 
-  const onSubmit = async (data) => {
-    setServerError('');
+  const onSubmit = useCallback(
+    async (data) => {
+      setServerError('');
 
-    try {
-      const result = await changePassword(data);
+      try {
+        const result = await changePassword(data);
 
-      if (result.user) {
-        setSuccess(true);
-        form.reset();
-        setTimeout(() => {
-          navigate(ROUTES.HOME);
-        }, 2000);
-      } else {
-        if (result.errors) {
-          Object.entries(result.errors).forEach(([field, messages]) => {
-            form.setError(field, {
-              type: 'server',
-              message: messages[0],
+        if (result.user) {
+          setSuccess(true);
+          form.reset();
+          setTimeout(() => {
+            navigate(ROUTES.HOME);
+          }, 2000);
+        } else {
+          if (result.errors) {
+            Object.entries(result.errors).forEach(([field, messages]) => {
+              form.setError(field, {
+                type: 'server',
+                message: messages[0],
+              });
             });
-          });
-        }
+          }
 
-        if (result.message) {
-          setServerError(result.message);
+          if (result.message) {
+            setServerError(result.message);
+          }
         }
+      } catch (error) {
+        setServerError(`An unexpected error occurred. Please try again, ${error}`);
       }
-    } catch (error) {
-      setServerError(`An unexpected error occurred. Please try again, ${error}`);
-    }
-  };
+    },
+    [form, navigate]
+  );
 
   return { form, onSubmit, success, serverError, setServerError };
 };

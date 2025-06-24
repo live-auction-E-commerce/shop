@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback, memo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn, getGridClass, sortListings, filterListings } from '@/lib/utils';
 import GridHeader from './GridHeader';
@@ -24,7 +24,7 @@ const ListingGrid = ({
   const [condition, setCondition] = useState('all');
   const [status, setStatus] = useState('all');
 
-  const toggleFilters = () => setFiltersVisible((prev) => !prev);
+  const toggleFilters = useCallback(() => setFiltersVisible((prev) => !prev), []);
 
   const filteredListings = useMemo(() => {
     return filterListings(listings, {
@@ -84,4 +84,4 @@ const ListingGrid = ({
   );
 };
 
-export default ListingGrid;
+export default memo(ListingGrid);

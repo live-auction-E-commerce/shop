@@ -9,12 +9,12 @@ import { BidProvider } from './context/BidContext';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <StripeProvider>
-        <BidProvider>
-          <RouterProvider router={router} />
-        </BidProvider>
-      </StripeProvider>
-    </AuthProvider>
+  <AuthProvider>
+    <StripeProvider>
+      <BidProvider>
+        <RouterProvider router={router} />
+      </BidProvider>
+    </StripeProvider>
+  </AuthProvider>
   </StrictMode>
 );
