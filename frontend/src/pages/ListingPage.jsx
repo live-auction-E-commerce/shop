@@ -7,6 +7,7 @@ import { getListingById } from '@/services/listingService';
 import useSingleListingSocket from '@/hooks/sockets/useSingleListingSocket';
 import { toast } from 'sonner';
 import PaymentModal from '@/components/modals/PaymentModal';
+import HighestBidderIndicator from '@/components/bid/HighestBidderIndicator';
 import usePaymentHandler from '@/hooks/payments/usePaymentHandler';
 import { useAuth } from '@/context/AuthContext';
 import { maxPossibleBidAmount } from '@/constants/constants';
@@ -25,6 +26,7 @@ const ListingPage = () => {
 
   const { width, height } = useWindowSize();
   const { user, defaultAddress } = useAuth();
+  const isUserHighestBidder = listing?.currentBid?.userId === user?._id;
   const { setLatestBid } = useBidContext();
   const navigate = useNavigate();
 
@@ -77,7 +79,7 @@ const ListingPage = () => {
         return;
       }
       if (bidAmount >= maxPossibleBidAmount) {
-        toast.error(`Maximum bid is: $${maxPossibleBidAmount}`);
+        toast.error(`Maximum bid is: $${maxPossibleBidAmount.toLocaleString()}`);
         return;
       }
       if (user._id === listing.sellerId) {
@@ -102,25 +104,16 @@ const ListingPage = () => {
             currentBid: {
               _id: newBid._id,
               amount: newBid.amount,
-              userId: newBid.userId,
+              userId: newBid.userId._id,
             },
           }));
           setLatestBid(newBid);
+          console.log(listing);
+          console.log(newBid);
         },
       });
     },
-    [
-      defaultAddress,
-      id,
-      listing?.currentBid?.amount,
-      listing?.currentBid?.userId,
-      listing?.sellerId,
-      listing?.startingBid,
-      navigate,
-      openPaymentModal,
-      setLatestBid,
-      user?._id,
-    ]
+    [defaultAddress, id, navigate, openPaymentModal, setLatestBid, user?._id, listing]
   );
 
   const handleBuyNowClick = useCallback(() => {
@@ -165,6 +158,7 @@ const ListingPage = () => {
         />
       )}
       <div className="container mx-auto px-4 py-8">
+        <HighestBidderIndicator isVisible={isUserHighestBidder} />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className={listing.saleType === 'auction' ? 'lg:col-span-2' : 'lg:col-span-3'}>
             <ProductDetails

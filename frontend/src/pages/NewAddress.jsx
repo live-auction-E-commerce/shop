@@ -19,8 +19,10 @@ const NewAddress = () => {
   const params = useParams();
   const isEditing = !!params.id;
 
-  const { user, refreshDefaultAddress } = useAuth();
+  const { user, defaultAddress, refreshDefaultAddress } = useAuth();
   const [loadingAddress, setLoadingAddress] = useState(isEditing);
+
+  const isFirstAddress = !defaultAddress && !isEditing;
 
   const form = useForm({
     resolver: zodResolver(addressSchema),
@@ -97,7 +99,7 @@ const NewAddress = () => {
       {!loadingAddress && (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <AddressForm form={form} />
+            <AddressForm form={form} hideDefaultOption={isFirstAddress} />
 
             <div className="flex justify-end gap-4">
               <Button type="button" variant="outline" onClick={() => navigate(ROUTES.ADDRESSES)}>

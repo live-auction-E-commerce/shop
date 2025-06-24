@@ -5,7 +5,14 @@ export const createAddress = async (req) => {
   const { user, body } = req;
   validateObjectId(user.id);
 
-  if (body.isDefault) {
+  const existingCount = await Address.countDocuments({
+    userId: user.id,
+    isActive: true,
+  });
+
+  const shouldBeDefault = existingCount === 0 || body.isDefault;
+
+  if (shouldBeDefault) {
     await Address.updateMany(
       { userId: user.id },
       { $set: { isDefault: false } },
@@ -19,7 +26,7 @@ export const createAddress = async (req) => {
     number: body.number,
     city: body.city,
     country: body.country,
-    isDefault: body.isDefault || false,
+    isDefault: shouldBeDefault,
   });
 
   await address.save();

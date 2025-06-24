@@ -2,6 +2,8 @@ import { useCallback, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { maxPossibleBidAmount } from '@/constants/constants';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 
 const BidModal = ({ isOpen, onClose, onConfirm, currentBidAmount }) => {
   const [bidAmount, setBidAmount] = useState('');
@@ -13,7 +15,7 @@ const BidModal = ({ isOpen, onClose, onConfirm, currentBidAmount }) => {
       return;
     }
     if (amount >= maxPossibleBidAmount) {
-      toast.error(`Maximum bid is: $${maxPossibleBidAmount}`);
+      toast.error(`Maximum bid is: $${maxPossibleBidAmount.toLocaleString()}`);
       return;
     }
 
