@@ -29,13 +29,17 @@ export const createAddress = async (req) => {
 
 export const getAddressById = async (addressId) => {
   validateObjectId(addressId);
+
   const address = await Address.findById(addressId);
   return address;
 };
 
 export const getAllAddressByUser = async (user) => {
   validateObjectId(user.id);
-  const addresses = await Address.find({ userId: user.id }).sort({
+  const addresses = await Address.find({
+    userId: user.id,
+    isActive: true,
+  }).sort({
     isDefault: -1,
     createdAt: -1,
   });
@@ -55,7 +59,7 @@ export const updateAddress = async (addressId, data) => {
     }
 
     await Address.updateMany(
-      { userId: address.userId },
+      { userId: address.userId, isActive: true },
       { $set: { isDefault: false } },
     );
   }
@@ -77,7 +81,7 @@ export const setDefaultAddress = async (addressId, userId) => {
   validateObjectId(userId);
   validateObjectId(addressId);
 
-  //unset previos addresses
+  //unset previous addresses
   await Address.updateMany({ userId }, { $set: { isDefault: false } });
 
   const updatedAddress = await Address.findByIdAndUpdate(
@@ -108,11 +112,34 @@ export const deleteAddress = async (addressId, userId) => {
   validateObjectId(addressId);
   validateObjectId(userId);
 
-  const address = await Address.findByIdAndDelete(addressId);
+  // Find the address first
+  const address = await Address.findOne({ _id: addressId, userId });
 
-  if (!address) {
-    throw new Error('Address not found');
+  if (!address || !address.isActive) {
+    throw new Error('Address not found or not authorized');
   }
 
-  return { success: true, message: 'Address deleted successfully' };
+  const wasDefault = address.isDefault;
+
+  // Soft delete it
+  address.isActive = false;
+  address.isDefault = false;
+  await address.save();
+
+  if (wasDefault) {
+    const nextAddress = await Address.findOne({
+      userId,
+      isActive: true,
+    }).sort({ createdAt: -1 });
+
+    if (nextAddress) {
+      nextAddress.isDefault = true;
+      await nextAddress.save();
+    }
+  }
+
+  return {
+    success: true,
+    message: 'Address deleted successfully (soft deletion)',
+  };
 };
