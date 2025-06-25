@@ -1,21 +1,18 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductDetails from '@/components/ui/ProductDetails';
 import BidChatbox from '@/components/bid/BidChatbox';
 import WinnerModal from '@/components/modals/WinnerModal';
 import { getListingById } from '@/services/listingService';
 import useSingleListingSocket from '@/hooks/sockets/useSingleListingSocket';
-import { toast } from 'sonner';
 import PaymentModal from '@/components/modals/PaymentModal';
 import HighestBidderIndicator from '@/components/bid/HighestBidderIndicator';
-import usePaymentHandler from '@/hooks/payments/usePaymentHandler';
 import { useAuth } from '@/context/AuthContext';
-import { maxPossibleBidAmount } from '@/constants/constants';
-import { useBidContext } from '@/context/BidContext';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
-import { ROUTES } from '@/routes/routes_consts';
-import { useNavigate } from 'react-router-dom';
+import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
+import AddressSelectionModal from '@/components/modals/AddressSelectionModal';
+import { useListingHandlers } from '@/hooks/listings/useListingHandlers';
 
 const ListingPage = () => {
   const { id } = useParams();
@@ -25,18 +22,20 @@ const ListingPage = () => {
   const [showConfetti, setShowConfetti] = useState(false);
 
   const { width, height } = useWindowSize();
-  const { user, defaultAddress } = useAuth();
-  const isUserHighestBidder = listing?.currentBid?.userId === user?._id;
-  const { setLatestBid } = useBidContext();
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const {
-    openPaymentModal,
-    handlePaymentSuccess,
-    handlePaymentCancel,
-    isPaymentModalOpen,
-    pendingBidAmount,
-  } = usePaymentHandler();
+  const { currentStep, paymentDetails, startPaymentFlow, handleAddressSelection, resetFlow } =
+    usePaymentFlow(listing);
+
+  const { handleBidClick, handleBuyNowClick, handlePaymentSuccess } = useListingHandlers({
+    listing,
+    setListing,
+    startPaymentFlow,
+    resetFlow,
+    paymentDetails,
+  });
+
+  const isUserHighestBidder = listing?.currentBid?.userId === user?._id;
 
   useEffect(() => {
     if (showConfetti) {
@@ -65,81 +64,6 @@ const ListingPage = () => {
     setListing,
     setShowConfetti
   );
-
-  const handleBidClick = useCallback(
-    (bidAmount) => {
-      if (!user?._id) {
-        toast.error('You must be logged in to place a bid!');
-        navigate(ROUTES.LOGIN);
-        return;
-      }
-
-      const currentBidAmount = listing?.currentBid?.amount || listing.startingBid;
-      if (bidAmount <= currentBidAmount) {
-        toast.error('Bid must be greater than current bid');
-        return;
-      }
-
-      if (bidAmount >= maxPossibleBidAmount) {
-        toast.error(`Maximum bid is: $${maxPossibleBidAmount.toLocaleString()}`);
-        return;
-      }
-
-      if (user._id === listing.sellerId) {
-        toast.error('You can not bid on a listing you posted');
-        return;
-      }
-
-      if (user._id === listing.currentBid?.userId) {
-        toast.error('You own the highest bid already');
-        return;
-      }
-
-      if (!defaultAddress) {
-        toast.error('You must have a default address to place a bid');
-        return;
-      }
-
-      openPaymentModal({
-        listingId: id,
-        amount: bidAmount,
-        onSuccess: (newBid) => {
-          setListing((prev) => ({
-            ...prev,
-            currentBid: {
-              _id: newBid._id,
-              amount: newBid.amount,
-              userId: newBid.userId._id,
-            },
-          }));
-          setLatestBid(newBid);
-        },
-      });
-    },
-    [defaultAddress, id, listing, navigate, openPaymentModal, setLatestBid, user?._id]
-  );
-
-  const handleBuyNowClick = useCallback(() => {
-    if (!user?._id) {
-      toast.error('You must be logged in to buy now!');
-      return;
-    }
-    if (user._id === listing.sellerId) {
-      toast.error('You can not buy a listing you posted');
-      return;
-    }
-    openPaymentModal({
-      listingId: id,
-      amount: listing.price,
-      onSuccess: () => {
-        setListing((prev) => ({
-          ...prev,
-          isSold: true,
-        }));
-      },
-      mode: 'buyNow',
-    });
-  }, [id, listing?.price, listing?.sellerId, openPaymentModal, user?._id]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -178,14 +102,25 @@ const ListingPage = () => {
           )}
         </div>
 
-        <PaymentModal
-          isOpen={isPaymentModalOpen}
-          onClose={handlePaymentCancel}
-          amount={pendingBidAmount || 0}
-          description={`Bid for ${listing._id}`}
-          onSuccess={handlePaymentSuccess}
-          listing={listing}
-        />
+        {currentStep === PAYMENT_STEPS.ADDRESS_SELECTION && (
+          <AddressSelectionModal
+            isOpen={true}
+            onConfirm={handleAddressSelection}
+            onClose={resetFlow}
+          />
+        )}
+
+        {currentStep === PAYMENT_STEPS.PAYMENT && (
+          <PaymentModal
+            isOpen={true}
+            amount={paymentDetails.amount}
+            listing={listing}
+            addressId={paymentDetails.addressId}
+            onSuccess={handlePaymentSuccess}
+            onClose={resetFlow}
+          />
+        )}
+
         <WinnerModal
           isVisible={!!winnerData}
           winnerEmail={winnerData?.buyerEmail}
