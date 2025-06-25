@@ -4,6 +4,10 @@ import { getDefaultAddress } from '@/services/addressService';
 
 const AuthContext = createContext();
 
+// we might be able to delete the default address from the state later, i only store this here as we needed to check
+// if the user has a default address before letting him place a bid / buy a product but now we have AddressSelectionModal
+// We don`t need this anymore as this component handles this case
+
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [user, setUser] = useState();

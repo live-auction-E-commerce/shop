@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { maxPossibleBidAmount } from '@/constants/constants';
 
 export const useBidValidations = (listing) => {
-  const { user, defaultAddress } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const validateBidder = useCallback(() => {
@@ -25,13 +25,9 @@ export const useBidValidations = (listing) => {
       toast.error('You own the highest bid already');
       return false;
     }
-    if (!defaultAddress) {
-      toast.error('You must have a default address to place a bid');
-      return false;
-    }
 
     return true;
-  }, [user, listing, defaultAddress, navigate]);
+  }, [user, listing, navigate]);
   const validateBidAmount = useCallback(
     (bidAmount) => {
       const currentBidAmount = listing?.currentBid?.amount || listing?.startingBid;

@@ -37,6 +37,8 @@ export const useListingHandlers = ({
     });
   }, [listing, startPaymentFlow]);
 
+  // TODO: We need to also pass the selected address by the user with each bid now
+
   const handlePaymentSuccess = useCallback(
     async (result) => {
       try {
@@ -72,8 +74,6 @@ export const useListingHandlers = ({
             addressId: paymentDetails.addressId,
             price: soldListing.price,
           });
-
-          toast.success('Listing purchased and order created successfully!');
         }
 
         const updatedListing = await getListingById(paymentDetails.listingId);

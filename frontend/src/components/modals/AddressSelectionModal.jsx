@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -15,6 +15,8 @@ const AddressSelectionModal = ({ isOpen, onConfirm, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { user } = useAuth();
+
+  console.log('Addresses rerendered!');
 
   useEffect(() => {
     const loadAddresses = async () => {
@@ -125,7 +127,7 @@ const AddressSelectionModal = ({ isOpen, onConfirm, onClose }) => {
             disabled={loading || addresses.length === 0}
             className="flex-1"
           >
-            Confirm Selection
+            Next
           </Button>
         </div>
       </DialogContent>
@@ -133,4 +135,4 @@ const AddressSelectionModal = ({ isOpen, onConfirm, onClose }) => {
   );
 };
 
-export default AddressSelectionModal;
+export default memo(AddressSelectionModal);
