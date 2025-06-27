@@ -7,7 +7,7 @@ import AddressSelectionModal from '@/components/modals/AddressSelectionModal';
 import useListings from '@/hooks/listings/useListings';
 import useListingsSocket from '@/hooks/sockets/useListingsSocket';
 import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
-import { useListingHandlers } from '@/hooks/listings/useListingHandlers';
+import { useListingActionHandlers } from '@/hooks/payments/useListingActionHandlers';
 
 const Home = () => {
   const { listings: initialListings, isLoading } = useListings();
@@ -31,7 +31,7 @@ const Home = () => {
     resetFlow,
   } = usePaymentFlow(false);
 
-  const { handleBidClick, handleBuyNowClick, handlePaymentSuccess } = useListingHandlers({
+  const { handleBidClick, handleBuyNowClick, handlePaymentSuccess } = useListingActionHandlers({
     setListings,
     startPaymentFlow,
     resetFlow,

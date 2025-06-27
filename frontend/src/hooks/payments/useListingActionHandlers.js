@@ -7,9 +7,9 @@ import { createOrder } from '@/services/orderService';
 import { getListingById } from '@/services/listingService';
 import { useAuth } from '@/context/AuthContext';
 import { useBidContext } from '@/context/BidContext';
-import { useListingValidations } from './useListingValidations';
+import { useListingValidations } from '../listings/useListingValidations';
 
-export const useListingHandlers = ({
+export const useListingActionHandlers = ({
   setListing,
   setListings,
   startPaymentFlow,

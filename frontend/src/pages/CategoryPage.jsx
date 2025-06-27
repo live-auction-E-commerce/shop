@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { ListingGrid } from '@/components/listing/ListingGrid';
 import useListings from '@/hooks/listings/useListings';
 import useListingsSocket from '@/hooks/sockets/useListingsSocket';
-import { useListingHandlers } from '@/hooks/listings/useListingHandlers';
+import { useListingActionHandlers } from '@/hooks/payments/useListingActionHandlers';
 import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
 import BidModal from '@/components/modals/BidModal';
 import PaymentModal from '@/components/modals/PaymentModal';
@@ -34,7 +34,7 @@ const CategoryPage = () => {
     resetFlow,
   } = usePaymentFlow(false);
 
-  const { handleBuyNowClick, handleBidClick, handlePaymentSuccess } = useListingHandlers({
+  const { handleBuyNowClick, handleBidClick, handlePaymentSuccess } = useListingActionHandlers({
     setListings: setFilteredListings,
     startPaymentFlow,
     resetFlow,

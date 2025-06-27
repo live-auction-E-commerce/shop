@@ -12,7 +12,7 @@ import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
 import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
 import AddressSelectionModal from '@/components/modals/AddressSelectionModal';
-import { useListingHandlers } from '@/hooks/listings/useListingHandlers';
+import { useListingActionHandlers } from '@/hooks/payments/useListingActionHandlers';
 
 const ListingPage = () => {
   const { id } = useParams();
@@ -27,7 +27,7 @@ const ListingPage = () => {
   const { currentStep, paymentDetails, startPaymentFlow, handleAddressSelection, resetFlow } =
     usePaymentFlow(listing, true);
 
-  const { handleBidClick, handleBuyNowClick, handlePaymentSuccess } = useListingHandlers({
+  const { handleBidClick, handleBuyNowClick, handlePaymentSuccess } = useListingActionHandlers({
     listing,
     setListing,
     startPaymentFlow,

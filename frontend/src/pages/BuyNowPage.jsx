@@ -5,7 +5,7 @@ import PaymentModal from '@/components/modals/PaymentModal';
 import AddressSelectionModal from '@/components/modals/AddressSelectionModal';
 import useListingsSocket from '@/hooks/sockets/useListingsSocket';
 import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
-import { useListingHandlers } from '@/hooks/listings/useListingHandlers';
+import { useListingActionHandlers } from '@/hooks/payments/useListingActionHandlers';
 
 const BuyNowPage = () => {
   const { listings: allListings, isLoading } = useListings();
@@ -29,7 +29,7 @@ const BuyNowPage = () => {
     resetFlow,
   } = usePaymentFlow(false);
 
-  const { handleBuyNowClick, handleBidClick, handlePaymentSuccess } = useListingHandlers({
+  const { handleBuyNowClick, handleBidClick, handlePaymentSuccess } = useListingActionHandlers({
     setListings: setFilteredListings,
     startPaymentFlow,
     resetFlow,
