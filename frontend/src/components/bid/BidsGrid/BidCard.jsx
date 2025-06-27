@@ -43,7 +43,7 @@ const BidCard = ({ bid, onViewDetails }) => {
           {isWinning && auctionStatus.status === 'active' && (
             <div className="absolute top-3 right-3">
               <Badge variant="default" className="bg-green-300 hover:bg-green-500">
-                <TrendingUp className="h-3 w-3 mr-1" />
+                <TrendingUp className="h-3 w-3 mr-1 text-black " />
                 <h1 className="text-black font-semibold">Leading</h1>
               </Badge>
             </div>

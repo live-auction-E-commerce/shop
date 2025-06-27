@@ -47,11 +47,11 @@ export const getAuctionStatus = (listing) => {
   const expiredAt = new Date(listing.expiredAt);
 
   if (listing.isSold) {
-    return { status: 'sold', label: 'Sold', variant: 'secondary' };
+    return { status: 'sold', label: 'Sold', variant: 'default' };
   } else if (now > expiredAt) {
     return { status: 'expired', label: 'Expired', variant: 'destructive' };
   } else {
-    return { status: 'active', label: 'Active', variant: 'default' };
+    return { status: 'active', label: 'Active', variant: 'secondary' };
   }
 };
 export const getTimeRemaining = (expiredAt, isExpired) => {
@@ -95,6 +95,8 @@ export function formatCurrency(amount) {
     currency: 'USD',
   }).format(numAmount);
 }
+
+export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
 export const getGridClass = (itemsPerRow) => {
   let gridClass = 'grid grid-cols-1 gap-4';

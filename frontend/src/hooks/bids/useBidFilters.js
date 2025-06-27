@@ -36,12 +36,14 @@ const useBidFilters = (bids) => {
     filtered.sort((a, b) => {
       let comparison = 0;
 
+      console.log(a);
+
       switch (filters.sortBy) {
         case 'date':
-          comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          comparison = new Date(a.bid.createdAt).getTime() - new Date(b.bid.createdAt).getTime();
           break;
         case 'amount':
-          comparison = a.amount - b.amount;
+          comparison = a.bid.amount - b.bid.amount;
           break;
         case 'expiry':
           comparison =
