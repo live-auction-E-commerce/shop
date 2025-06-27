@@ -6,7 +6,6 @@ const useBidFilters = (bids) => {
   const [filters, setFilters] = useState({
     status: 'all',
     category: 'all',
-    condition: 'all',
     sortBy: 'date',
     sortOrder: 'desc',
   });
@@ -26,13 +25,7 @@ const useBidFilters = (bids) => {
         if (status !== filters.status) return false;
       }
 
-      // Category filter
       if (filters.category !== 'all' && bid.product.category !== filters.category) {
-        return false;
-      }
-
-      // Condition filter
-      if (filters.condition !== 'all' && bid.product.condition !== filters.condition) {
         return false;
       }
 
@@ -71,7 +64,6 @@ const useBidFilters = (bids) => {
     setFilters({
       status: 'all',
       category: 'all',
-      condition: 'all',
       sortBy: 'date',
       sortOrder: 'desc',
     });
@@ -80,11 +72,8 @@ const useBidFilters = (bids) => {
   // Get unique values for filter options
   const filterOptions = useMemo(() => {
     const categories = [...new Set(bids.map((bid) => bid.product.category))];
-    const conditions = [...new Set(bids.map((bid) => bid.product.condition))];
-
     return {
       categories,
-      conditions,
     };
   }, [bids]);
 

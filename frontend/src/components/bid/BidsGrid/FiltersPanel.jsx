@@ -47,24 +47,6 @@ const FiltersPanel = ({
         </SelectContent>
       </Select>
 
-      {/* Condition Filter */}
-      <Select
-        value={filters.condition}
-        onValueChange={(value) => onFilterChange('condition', value)}
-      >
-        <SelectTrigger className="w-32">
-          <SelectValue placeholder="Condition" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Conditions</SelectItem>
-          {filterOptions.conditions.map((condition) => (
-            <SelectItem key={condition} value={condition}>
-              {condition.charAt(0).toUpperCase() + condition.slice(1)}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
       {/* Sort Options */}
       <Popover>
         <PopoverTrigger asChild>
