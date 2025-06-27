@@ -61,7 +61,7 @@ export const useListingActionHandlers = ({
   const handleBidClick = useCallback(
     (listing, bidAmount) => {
       if (!validateBidder(listing)) return;
-      if (!validateBidAmount(listing, bidAmount)) return;
+      if (bidAmount && !validateBidAmount(listing, bidAmount)) return;
 
       if (setListings && setListing) {
         setListing(listing);

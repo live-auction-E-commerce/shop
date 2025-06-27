@@ -12,7 +12,6 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
-  const [defaultAddress, setDefaultAddress] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -25,8 +24,6 @@ export const AuthProvider = ({ children }) => {
         const response = await verifyToken(token);
         const verifiedUser = response.user;
         setUser(verifiedUser);
-        const address = await getDefaultAddress(verifiedUser._id);
-        setDefaultAddress(address);
       } catch (error) {
         console.error('Invalid token:', error);
         logout();
@@ -47,19 +44,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setUser(null);
     setToken(null);
-    setDefaultAddress(null);
     setLoading(false);
   };
-
-  const refreshDefaultAddress = useCallback(async () => {
-    if (!user?._id) return;
-    try {
-      const address = await getDefaultAddress(user._id);
-      setDefaultAddress(address);
-    } catch (err) {
-      console.error('Failed to refresh default address:', err);
-    }
-  }, [user?._id]);
 
   const isAuthenticated = !!user;
 
@@ -68,13 +54,11 @@ export const AuthProvider = ({ children }) => {
       token,
       user,
       loading,
-      defaultAddress,
       login,
       logout,
       isAuthenticated,
-      refreshDefaultAddress,
     }),
-    [token, user, loading, defaultAddress, isAuthenticated, refreshDefaultAddress]
+    [token, user, loading, isAuthenticated]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
