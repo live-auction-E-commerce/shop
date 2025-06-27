@@ -42,9 +42,9 @@ const BidCard = ({ bid, onViewDetails }) => {
           </div>
           {isWinning && auctionStatus.status === 'active' && (
             <div className="absolute top-3 right-3">
-              <Badge variant="default" className="bg-green-600 hover:bg-green-700">
+              <Badge variant="default" className="bg-green-300 hover:bg-green-500">
                 <TrendingUp className="h-3 w-3 mr-1" />
-                Leading
+                <h1 className="text-black font-semibold">Leading</h1>
               </Badge>
             </div>
           )}
@@ -107,7 +107,7 @@ const BidCard = ({ bid, onViewDetails }) => {
             className="w-full bg-transparent"
             onClick={() => onViewDetails?.(bid)}
           >
-            View Auction Details
+            View Full Listing Details
           </Button>
         </div>
       </CardContent>
