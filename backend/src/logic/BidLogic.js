@@ -3,6 +3,7 @@ import Listing from '../models/Listing.js';
 import User from '../models/User.js';
 import PaymentIntent from '../models/PaymentIntent.js';
 import { validateObjectId } from '../lib/validations.js';
+import { aggregateUserBids } from '../lib/aggregations.js';
 
 export const createBid = async (data) => {
   validateObjectId(data.listingId);
@@ -74,14 +75,9 @@ export const getAllBidsByListing = async (listingId) => {
   return bids;
 };
 
-export const getAllBidsByUser = async (userId) => {
+export const getAllRelevantBidsByUser = async (userId) => {
   validateObjectId(userId);
-
-  const bids = await Bid.find({ userId }).sort({ createAt: -1 });
-  if (!bids) {
-    throw new Error('Couldn`t find a bids with the specific ID.');
-  }
-  return bids;
+  return await aggregateUserBids(userId);
 };
 
 export const getAllBidsByUserAndListing = async (userId, listingId) => {

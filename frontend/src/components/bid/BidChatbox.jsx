@@ -3,13 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { DollarSign } from 'lucide-react';
-import useBids from '@/hooks/common/UseBids';
+import useBidsForListing from '@/hooks/bids/useBidsForListing';
 import useSingleBidSocket from '@/hooks/sockets/useSingleBidSocket';
 import { useBidContext } from '@/context/BidContext';
 import BidItem from '@/components/bid/BidItem';
 
 const BidChatbox = ({ listingId, className = '' }) => {
-  const { bids: initialBids, isLoading, error } = useBids(listingId);
+  const { bids: initialBids, isLoading, error } = useBidsForListing(listingId);
   const [bids, setBids] = useState([]);
   const { latestBid } = useBidContext();
 

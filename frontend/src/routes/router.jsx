@@ -3,13 +3,13 @@ import App from '@/App';
 import Home from '@/pages/Home.jsx';
 import Login from '@/pages/Login.jsx';
 import Register from '@/pages/Register.jsx';
-import ProductPage from '@/pages/ListingPage';
 import CategoryPage from '@/pages/CategoryPage';
 import LiveAuctions from '@/pages/LiveAuctions';
 import AddressesPage from '@/pages/AddressesPage';
 import NewAddress from '@/pages/NewAddress';
 import BuyNowPage from '@/pages/BuyNowPage';
 import ListingPage from '@/pages/ListingPage';
+import YourBidsPage from '@/pages/YourBidsPage';
 import UploadProduct from '@/pages/UploadProduct';
 import OrdersPage from '@/pages/OrdersPage';
 import SalesPage from '@/pages/SalesPage';
@@ -37,6 +37,7 @@ const router = createBrowserRouter([
       { path: ROUTES.LISTING_PAGE, element: <ListingPage /> },
       { path: ROUTES.NEW_PRODUCT, element: <UploadProduct /> },
       { path: ROUTES.ORDERS, element: <OrdersPage /> },
+      { path: ROUTES.YOUR_BIDS, element: <YourBidsPage /> },
       { path: ROUTES.SALES, element: <SalesPage /> },
       { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     ],

@@ -41,6 +41,19 @@ export const getListingStatus = (listing) => {
   }
   return 'active';
 };
+
+export const getAuctionStatus = (listing) => {
+  const now = new Date();
+  const expiredAt = new Date(listing.expiredAt);
+
+  if (listing.isSold) {
+    return { status: 'sold', label: 'Sold', variant: 'secondary' };
+  } else if (now > expiredAt) {
+    return { status: 'expired', label: 'Expired', variant: 'destructive' };
+  } else {
+    return { status: 'active', label: 'Active', variant: 'default' };
+  }
+};
 export const getTimeRemaining = (expiredAt, isExpired) => {
   if (!expiredAt) return null;
 
