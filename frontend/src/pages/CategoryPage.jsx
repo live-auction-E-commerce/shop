@@ -3,14 +3,17 @@ import { useParams } from 'react-router-dom';
 import { ListingGrid } from '@/components/listing/ListingGrid';
 import useListings from '@/hooks/listings/useListings';
 import useListingsSocket from '@/hooks/sockets/useListingsSocket';
-import useListingPaymentHandler from '@/hooks/payments/useListingPaymentHandler';
+import { useListingHandlers } from '@/hooks/listings/useListingHandlers';
+import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
 import BidModal from '@/components/modals/BidModal';
 import PaymentModal from '@/components/modals/PaymentModal';
+import AddressSelectionModal from '@/components/modals/AddressSelectionModal';
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
   const { listings: allListings, isLoading } = useListings();
   const [filteredListings, setFilteredListings] = useState([]);
+  const [selectedListing, setSelectedListing] = useState(null);
 
   useEffect(() => {
     if (allListings.length) {
@@ -24,48 +27,62 @@ const CategoryPage = () => {
   useListingsSocket(filteredListings, setFilteredListings);
 
   const {
-    listings,
-    isPaymentModalOpen,
-    pendingBidAmount,
-    activeListingId,
-    selectedListing,
-    isBidModalOpen,
-    handleBidClick,
-    handleBuyNowClick,
+    currentStep,
+    paymentDetails,
+    startPaymentFlow,
+    handleAddressSelection,
     handleBidConfirm,
-    handlePaymentSuccess,
-    handlePaymentCancel,
-    closeBidModal,
-  } = useListingPaymentHandler(filteredListings);
+    resetFlow,
+  } = usePaymentFlow(false);
+
+  const { handleBuyNowClick, handleBidClick, handlePaymentSuccess } = useListingHandlers({
+    setListing: setSelectedListing,
+    setListings: setFilteredListings,
+    startPaymentFlow,
+    resetFlow,
+    paymentDetails,
+  });
+
+  const isBidModalOpen = currentStep === PAYMENT_STEPS.AMOUNT_ENTRY;
+  const isPaymentModalOpen = currentStep === PAYMENT_STEPS.PAYMENT;
 
   return (
     <>
       <ListingGrid
-        listings={listings}
+        listings={filteredListings}
         title={categoryName}
         onBuyNowClick={handleBuyNowClick}
         onBidClick={handleBidClick}
         isLoading={isLoading}
       />
 
-      {selectedListing && (
+      {selectedListing && isBidModalOpen && (
         <BidModal
           isOpen={isBidModalOpen}
-          onClose={closeBidModal}
-          currentBidAmount={selectedListing.currentBid?.amount || selectedListing.startingBid || 0}
+          onClose={resetFlow}
+          currentBidAmount={
+            selectedListing?.currentBid?.amount || selectedListing?.startingBid || 0
+          }
           onConfirm={handleBidConfirm}
         />
       )}
 
-      {pendingBidAmount && (
+      {currentStep === PAYMENT_STEPS.ADDRESS_SELECTION && (
+        <AddressSelectionModal
+          isOpen={true}
+          onConfirm={handleAddressSelection}
+          onClose={resetFlow}
+        />
+      )}
+
+      {paymentDetails && isPaymentModalOpen && (
         <PaymentModal
           isOpen={isPaymentModalOpen}
-          amount={pendingBidAmount}
-          listingId={activeListingId}
-          listing={selectedListing}
+          amount={paymentDetails.amount}
+          listingId={paymentDetails.listingId}
+          listing={filteredListings.find((l) => l._id === paymentDetails.listingId)}
           onSuccess={handlePaymentSuccess}
-          onCancel={handlePaymentCancel}
-          onClose={handlePaymentCancel}
+          onClose={resetFlow}
         />
       )}
     </>

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 export const PAYMENT_STEPS = {
   AMOUNT_ENTRY: 'AMOUNT_ENTRY',
@@ -46,9 +46,6 @@ export const usePaymentFlow = (skipAmountEntry = false) => {
     setCurrentStep(PAYMENT_STEPS.ADDRESS_SELECTION);
   }, []);
 
-  useEffect(() => {
-    console.log('Current Step Changed:', currentStep);
-  }, [currentStep]);
   const handleAddressSelection = useCallback((addressId) => {
     setPaymentDetails((prev) => ({ ...prev, addressId }));
     setCurrentStep(PAYMENT_STEPS.PAYMENT);

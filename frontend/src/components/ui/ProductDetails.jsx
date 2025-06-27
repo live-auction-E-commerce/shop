@@ -70,7 +70,7 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
     }
   };
   const handleBuyNow = () => {
-    if (onBuyNowClick) onBuyNowClick();
+    if (onBuyNowClick) onBuyNowClick(listing);
   };
   return (
     // This component is very long. Separate the component to smaller components

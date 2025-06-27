@@ -95,8 +95,6 @@ export const useListingHandlers = ({
             amount: paymentDetails.amount,
           });
 
-          console.log(newBid);
-
           setLatestBid(newBid);
           emitNewBid(paymentDetails.listingId, newBid);
           toast.success('Bid placed successfully!');

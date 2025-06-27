@@ -34,28 +34,26 @@ const Home = () => {
 
   const { handleBidClick, handleBuyNowClick, handlePaymentSuccess } = useListingHandlers({
     setListing: setSelectedListing,
-    listings,
     setListings,
     startPaymentFlow,
     resetFlow,
     paymentDetails,
   });
 
-  const onBuyNowClickHandler = useCallback(
-    (listingId) => {
-      handleBuyNowClick(listingId);
+  const onBidClickHandler = useCallback(
+    (listing) => {
+      setSelectedListing(listing);
+      handleBidClick(listing);
     },
-    [handleBuyNowClick]
+    [handleBidClick]
   );
 
-  const onBidClickHandler = useCallback(
-    (listingId) => {
-      const found = listings.find((l) => l._id === listingId);
-      if (!found) return;
-      setSelectedListing(found);
-      handleBidClick(found);
+  const onBuyNowClickHandler = useCallback(
+    (listing) => {
+      setSelectedListing(listing);
+      handleBuyNowClick(listing);
     },
-    [listings, handleBidClick]
+    [handleBuyNowClick]
   );
 
   return (

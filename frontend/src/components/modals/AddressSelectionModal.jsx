@@ -16,8 +16,6 @@ const AddressSelectionModal = ({ isOpen, onConfirm, onClose }) => {
   const [error, setError] = useState('');
   const { user } = useAuth();
 
-  console.log('Addresses rerendered!');
-
   useEffect(() => {
     const loadAddresses = async () => {
       if (!isOpen) return;
