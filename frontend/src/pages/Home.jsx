@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import HeroSection from '@/components/ui/hero-section';
 import ListingCarrousel from '@/components/listing/ListingCarrousel';
 import BidModal from '@/components/modals/BidModal';
@@ -38,20 +38,6 @@ const Home = () => {
     paymentDetails,
   });
 
-  const onBidClickHandler = useCallback(
-    (listing) => {
-      handleBidClick(listing);
-    },
-    [handleBidClick]
-  );
-
-  const onBuyNowClickHandler = useCallback(
-    (listing) => {
-      handleBuyNowClick(listing);
-    },
-    [handleBuyNowClick]
-  );
-
   const selectedListing = useMemo(
     () => listings.find((l) => l._id === paymentDetails.listingId),
     [listings, paymentDetails.listingId]
@@ -68,8 +54,8 @@ const Home = () => {
       <ListingCarrousel
         title="Hot Now!"
         listings={listings}
-        onBidClick={onBidClickHandler}
-        onBuyNowClick={onBuyNowClickHandler}
+        onBidClick={handleBidClick}
+        onBuyNowClick={handleBuyNowClick}
         isLoading={isLoading}
         isPaused={
           currentStep === PAYMENT_STEPS.PAYMENT || currentStep === PAYMENT_STEPS.AMOUNT_ENTRY
@@ -79,8 +65,8 @@ const Home = () => {
       <ListingCarrousel
         title="Trending Auctions"
         listings={listings}
-        onBidClick={onBidClickHandler}
-        onBuyNowClick={onBuyNowClickHandler}
+        onBidClick={handleBidClick}
+        onBuyNowClick={handleBuyNowClick}
         isLoading={isLoading}
         isPaused={
           currentStep === PAYMENT_STEPS.PAYMENT || currentStep === PAYMENT_STEPS.AMOUNT_ENTRY
@@ -90,8 +76,8 @@ const Home = () => {
       <ListingCarrousel
         title="Ending Soon"
         listings={listings}
-        onBidClick={onBidClickHandler}
-        onBuyNowClick={onBuyNowClickHandler}
+        onBidClick={handleBidClick}
+        onBuyNowClick={handleBuyNowClick}
         isLoading={isLoading}
         isPaused={
           currentStep === PAYMENT_STEPS.PAYMENT || currentStep === PAYMENT_STEPS.AMOUNT_ENTRY

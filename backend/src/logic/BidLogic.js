@@ -15,7 +15,7 @@ export const createBid = async (data) => {
 
   const listing = await Listing.findById(data.listingId);
   if (!listing) {
-    throw new Error('Listing not found. IS THIS IT ?');
+    throw new Error('Listing not found.');
   }
 
   const user = await User.findById(data.userId);
