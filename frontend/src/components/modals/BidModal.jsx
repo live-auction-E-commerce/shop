@@ -34,7 +34,7 @@ const BidModal = ({ isOpen, onClose, onConfirm, currentBidAmount }) => {
           onChange={(e) => setBidAmount(e.target.value)}
         />
         <Button className="mt-4 w-full" onClick={handleSubmit}>
-          Continue to Payment
+          Next
         </Button>
       </DialogContent>
     </Dialog>

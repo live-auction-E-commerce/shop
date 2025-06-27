@@ -1,5 +1,4 @@
-import { useState, useCallback } from 'react';
-import { useBidValidations } from './UseBidValidations';
+import { useState, useCallback, useEffect } from 'react';
 
 export const PAYMENT_STEPS = {
   AMOUNT_ENTRY: 'AMOUNT_ENTRY',
@@ -7,9 +6,8 @@ export const PAYMENT_STEPS = {
   PAYMENT: 'PAYMENT',
 };
 
-export const usePaymentFlow = (listing) => {
-  const { validateBidder, validateBidAmount } = useBidValidations(listing);
-  const [currentStep, setCurrentStep] = useState(PAYMENT_STEPS.AMOUNT_ENTRY);
+export const usePaymentFlow = (skipAmountEntry = false) => {
+  const [currentStep, setCurrentStep] = useState(null);
   const [paymentDetails, setPaymentDetails] = useState({
     listingId: null,
     amount: null,
@@ -17,28 +15,8 @@ export const usePaymentFlow = (listing) => {
     mode: 'bid',
   });
 
-  const startPaymentFlow = useCallback(
-    (initialDetails) => {
-      if (initialDetails.mode === 'bid') {
-        if (!validateBidder()) return;
-        if (!validateBidAmount(initialDetails.amount)) return;
-      } else if (initialDetails.mode === 'buyNow') {
-        if (!validateBidder()) return;
-      }
-
-      setPaymentDetails(initialDetails);
-      setCurrentStep(PAYMENT_STEPS.ADDRESS_SELECTION);
-    },
-    [validateBidder, validateBidAmount]
-  );
-
-  const handleAddressSelection = useCallback((addressId) => {
-    setPaymentDetails((prev) => ({ ...prev, addressId }));
-    setCurrentStep(PAYMENT_STEPS.PAYMENT);
-  }, []);
-
   const resetFlow = useCallback(() => {
-    setCurrentStep(PAYMENT_STEPS.AMOUNT_ENTRY);
+    setCurrentStep(null);
     setPaymentDetails({
       listingId: null,
       amount: null,
@@ -47,10 +25,40 @@ export const usePaymentFlow = (listing) => {
     });
   }, []);
 
+  const startPaymentFlow = useCallback(
+    (initialDetails) => {
+      if (initialDetails.mode === 'bid') {
+        if (!skipAmountEntry) {
+          setPaymentDetails(initialDetails);
+          setCurrentStep(PAYMENT_STEPS.AMOUNT_ENTRY);
+          return;
+        }
+      }
+
+      setPaymentDetails(initialDetails);
+      setCurrentStep(PAYMENT_STEPS.ADDRESS_SELECTION);
+    },
+    [skipAmountEntry]
+  );
+
+  const handleBidConfirm = useCallback((bidAmount) => {
+    setPaymentDetails((prev) => ({ ...prev, amount: bidAmount }));
+    setCurrentStep(PAYMENT_STEPS.ADDRESS_SELECTION);
+  }, []);
+
+  useEffect(() => {
+    console.log('Current Step Changed:', currentStep);
+  }, [currentStep]);
+  const handleAddressSelection = useCallback((addressId) => {
+    setPaymentDetails((prev) => ({ ...prev, addressId }));
+    setCurrentStep(PAYMENT_STEPS.PAYMENT);
+  }, []);
+
   return {
     currentStep,
     paymentDetails,
     startPaymentFlow,
+    handleBidConfirm,
     handleAddressSelection,
     resetFlow,
   };

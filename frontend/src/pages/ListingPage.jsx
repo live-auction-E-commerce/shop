@@ -25,7 +25,7 @@ const ListingPage = () => {
   const { user } = useAuth();
 
   const { currentStep, paymentDetails, startPaymentFlow, handleAddressSelection, resetFlow } =
-    usePaymentFlow(listing);
+    usePaymentFlow(listing, true);
 
   const { handleBidClick, handleBuyNowClick, handlePaymentSuccess } = useListingHandlers({
     listing,
@@ -34,7 +34,6 @@ const ListingPage = () => {
     resetFlow,
     paymentDetails,
   });
-
   const isUserHighestBidder = listing?.currentBid?.userId === user?._id;
 
   useEffect(() => {

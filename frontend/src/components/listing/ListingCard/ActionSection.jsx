@@ -42,7 +42,7 @@ const ActionSection = ({
             className="w-full h-7 text-xs cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              onBidClick?.(listing._id);
+              onBidClick?.();
             }}
             disabled={isExpired || isSold}
           >
@@ -62,7 +62,7 @@ const ActionSection = ({
             className="w-full h-7 text-xs cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              onBuyNowClick?.(listing._id);
+              onBuyNowClick?.();
             }}
             disabled={isSold}
           >

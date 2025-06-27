@@ -7,41 +7,86 @@ import { createOrder } from '@/services/orderService';
 import { getListingById } from '@/services/listingService';
 import { useAuth } from '@/context/AuthContext';
 import { useBidContext } from '@/context/BidContext';
+import { useListingValidations } from './useListingValidations';
 
 export const useListingHandlers = ({
-  listing,
   setListing,
+  setListings,
   startPaymentFlow,
   resetFlow,
   paymentDetails,
 }) => {
   const { user } = useAuth();
   const { setLatestBid } = useBidContext();
+  const { validateBidder, validateBidAmount, validateBuyNow } = useListingValidations();
 
-  const handleBidClick = useCallback(
-    (bidAmount) => {
-      startPaymentFlow({
-        listingId: listing._id,
-        amount: bidAmount,
-        mode: 'bid',
-      });
+  const updateListingState = useCallback(
+    (updatedListing) => {
+      if (setListings) {
+        setListings((prev) => {
+          return prev.map((l) => (l._id === updatedListing._id ? { ...l, ...updatedListing } : l));
+        });
+      } else if (setListing) {
+        setListing(updatedListing);
+      }
     },
-    [listing, startPaymentFlow]
+    [setListing, setListings]
   );
 
-  const handleBuyNowClick = useCallback(() => {
-    startPaymentFlow({
-      listingId: listing._id,
-      amount: listing.price,
-      mode: 'buyNow',
-    });
-  }, [listing, startPaymentFlow]);
+  const removeListing = useCallback(
+    (listingId) => {
+      if (setListings) {
+        setListings((prev) => prev.filter((l) => l._id !== listingId));
+      }
+      if (setListing) {
+        setListing(null);
+      }
+    },
+    [setListing, setListings]
+  );
 
-  // TODO: We need to also pass the selected address by the user with each bid now
+  const handleBuyNowClick = useCallback(
+    (listing) => {
+      if (!validateBuyNow(listing)) return;
+      if (setListing) setListing(listing);
+      startPaymentFlow({
+        listingId: listing._id,
+        amount: listing.price,
+        mode: 'buyNow',
+      });
+    },
+    [validateBuyNow, setListing, startPaymentFlow]
+  );
+
+  const handleBidClick = useCallback(
+    (listing, bidAmount) => {
+      if (!validateBidder(listing)) return;
+      if (!validateBidAmount(listing, bidAmount)) return;
+
+      if (setListings && setListing) {
+        setListing(listing);
+      }
+
+      if (bidAmount) {
+        startPaymentFlow({
+          listingId: listing._id,
+          mode: 'bid',
+          amount: bidAmount,
+        });
+      } else {
+        startPaymentFlow({
+          listingId: listing._id,
+          mode: 'bid',
+        });
+      }
+    },
+    [validateBidder, validateBidAmount, setListing, startPaymentFlow, setListings]
+  );
 
   const handlePaymentSuccess = useCallback(
     async (result) => {
       try {
+        let updatedListing = null;
         if (paymentDetails.mode === 'bid') {
           const newBid = await placeBid({
             listingId: paymentDetails.listingId,
@@ -50,15 +95,15 @@ export const useListingHandlers = ({
             amount: paymentDetails.amount,
           });
 
+          console.log(newBid);
+
           setLatestBid(newBid);
           emitNewBid(paymentDetails.listingId, newBid);
           toast.success('Bid placed successfully!');
-        } else if (paymentDetails.mode === 'buyNow') {
-          if (!paymentDetails.addressId) {
-            toast.error('No address selected. Please select an address before purchasing.');
-            return;
-          }
 
+          updatedListing = await getListingById(paymentDetails.listingId);
+          updateListingState(updatedListing);
+        } else if (paymentDetails.mode === 'buyNow') {
           const soldListing = await markListingAsSold({
             listingId: paymentDetails.listingId,
             paymentIntentId: result.paymentIntentId,
@@ -74,25 +119,38 @@ export const useListingHandlers = ({
             addressId: paymentDetails.addressId,
             price: soldListing.price,
           });
+
+          if (setListings) {
+            removeListing(soldListing._id);
+          } else if (setListing) {
+            updatedListing = await getListingById(paymentDetails.listingId);
+            updateListingState(updatedListing);
+          }
+
+          toast.success('Purchase successful!');
         }
-
-        const updatedListing = await getListingById(paymentDetails.listingId);
-        setListing(updatedListing);
-
-        toast.success('Payment processed successfully!');
-      } catch (error) {
-        console.error('Failed to process payment:', error);
+      } catch (err) {
+        console.error('Payment failed:', err);
         toast.error('Failed to update listing after payment.');
       } finally {
         resetFlow();
       }
     },
-    [paymentDetails, user, resetFlow, setLatestBid, setListing]
+    [
+      paymentDetails,
+      user,
+      resetFlow,
+      setLatestBid,
+      removeListing,
+      updateListingState,
+      setListing,
+      setListings,
+    ]
   );
 
   return {
-    handleBidClick,
     handleBuyNowClick,
+    handleBidClick,
     handlePaymentSuccess,
   };
 };
