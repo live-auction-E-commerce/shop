@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { ListingGrid } from '@/components/listing/ListingGrid';
 import useListings from '@/hooks/listings/useListings';
@@ -13,7 +13,6 @@ const CategoryPage = () => {
   const { categoryName } = useParams();
   const { listings: allListings, isLoading } = useListings();
   const [filteredListings, setFilteredListings] = useState([]);
-  const [selectedListing, setSelectedListing] = useState(null);
 
   useEffect(() => {
     if (allListings.length) {
@@ -36,15 +35,20 @@ const CategoryPage = () => {
   } = usePaymentFlow(false);
 
   const { handleBuyNowClick, handleBidClick, handlePaymentSuccess } = useListingHandlers({
-    setListing: setSelectedListing,
     setListings: setFilteredListings,
     startPaymentFlow,
     resetFlow,
     paymentDetails,
   });
 
+  const selectedListing = useMemo(
+    () => filteredListings.find((l) => l._id === paymentDetails.listingId),
+    [filteredListings, paymentDetails.listingId]
+  );
+
   const isBidModalOpen = currentStep === PAYMENT_STEPS.AMOUNT_ENTRY;
   const isPaymentModalOpen = currentStep === PAYMENT_STEPS.PAYMENT;
+  const isAddressSelectionModalOpen = currentStep === PAYMENT_STEPS.ADDRESS_SELECTION;
 
   return (
     <>
@@ -56,18 +60,16 @@ const CategoryPage = () => {
         isLoading={isLoading}
       />
 
-      {selectedListing && isBidModalOpen && (
+      {isBidModalOpen && (
         <BidModal
           isOpen={isBidModalOpen}
           onClose={resetFlow}
-          currentBidAmount={
-            selectedListing?.currentBid?.amount || selectedListing?.startingBid || 0
-          }
+          currentBidAmount={paymentDetails?.amount}
           onConfirm={handleBidConfirm}
         />
       )}
 
-      {currentStep === PAYMENT_STEPS.ADDRESS_SELECTION && (
+      {isAddressSelectionModalOpen && (
         <AddressSelectionModal
           isOpen={true}
           onConfirm={handleAddressSelection}
@@ -75,12 +77,12 @@ const CategoryPage = () => {
         />
       )}
 
-      {paymentDetails && isPaymentModalOpen && (
+      {isPaymentModalOpen && (
         <PaymentModal
           isOpen={isPaymentModalOpen}
           amount={paymentDetails.amount}
           listingId={paymentDetails.listingId}
-          listing={filteredListings.find((l) => l._id === paymentDetails.listingId)}
+          listing={selectedListing}
           onSuccess={handlePaymentSuccess}
           onClose={resetFlow}
         />

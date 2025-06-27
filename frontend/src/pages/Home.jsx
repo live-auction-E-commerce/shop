@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import HeroSection from '@/components/ui/hero-section';
 import ListingCarrousel from '@/components/listing/ListingCarrousel';
 import BidModal from '@/components/modals/BidModal';
@@ -11,7 +11,6 @@ import { useListingHandlers } from '@/hooks/listings/useListingHandlers';
 
 const Home = () => {
   const { listings: initialListings, isLoading } = useListings();
-  const [selectedListing, setSelectedListing] = useState(null);
 
   const [listings, setListings] = useState(initialListings);
   useListingsSocket(listings, setListings);
@@ -33,7 +32,6 @@ const Home = () => {
   } = usePaymentFlow(false);
 
   const { handleBidClick, handleBuyNowClick, handlePaymentSuccess } = useListingHandlers({
-    setListing: setSelectedListing,
     setListings,
     startPaymentFlow,
     resetFlow,
@@ -42,7 +40,6 @@ const Home = () => {
 
   const onBidClickHandler = useCallback(
     (listing) => {
-      setSelectedListing(listing);
       handleBidClick(listing);
     },
     [handleBidClick]
@@ -50,11 +47,19 @@ const Home = () => {
 
   const onBuyNowClickHandler = useCallback(
     (listing) => {
-      setSelectedListing(listing);
       handleBuyNowClick(listing);
     },
     [handleBuyNowClick]
   );
+
+  const selectedListing = useMemo(
+    () => listings.find((l) => l._id === paymentDetails.listingId),
+    [listings, paymentDetails.listingId]
+  );
+
+  const isBidModalOpen = currentStep === PAYMENT_STEPS.AMOUNT_ENTRY;
+  const isPaymentModalOpen = currentStep === PAYMENT_STEPS.PAYMENT;
+  const isAddressSelectionModalOpen = currentStep === PAYMENT_STEPS.ADDRESS_SELECTION;
 
   return (
     <section className="flex flex-col">
@@ -93,18 +98,16 @@ const Home = () => {
         }
       />
 
-      {currentStep === PAYMENT_STEPS.AMOUNT_ENTRY && (
+      {isBidModalOpen && (
         <BidModal
           isOpen={true}
           onClose={resetFlow}
-          currentBidAmount={
-            selectedListing?.currentBid?.amount || selectedListing?.startingBid || 0
-          }
+          currentBidAmount={paymentDetails?.amount}
           onConfirm={handleBidConfirm}
         />
       )}
 
-      {currentStep === PAYMENT_STEPS.ADDRESS_SELECTION && (
+      {isAddressSelectionModalOpen && (
         <AddressSelectionModal
           isOpen={true}
           onConfirm={handleAddressSelection}
@@ -112,7 +115,7 @@ const Home = () => {
         />
       )}
 
-      {currentStep === PAYMENT_STEPS.PAYMENT && (
+      {isPaymentModalOpen && (
         <PaymentModal
           isOpen={true}
           amount={paymentDetails.amount}

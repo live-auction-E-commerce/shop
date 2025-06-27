@@ -1,41 +1,52 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import useListings from '@/hooks/listings/useListings';
 import { ListingGrid } from '@/components/listing/ListingGrid';
-import useListingPaymentHandler from '@/hooks/payments/useListingPaymentHandler';
 import BidModal from '@/components/modals/BidModal';
 import PaymentModal from '@/components/modals/PaymentModal';
 import useListingsSocket from '@/hooks/sockets/useListingsSocket';
+import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
+import { useListingHandlers } from '@/hooks/listings/useListingHandlers';
+import AddressSelectionModal from '@/components/modals/AddressSelectionModal';
 
 const LiveAuctions = () => {
   const { listings: allListings, isLoading } = useListings();
-  const [localListings, setLocalListings] = useState([]);
+  const [filteredListings, setfilteredListings] = useState([]);
 
   useEffect(() => {
     const auctionItems = allListings.filter((l) => l.saleType === 'auction');
-    setLocalListings(auctionItems);
+    setfilteredListings(auctionItems);
   }, [allListings]);
 
-  useListingsSocket(localListings, setLocalListings);
+  useListingsSocket(filteredListings, setfilteredListings);
 
   const {
-    listings,
-    isBidModalOpen,
-    selectedListing,
-    isPaymentModalOpen,
-    pendingBidAmount,
-    activeListingId,
-    handleBidClick,
+    currentStep,
+    paymentDetails,
+    startPaymentFlow,
+    handleAddressSelection,
     handleBidConfirm,
-    handleBuyNowClick,
-    handlePaymentSuccess,
-    handlePaymentCancel,
-    closeBidModal,
-  } = useListingPaymentHandler(localListings, setLocalListings);
+    resetFlow,
+  } = usePaymentFlow(false);
+
+  const { handleBuyNowClick, handleBidClick, handlePaymentSuccess } = useListingHandlers({
+    setListings: setfilteredListings,
+    startPaymentFlow,
+    resetFlow,
+    paymentDetails,
+  });
+
+  const selectedListing = useMemo(
+    () => filteredListings.find((l) => l._id === paymentDetails.listingId),
+    [filteredListings, paymentDetails.listingId]
+  );
+
+  const isBidModalOpen = currentStep === PAYMENT_STEPS.AMOUNT_ENTRY;
+  const isPaymentModalOpen = currentStep === PAYMENT_STEPS.PAYMENT;
 
   return (
     <>
       <ListingGrid
-        listings={listings}
+        listings={filteredListings}
         onBidClick={handleBidClick}
         onBuyNowClick={handleBuyNowClick}
         title="Live Auctions"
@@ -43,24 +54,31 @@ const LiveAuctions = () => {
         isLoading={isLoading}
       />
 
-      {selectedListing && (
+      {isBidModalOpen && (
         <BidModal
           isOpen={isBidModalOpen}
-          currentBidAmount={selectedListing.currentBid?.amount || 0}
-          onClose={closeBidModal}
+          currentBidAmount={paymentDetails?.amount || 0}
+          onClose={resetFlow}
           onConfirm={handleBidConfirm}
         />
       )}
 
-      {pendingBidAmount && (
+      {currentStep === PAYMENT_STEPS.ADDRESS_SELECTION && (
+        <AddressSelectionModal
+          isOpen={true}
+          onConfirm={handleAddressSelection}
+          onClose={resetFlow}
+        />
+      )}
+
+      {paymentDetails && isPaymentModalOpen && (
         <PaymentModal
           isOpen={isPaymentModalOpen}
-          amount={pendingBidAmount}
-          listingId={activeListingId}
+          amount={paymentDetails.amount}
+          listingId={paymentDetails.listingId}
           listing={selectedListing}
           onSuccess={handlePaymentSuccess}
-          onCancel={handlePaymentCancel}
-          onClose={handlePaymentCancel}
+          onClose={resetFlow}
         />
       )}
     </>
