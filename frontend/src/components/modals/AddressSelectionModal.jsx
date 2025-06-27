@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Home, AlertCircle } from 'lucide-react';
 import { getAllAddressesById } from '@/services/addressService';
+import { formatAddress } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
 
 const AddressSelectionModal = ({ isOpen, onConfirm, onClose }) => {
@@ -49,10 +50,6 @@ const AddressSelectionModal = ({ isOpen, onConfirm, onClose }) => {
     }
     setError('');
     onConfirm(selectedAddressId);
-  };
-
-  const formatAddress = (address) => {
-    return `${address.street} ${address.number}, ${address.city}, ${address.country}`;
   };
 
   return (

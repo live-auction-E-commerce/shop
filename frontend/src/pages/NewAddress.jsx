@@ -10,6 +10,8 @@ import { ArrowLeft } from 'lucide-react';
 import { addressSchema } from '@/lib/validations';
 import AddressForm from '@/components/forms/AddressForm';
 import { useAuth } from '@/context/AuthContext';
+import useRequireAuth from '@/hooks/auth/useRequireAuth';
+import { useLocation } from 'react-router-dom';
 import { createAddress, updateAddress, getAddressById } from '@/services/addressService';
 import { toast } from 'sonner';
 import { ROUTES } from '@/routes/routes_consts';
@@ -17,17 +19,18 @@ import { ROUTES } from '@/routes/routes_consts';
 const NewAddress = () => {
   const navigate = useNavigate();
   const params = useParams();
+  const { state } = useLocation();
+  const isFirstAddress = state?.isFirstAddress ?? false;
+  const isAllowed = useRequireAuth();
   const isEditing = !!params.id;
 
-  const { user, defaultAddress, refreshDefaultAddress } = useAuth();
+  const { user } = useAuth();
   const [loadingAddress, setLoadingAddress] = useState(isEditing);
-
-  const isFirstAddress = !defaultAddress && !isEditing;
 
   const form = useForm({
     resolver: zodResolver(addressSchema),
     defaultValues: {
-      userId: user._id,
+      userId: user?._id,
       description: '',
       street: '',
       number: '',
@@ -65,11 +68,9 @@ const NewAddress = () => {
     try {
       if (isEditing) {
         await updateAddress(params.id, data);
-        await refreshDefaultAddress();
         toast.success('Address has been updated');
       } else {
         await createAddress(data);
-        await refreshDefaultAddress();
         toast.success('Address has been created');
       }
 
@@ -78,6 +79,10 @@ const NewAddress = () => {
       toast.error('Error saving address', error);
     }
   };
+
+  if (!isAllowed) {
+    return null;
+  }
 
   if (loadingAddress && isEditing) {
     return <div className="text-center mt-12">Loading address...</div>;
