@@ -14,11 +14,11 @@ async function startWorker() {
     async (job) => {
       const { listingId } = job.data;
 
-      const { listingId: id, winnerData } = await finishAuction(listingId);
+      const { winnerData } = await finishAuction(listingId);
 
       await redisPublisher.publish(
         'auction-ended',
-        JSON.stringify({ listingId: id, winnerData }),
+        JSON.stringify({ listingId, winnerData }),
       );
     },
     { connection: redis },
