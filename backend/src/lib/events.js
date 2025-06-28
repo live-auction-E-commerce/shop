@@ -4,11 +4,7 @@ import sendEmail from './email.js';
 
 export const handleAuctionEnd = async (listingId, winnerData) => {
   try {
-    const capturedIntent = await captureStripePaymentIntent(
-      winnerData.paymentIntentId,
-    );
-    console.log('Payment captured successfully:', capturedIntent);
-
+    await captureStripePaymentIntent(winnerData.paymentIntentId);
     await sendEmail({
       to: winnerData.sellerEmail,
       subject: 'Your Auction Has Ended!',
