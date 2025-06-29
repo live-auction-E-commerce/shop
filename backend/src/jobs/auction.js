@@ -46,14 +46,12 @@ export const finishAuction = async (listingId) => {
   const sellerEmail = listing.sellerId.email;
   const price = currentBid.amount || listing.startingBid;
 
-  // I currently set the default address to the buyer's default address.
-  const defaultAddress = await Address.findOne({
-    userId: buyerId,
-    isDefault: true,
-  }).exec();
+  const bidAddress =
+    currentBid.addressId &&
+    (await Address.findOne({ _id: currentBid.addressId }));
 
-  if (!defaultAddress) {
-    throw new Error('Buyer has no default address');
+  if (!bidAddress) {
+    throw new Error('No valid address associated with the winning bid.');
   }
 
   const paymentIntent = await PaymentIntent.findById(
@@ -67,7 +65,7 @@ export const finishAuction = async (listingId) => {
     buyerId,
     sellerId,
     listingId,
-    addressId: defaultAddress._id,
+    addressId: bidAddress._id,
     price,
   });
 

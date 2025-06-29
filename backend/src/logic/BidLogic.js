@@ -9,6 +9,7 @@ export const createBid = async (data) => {
   validateObjectId(data.listingId);
   validateObjectId(data.userId);
   validateObjectId(data.paymentIntentId);
+  validateObjectId(data.addressId);
 
   if (typeof data.amount !== 'number' || data.amount <= 0) {
     throw new Error('Invalid amount: must be a positive number.');
@@ -52,6 +53,7 @@ export const createBid = async (data) => {
     userId: data.userId,
     paymentIntentId: data.paymentIntentId,
     amount: data.amount,
+    addressId: data.addressId,
   });
 
   const savedBid = await newBid.save();

@@ -16,6 +16,11 @@ const bidSchema = new mongoose.Schema({
     ref: 'PaymentIntent',
     required: [true, 'paymentIntentId is required'],
   },
+  addressId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Address',
+    required: [true, 'addressId is required'],
+  },
   amount: {
     type: Number,
     required: [true, 'amount is required'],

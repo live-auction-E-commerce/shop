@@ -93,6 +93,7 @@ export const useListingActionHandlers = ({
             userId: user._id,
             paymentIntentId: result,
             amount: paymentDetails.amount,
+            addressId: paymentDetails.addressId,
           });
 
           setLatestBid(newBid);
