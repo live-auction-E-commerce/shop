@@ -4,7 +4,7 @@ export const getAllBidsByListing = async (listingId) => {
   return await fetchAPI(`/api/bids/${listingId}`);
 };
 
-export const placeBid = async ({ listingId, userId, paymentIntentId, amount }) => {
+export const placeBid = async ({ listingId, userId, paymentIntentId, amount, addressId }) => {
   return await fetchAPI(
     '/api/bids',
     {
@@ -17,6 +17,7 @@ export const placeBid = async ({ listingId, userId, paymentIntentId, amount }) =
         userId,
         paymentIntentId,
         amount,
+        addressId,
       }),
     },
     { requireAuth: true }
