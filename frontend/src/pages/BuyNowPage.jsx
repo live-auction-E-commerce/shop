@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import useListings from '@/hooks/listings/useListings';
 import { ListingGrid } from '@/components/listing/ListingGrid';
 import PaymentModal from '@/components/modals/PaymentModal';
-import useListingPaymentHandler from '@/hooks/payments/useListingPaymentHandler';
+import AddressSelectionModal from '@/components/modals/AddressSelectionModal';
 import useListingsSocket from '@/hooks/sockets/useListingsSocket';
+import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
+import { useListingActionHandlers } from '@/hooks/payments/useListingActionHandlers';
 
 const BuyNowPage = () => {
   const { listings: allListings, isLoading } = useListings();
@@ -19,36 +21,63 @@ const BuyNowPage = () => {
   useListingsSocket(filteredListings, setFilteredListings);
 
   const {
-    listings,
-    selectedListing,
-    isPaymentModalOpen,
-    pendingBidAmount,
-    activeListingId,
-    handleBuyNowClick,
-    handlePaymentSuccess,
-    handlePaymentCancel,
-  } = useListingPaymentHandler(filteredListings);
+    currentStep,
+    paymentDetails,
+    startPaymentFlow,
+    handleAddressSelection,
+    handleBidConfirm,
+    resetFlow,
+  } = usePaymentFlow(false);
 
+  const { handleBuyNowClick, handleBidClick, handlePaymentSuccess } = useListingActionHandlers({
+    setListings: setFilteredListings,
+    startPaymentFlow,
+    resetFlow,
+    paymentDetails,
+  });
+
+  const selectedListing = useMemo(
+    () => filteredListings.find((l) => l._id === paymentDetails.listingId),
+    [filteredListings, paymentDetails.listingId]
+  );
+
+  const isBidModalOpen = currentStep === PAYMENT_STEPS.AMOUNT_ENTRY;
+  const isPaymentModalOpen = currentStep === PAYMENT_STEPS.PAYMENT;
   return (
     <>
       <ListingGrid
-        listings={listings}
+        listings={filteredListings}
         onBuyNowClick={handleBuyNowClick}
-        onBidClick={() => {}}
+        onBidClick={handleBidClick}
         title="Buy Now"
         variant="compact"
         isLoading={isLoading}
       />
 
-      {pendingBidAmount && (
+      {isBidModalOpen && (
+        <BidModal
+          isOpen={isBidModalOpen}
+          currentBidAmount={paymentDetails?.amount}
+          onClose={resetFlow}
+          onConfirm={handleBidConfirm}
+        />
+      )}
+
+      {currentStep === PAYMENT_STEPS.ADDRESS_SELECTION && (
+        <AddressSelectionModal
+          isOpen={true}
+          onConfirm={handleAddressSelection}
+          onClose={resetFlow}
+        />
+      )}
+
+      {paymentDetails && isPaymentModalOpen && (
         <PaymentModal
           isOpen={isPaymentModalOpen}
-          amount={pendingBidAmount}
-          listingId={activeListingId}
+          amount={paymentDetails.amount}
           listing={selectedListing}
           onSuccess={handlePaymentSuccess}
-          onCancel={handlePaymentCancel}
-          onClose={handlePaymentCancel}
+          onClose={resetFlow}
         />
       )}
     </>

@@ -115,7 +115,7 @@ const ListingCarrousel = ({
         </div>
       </div>
 
-      {isMobile && itemsToRender > 1 && !isLoading && (
+      {isMobile && itemsToRender.length > 1 && !isLoading && (
         <div className="mt-4 flex justify-center gap-2">
           {Array.from({ length: itemsToRender }).map((_, index) => (
             <button

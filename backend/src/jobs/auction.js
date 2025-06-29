@@ -34,6 +34,7 @@ export const finishAuction = async (listingId) => {
     throw new Error('No bids found on this listing');
   }
 
+
   const buyerId = currentBid.userId._id;
   const buyerEmail = currentBid.userId.email;
   const sellerId = listing.sellerId;

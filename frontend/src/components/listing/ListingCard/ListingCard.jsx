@@ -42,6 +42,11 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
   const progressPercentage = getBidProgress(listing);
   const product = listing?.product;
 
+  const handleBidClick = useCallback(() => {
+    onBidClick?.(listing), [onBidClick, listing];
+  });
+  const handleBuyNowClick = useCallback(() => onBuyNowClick?.(listing), [onBuyNowClick, listing]);
+
   if (!listing || !product) return null;
 
   if (isLoading) return <ListingCardSkeleton />;
@@ -79,8 +84,8 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
           isExpired={isExpired}
           isSold={isSold}
           listing={listing}
-          onBidClick={onBidClick}
-          onBuyNowClick={onBuyNowClick}
+          onBidClick={handleBidClick}
+          onBuyNowClick={handleBuyNowClick}
           status={status}
           timeRemaining={timeRemaining}
           progressPercentage={progressPercentage}

@@ -1,38 +1,51 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import HeroSection from '@/components/ui/hero-section';
 import ListingCarrousel from '@/components/listing/ListingCarrousel';
 import BidModal from '@/components/modals/BidModal';
 import PaymentModal from '@/components/modals/PaymentModal';
+import AddressSelectionModal from '@/components/modals/AddressSelectionModal';
 import useListings from '@/hooks/listings/useListings';
-import useListingPaymentHandler from '@/hooks/payments/useListingPaymentHandler';
 import useListingsSocket from '@/hooks/sockets/useListingsSocket';
+import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
+import { useListingActionHandlers } from '@/hooks/payments/useListingActionHandlers';
 
 const Home = () => {
   const { listings: initialListings, isLoading } = useListings();
-  const [localListings, setLocalListings] = useState([]);
 
+  const [listings, setListings] = useState(initialListings);
+  useListingsSocket(listings, setListings);
+
+  // sync initialListings and listings
   useEffect(() => {
-    if (initialListings.length) {
-      setLocalListings(initialListings);
+    if (initialListings.length > 0 && listings.length === 0) {
+      setListings(initialListings);
     }
   }, [initialListings]);
 
-  useListingsSocket(localListings, setLocalListings);
-
   const {
-    listings,
-    isBidModalOpen,
-    selectedListing,
-    handleBidClick,
-    handleBuyNowClick,
+    currentStep,
+    paymentDetails,
+    startPaymentFlow,
     handleBidConfirm,
-    handlePaymentSuccess,
-    handlePaymentCancel,
-    isPaymentModalOpen,
-    pendingBidAmount,
-    activeListingId,
-    closeBidModal,
-  } = useListingPaymentHandler(localListings);
+    handleAddressSelection,
+    resetFlow,
+  } = usePaymentFlow(false);
+
+  const { handleBidClick, handleBuyNowClick, handlePaymentSuccess } = useListingActionHandlers({
+    setListings,
+    startPaymentFlow,
+    resetFlow,
+    paymentDetails,
+  });
+
+  const selectedListing = useMemo(
+    () => listings.find((l) => l._id === paymentDetails.listingId),
+    [listings, paymentDetails.listingId]
+  );
+
+  const isBidModalOpen = currentStep === PAYMENT_STEPS.AMOUNT_ENTRY;
+  const isPaymentModalOpen = currentStep === PAYMENT_STEPS.PAYMENT;
+  const isAddressSelectionModalOpen = currentStep === PAYMENT_STEPS.ADDRESS_SELECTION;
 
   return (
     <section className="flex flex-col">
@@ -44,44 +57,58 @@ const Home = () => {
         onBidClick={handleBidClick}
         onBuyNowClick={handleBuyNowClick}
         isLoading={isLoading}
-        isPaused={isBidModalOpen || isPaymentModalOpen}
+        isPaused={
+          currentStep === PAYMENT_STEPS.PAYMENT || currentStep === PAYMENT_STEPS.AMOUNT_ENTRY
+        }
       />
+
       <ListingCarrousel
         title="Trending Auctions"
         listings={listings}
         onBidClick={handleBidClick}
         onBuyNowClick={handleBuyNowClick}
         isLoading={isLoading}
-        isPaused={isBidModalOpen || isPaymentModalOpen}
+        isPaused={
+          currentStep === PAYMENT_STEPS.PAYMENT || currentStep === PAYMENT_STEPS.AMOUNT_ENTRY
+        }
       />
+
       <ListingCarrousel
         title="Ending Soon"
         listings={listings}
         onBidClick={handleBidClick}
         onBuyNowClick={handleBuyNowClick}
         isLoading={isLoading}
-        isPaused={isBidModalOpen || isPaymentModalOpen}
+        isPaused={
+          currentStep === PAYMENT_STEPS.PAYMENT || currentStep === PAYMENT_STEPS.AMOUNT_ENTRY
+        }
       />
 
-      {selectedListing && (
+      {isBidModalOpen && (
         <BidModal
-          isOpen={isBidModalOpen}
-          onClose={closeBidModal}
-          currentBidAmount={selectedListing.currentBid?.amount || selectedListing.startingBid || 0}
+          isOpen={true}
+          onClose={resetFlow}
+          currentBidAmount={paymentDetails?.amount}
           onConfirm={handleBidConfirm}
         />
       )}
 
-      {pendingBidAmount && (
+      {isAddressSelectionModalOpen && (
+        <AddressSelectionModal
+          isOpen={true}
+          onConfirm={handleAddressSelection}
+          onClose={resetFlow}
+        />
+      )}
+
+      {isPaymentModalOpen && (
         <PaymentModal
-          isOpen={isPaymentModalOpen}
-          amount={pendingBidAmount}
-          listingId={activeListingId}
+          isOpen={true}
+          amount={paymentDetails.amount}
           listing={selectedListing}
+          addressId={paymentDetails.addressId}
           onSuccess={handlePaymentSuccess}
-          onCancel={handlePaymentCancel}
-          onClose={handlePaymentCancel}
-          mode={listings.saleType}
+          onClose={resetFlow}
         />
       )}
     </section>

@@ -17,6 +17,7 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
   const [loading, setLoading] = useState(true);
 
   const { productId } = listing;
+
   const images = listing.productId?.images || [];
 
   // TODO: Handle auction expiration logic in terms of UI updates, we would need to set the state reflecting sold status here
@@ -65,11 +66,11 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
 
   const handleBid = () => {
     if (onBidClick) {
-      onBidClick(bidAmount);
+      onBidClick(listing, bidAmount);
     }
   };
   const handleBuyNow = () => {
-    if (onBuyNowClick) onBuyNowClick();
+    if (onBuyNowClick) onBuyNowClick(listing);
   };
   return (
     // This component is very long. Separate the component to smaller components

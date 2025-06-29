@@ -207,3 +207,6 @@ export function maskEmail(email) {
   if (username.length <= 2) return email;
   return `${username.slice(0, 2)}***@${domain}`;
 }
+
+export const formatAddress = (address) =>
+  `${address.street} ${address.number}, ${address.city}, ${address.country}`;
