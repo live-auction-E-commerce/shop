@@ -1,7 +1,14 @@
 import { Package, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/routes/routes_consts';
 
 const EmptyState = ({ hasSearchOrFilters, onClearFilters }) => {
+  const navigate = useNavigate();
+
+  const handleBrowseClick = () => {
+    navigate(ROUTES.LIVE);
+  };
   if (hasSearchOrFilters) {
     return (
       <div className="text-center py-12">
@@ -24,7 +31,9 @@ const EmptyState = ({ hasSearchOrFilters, onClearFilters }) => {
       <p className="text-muted-foreground mb-6">
         You haven't placed any bids yet. Start exploring auctions to place your first bid!
       </p>
-      <Button>Browse Auctions</Button>
+      <Button className="cursor-pointer" onClick={handleBrowseClick}>
+        Browse Auctions
+      </Button>
     </div>
   );
 };
