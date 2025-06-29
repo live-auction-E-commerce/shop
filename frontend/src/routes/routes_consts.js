@@ -18,5 +18,6 @@ export const ROUTES = {
   NEW_PRODUCT: `/new-product`,
   ORDERS: '/orders',
   SALES: '/sales',
+  MANAGE: '/manage-listings',
   NOT_FOUND: '*',
 };

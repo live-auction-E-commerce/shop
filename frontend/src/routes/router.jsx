@@ -13,6 +13,7 @@ import ListingPage from '@/pages/ListingPage';
 import UploadProduct from '@/pages/UploadProduct';
 import OrdersPage from '@/pages/OrdersPage';
 import SalesPage from '@/pages/SalesPage';
+import ManageLiveListings from '@/pages/ManageListingsPage';
 import ChangePasswordPage from '@/pages/ChangePasswordPage';
 import VerifySellerEmail from '@/pages/VerifySellerEmail';
 import NotFound from '@/pages/NotFound';
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
       { path: ROUTES.NEW_PRODUCT, element: <UploadProduct /> },
       { path: ROUTES.ORDERS, element: <OrdersPage /> },
       { path: ROUTES.SALES, element: <SalesPage /> },
+      { path: ROUTES.MANAGE, element: <ManageLiveListings /> },
       { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     ],
   },

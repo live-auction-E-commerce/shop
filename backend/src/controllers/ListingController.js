@@ -67,3 +67,16 @@ export const markListingAsSold = async (req, res) => {
     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
   }
 };
+
+export const getAllLiveListingsBySeller = async (req, res) => {
+  try {
+    const listings = await ListingLogic.getAllLiveListingsBySeller(
+      req.params.id,
+    );
+    res.status(StatusCodes.OK).json(listings);
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};

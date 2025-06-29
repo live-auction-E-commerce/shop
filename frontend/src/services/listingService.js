@@ -8,6 +8,10 @@ export const getListingById = async (id) => {
   return await fetchAPI(`/api/listings/${id}`);
 };
 
+export const getAllLiveListingsBySeller = async (sellerId) => {
+  return await fetchAPI(`/api/listings/seller/${sellerId}`, {}, { requireAuth: true });
+};
+
 export const createListing = async (data) => {
   return await fetchAPI(
     '/api/listings',

@@ -241,3 +241,26 @@ export const markListingAsSold = async ({ listingId, amount, userId }) => {
 
   return listing;
 };
+
+export const getAllLiveListingsBySeller = async (sellerId) => {
+  validateObjectId(sellerId);
+
+  const now = new Date();
+
+  const listings = await Listing.find({
+    sellerId,
+    isSold: { $ne: true },
+    $or: [{ saleType: { $ne: 'auction' } }, { expiredAt: { $gt: now } }],
+  })
+    .populate({
+      path: 'productId',
+      model: 'Product',
+    })
+    .populate({
+      path: 'currentBid',
+      model: 'Bid',
+    })
+    .sort({ createdAt: -1 });
+
+  return listings.map(attachImageUrlsToListing);
+};
