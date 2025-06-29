@@ -1,5 +1,6 @@
 import useBids from '../hooks/bids/useBidsForUser';
 import useBidFilters from '../hooks/bids/useBidFilters';
+import useRequireAuth from '@/hooks/auth/useRequireAuth';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/bid/BidsGrid/SearchBar';
 import FiltersPanel from '../components/bid/BidsGrid/FiltersPanel';
@@ -13,6 +14,7 @@ import { useCallback } from 'react';
 const YourBidsPage = () => {
   const { bids, loading, error } = useBids();
   const navigate = useNavigate();
+  const isAllowed = useRequireAuth();
 
   const {
     searchQuery,
@@ -32,6 +34,10 @@ const YourBidsPage = () => {
     },
     [navigate]
   );
+
+  if (!isAllowed) {
+    return null;
+  }
   if (loading) {
     return <LoadingSkeleton />;
   }
