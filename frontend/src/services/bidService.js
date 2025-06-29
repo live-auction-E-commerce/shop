@@ -22,3 +22,7 @@ export const placeBid = async ({ listingId, userId, paymentIntentId, amount }) =
     { requireAuth: true }
   );
 };
+
+export const getUserBids = async () => {
+  return await fetchAPI('/api/bids', {}, { requireAuth: true });
+};

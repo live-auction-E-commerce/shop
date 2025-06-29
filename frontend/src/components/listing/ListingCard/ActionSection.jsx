@@ -39,7 +39,7 @@ const ActionSection = ({
 
           <Button
             size="sm"
-            className="w-full h-7 text-xs cursor-pointer"
+            className="w-full h-7 text-md font-bold cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               onBidClick?.();
@@ -59,7 +59,7 @@ const ActionSection = ({
 
           <Button
             size="sm"
-            className="w-full h-7 text-xs cursor-pointer"
+            className="w-full h-7 text-md font-bold cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               onBuyNowClick?.();

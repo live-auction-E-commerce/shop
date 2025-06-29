@@ -1,6 +1,6 @@
 import User from '../models/User.js';
 import crypto from 'crypto';
-import sendEmail from '../lib/emailSender.js';
+import sendEmail from '../lib/email.js';
 import { getNewToken } from '../lib/vault.js';
 import config from '../../config.js';
 

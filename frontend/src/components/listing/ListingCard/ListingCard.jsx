@@ -73,7 +73,7 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
 
       <div className="p-3 flex-grow flex flex-col">
         <div className="mb-1">
-          <h3 className="font-medium text-sm line-clamp-1">{product.name}</h3>
+          <h3 className="font-extrabold text-md line-clamp-1">{product.name}</h3>
           <div className="flex justify-between items-center mt-1">
             <CategoryBadges category={product.category} brand={product.brand} />
           </div>

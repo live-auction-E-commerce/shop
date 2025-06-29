@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getAllBidsByListing } from '@/services/bidService';
 
-const useBids = (listingId) => {
+const useBidsForListing = (listingId) => {
   const [bids, setBids] = useState(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,4 +33,4 @@ const useBids = (listingId) => {
   return { bids, isLoading, error };
 };
 
-export default useBids;
+export default useBidsForListing;

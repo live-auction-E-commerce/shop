@@ -8,6 +8,7 @@ import {
 } from '../lib/validations.js';
 import { attachImageUrlsToListing } from '../lib/image.js';
 import { auctionQueue } from '../jobs/queue.js';
+import { aggregateAllListings } from '../lib/aggregations.js';
 
 const MAX_AUCTION_DURATION = 1000 * 60 * 60 * 24 * 30; // 30 days in milliseconds
 
@@ -150,72 +151,12 @@ export const getListingById = async (listingId) => {
 };
 
 // eslint-disable-next-line no-unused-vars
-export const getAllListings = async (queryParams, req) => {
-  const { q } = queryParams;
-
-  const now = new Date();
-
-  const pipeline = [
-    {
-      $lookup: {
-        from: 'products',
-        localField: 'productId',
-        foreignField: '_id',
-        as: 'product',
-      },
-    },
-    { $unwind: '$product' },
-    {
-      $lookup: {
-        from: 'bids',
-        localField: 'currentBid',
-        foreignField: '_id',
-        as: 'currentBid',
-      },
-    },
-    {
-      $unwind: {
-        path: '$currentBid',
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $match: {
-        $and: [
-          { $or: [{ isSold: false }, { isSold: { $exists: false } }] },
-          {
-            $or: [
-              { saleType: { $ne: 'auction' } },
-              { expiredAt: { $gt: now } },
-            ],
-          },
-        ],
-      },
-    },
-  ];
-
-  if (q && q.trim().length > 1) {
-    const regex = new RegExp(q, 'i');
-    pipeline.push({
-      $match: {
-        $or: [
-          { 'product.name': regex },
-          { 'product.description': regex },
-          { 'product.brand': regex },
-          { 'product.category': regex },
-          { 'product.condition': regex },
-          { 'product.size': regex },
-        ],
-      },
-    });
-  }
-
-  const results = await Listing.aggregate(pipeline);
-  return results;
+export const getAllListings = async (queryParams) => {
+  return await aggregateAllListings(queryParams);
 };
 
 // eslint-disable-next-line no-unused-vars
-export const markListingAsSold = async ({ listingId, amount, userId }) => {
+export const markListingAsSold = async ({ listingId, amount }) => {
   validateObjectId(listingId);
 
   const listing = await Listing.findById(listingId);
