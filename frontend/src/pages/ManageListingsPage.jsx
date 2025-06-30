@@ -7,8 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { ROUTES } from '@/routes/routes_consts';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { useNavigate } from 'react-router-dom';
 import {
   Select,
   SelectContent,
@@ -16,13 +18,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Edit, Trash2, Search, Filter, Calendar, Gavel, ShoppingCart, Package } from 'lucide-react';
+import {
+  Edit,
+  Trash2,
+  Search,
+  Filter,
+  Calendar,
+  Gavel,
+  ShoppingCart,
+  Package,
+  Lock,
+} from 'lucide-react';
 import useSellerLiveListings from '@/hooks/listings/useSellerLiveListings';
 import { getListingStatus, formatDate, formatCurrency, getTimeRemaining } from '@/lib/utils';
+import { toast } from 'sonner';
+import { deleteListing } from '@/services/listingService';
 
 export default function ManageLiveListings() {
   const {
     listings,
+    setListings,
     searchTerm,
     setSearchTerm,
     saleType,
@@ -33,9 +48,48 @@ export default function ManageLiveListings() {
     loading,
     error,
   } = useSellerLiveListings();
+  const navigate = useNavigate();
 
   const auctionListings = listings.filter((l) => l.saleType === 'auction').length;
   const buyNowListings = listings.filter((l) => l.saleType === 'now').length;
+
+  const canEditListing = (listing) => {
+    if (!listing) return false;
+    if (listing.saleType === 'now') return true;
+    if (listing.saleType === 'auction' && listing.currentBid != null) return false;
+    return true;
+  };
+
+  const handleEditClick = (listing) => {
+    if (!canEditListing(listing)) {
+      toast.error('Cannot edit auction listings that have received bids');
+      return;
+    }
+
+    const editRoute = ROUTES.EDIT_LISTING.replace(':id', listing._id);
+    navigate(editRoute);
+  };
+
+  const handleDeleteClick = async (listing) => {
+    if (!canEditListing(listing)) {
+      toast.error('Cannot delete auction listings that have received bids');
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete the listing for "${listing.productId.name}"? This action cannot be undone.`
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteListing(listing._id);
+      toast.success('Listing deleted successfully');
+      setListings((prev) => prev.filter((l) => l._id !== listing._id)); // ⬅️ update state only
+    } catch (err) {
+      toast.error(`Failed to delete listing: ${err.message}`);
+    }
+  };
 
   if (loading) {
     return (
@@ -160,94 +214,134 @@ export default function ManageLiveListings() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {listings.map((listing) => (
-            <Card key={listing._id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="relative">
-                <img
-                  src={listing.productId.images[0] || '/placeholder.svg'}
-                  alt={listing.productId?.name}
-                  className="w-full h-48 object-cover"
-                />
-                <Badge className={`absolute top-3 right-3`}>
-                  {listing.saleType === 'auction' ? 'Auction' : 'Buy Now'}
-                </Badge>
-                {listing.saleType === 'auction' && (
-                  <Badge className="absolute top-3 left-3 bg-red-100 text-red-800">
-                    {getTimeRemaining(listing.expiredAt, getListingStatus(listing) === 'expired')}
+          {listings.map((listing) => {
+            const isEditable = canEditListing(listing);
+
+            return (
+              <Card key={listing._id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="relative">
+                  <img
+                    src={listing.productId.images[0] || '/placeholder.svg'}
+                    alt={listing.productId?.name}
+                    className="w-full h-48 object-cover"
+                  />
+                  <Badge className={`absolute top-3 right-3`}>
+                    {listing.saleType === 'auction' ? 'Auction' : 'Buy Now'}
                   </Badge>
-                )}
-              </div>
+                  {listing.saleType === 'auction' && (
+                    <Badge className="absolute top-3 left-3 bg-red-100 text-red-800">
+                      {getTimeRemaining(listing.expiredAt, getListingStatus(listing) === 'expired')}
+                    </Badge>
+                  )}
+                  {!isEditable && (
+                    <Badge className="absolute bottom-3 left-3 bg-yellow-100 text-yellow-800">
+                      <Lock className="h-3 w-3 mr-1" />
+                      Locked
+                    </Badge>
+                  )}
+                </div>
 
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg line-clamp-1">{listing.productId.name}</CardTitle>
-                <CardDescription className="line-clamp-2">
-                  {listing.productId.description}
-                </CardDescription>
-              </CardHeader>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg line-clamp-1">{listing.productId.name}</CardTitle>
+                  <CardDescription className="line-clamp-2">
+                    {listing.productId.description}
+                  </CardDescription>
+                </CardHeader>
 
-              <CardContent className="pb-3">
-                <div className="space-y-2 h-32">
-                  {/* Fixed height container */}
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <span className="capitalize">
-                      {listing.productId.brand} • {listing.productId.category}
-                    </span>
-                    <span className="capitalize">{listing.productId.condition}</span>
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4 mr-1" />
-                    Listed on {formatDate(listing.createdAt)}
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-col">
-                      <span className="text-xs text-muted-foreground">
-                        {listing.saleType === 'auction'
-                          ? listing.currentBid?.amount != null
-                            ? 'Current Bid'
-                            : 'Starting Bid'
-                          : 'Price'}
+                <CardContent className="pb-3">
+                  <div className="space-y-2 h-32">
+                    {/* Fixed height container */}
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <span className="capitalize">
+                        {listing.productId.brand} • {listing.productId.category}
                       </span>
-                      <div className="flex items-center text-lg font-bold text-primary">
-                        {formatCurrency(
-                          listing.saleType === 'auction'
-                            ? (listing.currentBid?.amount ?? listing.startingBid)
-                            : listing.price
-                        )}
-                      </div>
+                      <span className="capitalize">{listing.productId.condition}</span>
                     </div>
-                    {listing.productId.size && (
-                      <div className="text-sm text-muted-foreground">
-                        Size: {listing.productId.size}
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Calendar className="h-4 w-4 mr-1" />
+                      Listed on {formatDate(listing.createdAt)}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-xs text-muted-foreground">
+                          {listing.saleType === 'auction'
+                            ? listing.currentBid?.amount != null
+                              ? 'Current Bid'
+                              : 'Starting Bid'
+                            : 'Price'}
+                        </span>
+                        <div className="flex items-center text-lg font-bold text-primary">
+                          {formatCurrency(
+                            listing.saleType === 'auction'
+                              ? (listing.currentBid?.amount ?? listing.startingBid)
+                              : listing.price
+                          )}
+                        </div>
                       </div>
-                    )}
+                      {listing.productId.size && (
+                        <div className="text-sm text-muted-foreground">
+                          Size: {listing.productId.size}
+                        </div>
+                      )}
+                    </div>
+                    {/* Fixed height container for auction end date - always takes space */}
+                    <div className="h-5 flex items-center text-sm text-muted-foreground">
+                      {listing.saleType === 'auction' && listing.expiredAt && (
+                        <>Ends: {formatDate(listing.expiredAt)}</>
+                      )}
+                    </div>
                   </div>
-                  {/* Fixed height container for auction end date - always takes space */}
-                  <div className="h-5 flex items-center text-sm text-muted-foreground">
-                    {listing.saleType === 'auction' && listing.expiredAt && (
-                      <>Ends: {formatDate(listing.expiredAt)}</>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
+                </CardContent>
 
-              <CardFooter className="pt-3 border-t">
-                <div className="flex gap-2 w-full">
-                  <Button variant="outline" size="sm" className="flex-1 bg-transparent">
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 text-destructive hover:text-destructive bg-transparent"
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
-                  </Button>
-                </div>
-              </CardFooter>
-            </Card>
-          ))}
+                <CardFooter className="pt-3 border-t">
+                  <div className="flex gap-2 w-full">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className={`flex-1 ${!isEditable ? 'opacity-50 cursor-not-allowed' : 'bg-transparent'}`}
+                      onClick={() => handleEditClick(listing)}
+                      disabled={!isEditable}
+                    >
+                      {!isEditable ? (
+                        <>
+                          <Lock className="h-4 w-4 mr-2" />
+                          Locked
+                        </>
+                      ) : (
+                        <>
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className={`flex-1 bg-transparent ${
+                        !isEditable
+                          ? 'opacity-50 cursor-not-allowed'
+                          : 'text-destructive hover:text-destructive'
+                      }`}
+                      onClick={() => handleDeleteClick(listing)}
+                      disabled={!isEditable}
+                    >
+                      {!isEditable ? (
+                        <>
+                          <Lock className="h-4 w-4 mr-2" />
+                          Locked
+                        </>
+                      ) : (
+                        <>
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </CardFooter>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>

@@ -2,6 +2,7 @@ import express from 'express';
 import * as ListingController from '../controllers/ListingController.js';
 import verifyLoggedIn from '../middlewares/VerifyLoggedIn.js';
 import verifySeller from '../middlewares/verifySeller.js';
+import { uploadToS3 } from '../middlewares/S3Upload.js';
 
 const router = express.Router();
 
@@ -25,7 +26,12 @@ router.post(
   verifyLoggedIn,
   ListingController.markListingAsSold,
 );
-router.put('/listings/:id', verifyLoggedIn, ListingController.editListing);
+router.put(
+  '/listings/:id',
+  verifyLoggedIn,
+  uploadToS3.array('images', 5),
+  ListingController.editListing,
+);
 router.delete('/listings/:id', verifyLoggedIn, ListingController.deleteListing);
 
 export default router;

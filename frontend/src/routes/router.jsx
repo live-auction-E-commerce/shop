@@ -11,6 +11,7 @@ import NewAddress from '@/pages/NewAddress';
 import BuyNowPage from '@/pages/BuyNowPage';
 import ListingPage from '@/pages/ListingPage';
 import UploadProduct from '@/pages/UploadProduct';
+import EditListingPage from '@/pages/EditListingPage';
 import OrdersPage from '@/pages/OrdersPage';
 import SalesPage from '@/pages/SalesPage';
 import ManageLiveListings from '@/pages/ManageListingsPage';
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
       { path: ROUTES.ORDERS, element: <OrdersPage /> },
       { path: ROUTES.SALES, element: <SalesPage /> },
       { path: ROUTES.MANAGE, element: <ManageLiveListings /> },
+      { path: ROUTES.EDIT_LISTING, element: <EditListingPage /> },
       { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     ],
   },

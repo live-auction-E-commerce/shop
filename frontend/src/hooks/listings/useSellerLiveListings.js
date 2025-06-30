@@ -57,6 +57,7 @@ const useSellerLiveListings = () => {
 
   return {
     listings: filteredAndSortedListings,
+    setListings,
     searchTerm,
     setSearchTerm,
     setSaleType,

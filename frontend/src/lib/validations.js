@@ -9,6 +9,21 @@ export const productSchema = z.object({
   size: z.string().min(1, 'Size is required'),
 });
 
+export const editListingSchema = z.object({
+  name: z.string().min(1, 'Product name is required'),
+  description: z.string().min(10, 'Description must be at least 10 characters'),
+  brand: z.string().min(1, 'Brand is required'),
+  category: z.string().min(1, 'Category is required'),
+  condition: z.string().min(1, 'Condition is required'),
+  size: z.string().optional(),
+  images: z.array(z.string()).min(1, 'At least one image is required'),
+  listing: z.object({
+    price: z.number().optional(),
+    startingBid: z.number().optional(),
+    expiredAt: z.date().optional(),
+  }),
+});
+
 export const auctionSchema = z.object({
   startingBid: z
     .number({ invalid_type_error: 'Starting bid is required' })

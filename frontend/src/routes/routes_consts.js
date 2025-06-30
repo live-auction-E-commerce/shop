@@ -19,5 +19,6 @@ export const ROUTES = {
   ORDERS: '/orders',
   SALES: '/sales',
   MANAGE: '/manage-listings',
+  EDIT_LISTING: '/manage-listings/edit/:id',
   NOT_FOUND: '*',
 };
