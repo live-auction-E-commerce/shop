@@ -20,7 +20,6 @@ const ListingPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
-  console.log(listing);
 
   const { width, height } = useWindowSize();
   const { user } = useAuth();
