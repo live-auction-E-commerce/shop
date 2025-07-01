@@ -48,6 +48,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import useRequireSeller from '@/hooks/auth/useVerifiedUser';
 
 export default function ManageLiveListings() {
   const {
@@ -71,6 +72,7 @@ export default function ManageLiveListings() {
 
   const auctionListings = listings.filter((l) => l.saleType === 'auction').length;
   const buyNowListings = listings.filter((l) => l.saleType === 'now').length;
+  const isSeller = useRequireSeller();
 
   const canEditListing = (listing) => {
     if (!listing) return false;
@@ -138,10 +140,9 @@ export default function ManageLiveListings() {
     }
   };
 
-  const handleViewDetails = (listing) => {
-    // Navigate to listing details or analytics page
-    console.log('View details for:', listing._id);
-  };
+  if (!isSeller) {
+    return null;
+  }
 
   if (loading) {
     return (
@@ -407,16 +408,6 @@ export default function ManageLiveListings() {
                               <p>Editing is disabled once bidding has started</p>
                             </TooltipContent>
                           </Tooltip>
-
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="flex-1 bg-transparent"
-                            onClick={() => handleViewDetails(listing)}
-                          >
-                            <Eye className="h-4 w-4 mr-2" />
-                            View Details
-                          </Button>
                         </>
                       )}
                     </div>

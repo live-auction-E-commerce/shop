@@ -151,7 +151,7 @@ export const filterListings = (
   const searchLower = searchTerm.toLowerCase();
 
   return listings.filter((listing) => {
-    const product = listing.product;
+    const product = listing.product || listing.productId;
     if (!product) return false;
 
     const matchesSearch =

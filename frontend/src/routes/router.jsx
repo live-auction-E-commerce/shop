@@ -41,7 +41,7 @@ const router = createBrowserRouter([
       { path: ROUTES.ORDERS, element: <OrdersPage /> },
       { path: ROUTES.YOUR_BIDS, element: <YourBidsPage /> },
       { path: ROUTES.SALES, element: <SalesPage /> },
-      { path: ROUTES.MANAGE, element: <ManageLiveListings /> },
+      { path: ROUTES.MANAGE_LISTINGS, element: <ManageLiveListings /> },
       { path: ROUTES.EDIT_LISTING, element: <EditListingPage /> },
       { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     ],
