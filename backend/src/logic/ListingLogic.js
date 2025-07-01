@@ -71,7 +71,7 @@ export const createListing = async (req) => {
       await auctionQueue.add(
         'endAuction',
         { listingId: savedListing._id.toString() },
-        { delay },
+        { delay, jobId: savedListing._id.toString() },
       );
       console.log(`📦 Auction end job scheduled in ${delay} ms`);
     } else {
@@ -146,6 +146,13 @@ export const deleteListing = async (listingId) => {
     throw new Error('Cannot delete a sold listing');
   }
   const productId = listing.productId?._id;
+
+  const jobId = listingId.toString();
+  const job = await auctionQueue.getJob(jobId);
+  if (job) {
+    await job.remove();
+    console.log(`Removed job for listing ${listingId} from auction queue`);
+  }
 
   await Listing.findByIdAndDelete(listingId);
   if (productId) {
