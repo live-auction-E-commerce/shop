@@ -4,8 +4,22 @@ export const getAllListings = async () => {
   return await fetchAPI('/api/listings');
 };
 
+export const updateListing = async (listingId, formData) => {
+  return await fetchAPI(
+    `/api/listings/${listingId}`,
+    {
+      method: 'PUT',
+      body: formData,
+    },
+    { requireAuth: true }
+  );
+};
 export const getListingById = async (id) => {
   return await fetchAPI(`/api/listings/${id}`);
+};
+
+export const getAllLiveListingsBySeller = async (sellerId) => {
+  return await fetchAPI(`/api/listings/seller/${sellerId}`, {}, { requireAuth: true });
 };
 
 export const createListing = async (data) => {
@@ -31,6 +45,15 @@ export const markListingAsSold = async ({ listingId, amount }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ listingId, amount }),
+    },
+    { requireAuth: true }
+  );
+};
+export const deleteListing = async (listingId) => {
+  return await fetchAPI(
+    `/api/listings/${listingId}`,
+    {
+      method: 'DELETE',
     },
     { requireAuth: true }
   );

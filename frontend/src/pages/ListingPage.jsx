@@ -34,8 +34,8 @@ const ListingPage = () => {
     resetFlow,
     paymentDetails,
   });
-  const isUserHighestBidder = listing?.currentBid?.userId === user?._id;
-
+  const isUserHighestBidder = !!user?._id && listing?.currentBid?.userId === user._id;
+  
   useEffect(() => {
     if (showConfetti) {
       const timeout = setTimeout(() => setShowConfetti(false), 10000);

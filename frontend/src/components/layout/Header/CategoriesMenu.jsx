@@ -15,7 +15,7 @@ const CategoriesMenu = () => (
   <NavigationMenu className="hidden md:flex">
     <NavigationMenuList>
       <NavigationMenuItem>
-        <NavigationMenuTrigger className="bg-transparent hover:bg-white/50">
+        <NavigationMenuTrigger className="bg-transparent font-semibold">
           Categories
         </NavigationMenuTrigger>
         <NavigationMenuContent>
@@ -24,12 +24,10 @@ const CategoriesMenu = () => (
               <NavigationMenuLink asChild>
                 <Link
                   to={ROUTES.HOME}
-                  className="flex flex-col h-full w-full select-none justify-end rounded-md bg-gradient-to-br from-rose-100 to-teal-100 p-6 no-underline outline-none focus:shadow-md"
+                  className="flex flex-col h-full w-full select-none justify-end rounded-md bg-gradient-to-br from-primary/20 to-secondary/20 p-6 no-underline outline-none focus:shadow-md"
                 >
-                  <div className="mb-2 mt-4 text-lg font-medium text-rose-800">
-                    Featured Fashion
-                  </div>
-                  <p className="text-sm leading-tight text-teal-800">
+                  <div className="mb-2 mt-4 text-lg font-medium text-primary">Featured Fashion</div>
+                  <p className="text-sm leading-tight text-secondary">
                     Discover our trending styles and collections
                   </p>
                 </Link>
@@ -50,10 +48,10 @@ const CategoriesMenu = () => (
             className="cursor-pointer inline-flex items-center h-10 px-4 py-2 text-sm font-medium rounded-md bg-transparent hover:bg-white/50"
           >
             <span className="relative flex h-2 w-2 mr-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-rose-500" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/50 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
             </span>
-            <span>Live Auctions</span>
+            <span className="bg-transparent font-semibold">Live Auctions</span>
           </Link>
         </NavigationMenuLink>
       </NavigationMenuItem>
@@ -63,7 +61,7 @@ const CategoriesMenu = () => (
             to={ROUTES.BUY_NOW}
             className="cursor-pointer inline-flex h-10 items-center px-4 py-2 text-sm font-medium rounded-md bg-transparent hover:bg-white/50"
           >
-            Buy Now
+            <span className="bg-transparent font-semibold">Buy Now</span>
           </Link>
         </NavigationMenuLink>
       </NavigationMenuItem>

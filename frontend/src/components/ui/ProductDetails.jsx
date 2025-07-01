@@ -90,7 +90,7 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
               <Button
                 variant="secondary"
                 size="icon"
-                className="rounded-full opacity-80 hover:opacity-100"
+                className="rounded-full opacity-80 hover:opacity-100 cursor-pointer"
                 onClick={prevImage}
               >
                 <ArrowLeft className="h-5 w-5" />
@@ -98,7 +98,7 @@ const ProductDetails = ({ listing, onBidClick, onBuyNowClick }) => {
               <Button
                 variant="secondary"
                 size="icon"
-                className="rounded-full opacity-80 hover:opacity-100"
+                className="rounded-full opacity-80 hover:opacity-100 cursor-pointer"
                 onClick={nextImage}
               >
                 <ArrowRight className="h-5 w-5" />

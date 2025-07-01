@@ -16,3 +16,5 @@ export const attachImageUrlsToListing = (listing) => {
     imageUrls,
   };
 };
+export const buildS3Url = (key) =>
+  `https://${config.AWS_S3_BUCKET_NAME}.s3.${config.AWS_REGION}.amazonaws.com/${key}`;
