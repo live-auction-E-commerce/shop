@@ -41,6 +41,7 @@ const EditListingPage = () => {
   };
 
   if (loading) return <p className="text-center mt-10">Loading listing data...</p>;
+  console.log('Validation errors:', form.formState.errors);
 
   return (
     <div className="container mx-auto py-10">

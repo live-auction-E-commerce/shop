@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { formSchema } from '@/lib/validations';
+import { editFormSchema } from '@/lib/validations';
 import { getListingById, updateListing } from '@/services/listingService';
 
 export const useEditProductForm = (listingId) => {
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(editFormSchema),
     defaultValues: {
       name: '',
       description: '',
@@ -84,7 +84,9 @@ export const useEditProductForm = (listingId) => {
       formData.append('price', data.listing.price);
     } else if (data.saleType === 'auction') {
       formData.append('startingBid', data.listing.startingBid);
-      formData.append('expiredAt', data.listing.expiredAt);
+      if (data.listing.expiredAt) {
+        formData.append('expiredAt', data.listing.expiredAt.toString());
+      }
     }
 
     formData.append('existingImages', JSON.stringify(existingImages));
