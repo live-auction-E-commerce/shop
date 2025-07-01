@@ -11,7 +11,7 @@ const StatusBadges = ({ status, isAuction }) => (
       </Badge>
     </div>
     <div className="absolute top-2 left-2">
-      <Badge variant="outline" className="bg-background/80 backdrop-blur-sm text-xs px-1.5 py-0">
+      <Badge variant="secondary" className="backdrop-blur-sm text-xs px-1.5 py-0">
         {isAuction ? 'Auction' : 'Buy Now'}
       </Badge>
     </div>

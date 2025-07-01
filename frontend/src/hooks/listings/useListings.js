@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { getAllListings } from '@/services/listingService';
 const useListings = () => {
   const [listings, setListings] = useState([]);
@@ -21,7 +21,12 @@ const useListings = () => {
     fetchListings();
   }, []);
 
-  return { listings, setListings, isLoading, error };
+  return {
+    listings: useMemo(() => listings, [listings]),
+    setListings,
+    isLoading,
+    error,
+  };
 };
 
 export default useListings;

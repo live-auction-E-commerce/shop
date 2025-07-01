@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import crypto from 'crypto';
-import sendEmail from '../lib/emailSender.js';
+import sendEmail, { generateSellerVerificationEmail } from '../lib/email.js';
+
 import { getNewToken } from '../lib/vault.js';
 import config from '../../config.js';
 
@@ -20,11 +21,11 @@ export const requestSellerVerification = async (userId) => {
   await user.save();
 
   const link = `${config.FRONTEND_URL}/verify-seller-email?token=${token}`;
+  const emailContent = generateSellerVerificationEmail(link);
 
   await sendEmail({
     to: user.email,
-    subject: 'Verify your email to become a seller',
-    html: `<p>Click <a href="${link}">here</a> to verify your email.</p>`,
+    ...emailContent,
   });
 };
 

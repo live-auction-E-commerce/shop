@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/bids', verifyLoggedIn, BidController.createBid);
 router.get('/bids/:id', BidController.getAllBidsByListing);
-router.get('/bids/', verifyLoggedIn, BidController.getAllBidsByUser);
+router.get('/bids/', verifyLoggedIn, BidController.getAllRelevantlBidsByUser);
 router.get(
   '/bids/:listingId/:userId',
   BidController.getAllBidsByUserAndListing,

@@ -19,9 +19,9 @@ export const getAllBidsByListing = async (req, res) => {
   }
 };
 
-export const getAllBidsByUser = async (req, res) => {
+export const getAllRelevantlBidsByUser = async (req, res) => {
   try {
-    const bids = await BidLogic.getAllBidsByUser(req.params.id);
+    const bids = await BidLogic.getAllRelevantBidsByUser(req.user.id);
     res.status(StatusCodes.OK).json(bids);
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });

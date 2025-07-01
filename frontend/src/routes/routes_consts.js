@@ -18,7 +18,8 @@ export const ROUTES = {
   NEW_PRODUCT: `/new-product`,
   ORDERS: '/orders',
   SALES: '/sales',
-  MANAGE: '/manage-listings',
   EDIT_LISTING: '/manage-listings/edit/:id',
+  YOUR_BIDS: '/bids',
+  MANAGE_LISTINGS: '/manage-listings',
   NOT_FOUND: '*',
 };

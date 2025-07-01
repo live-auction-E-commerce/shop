@@ -42,6 +42,11 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
   const progressPercentage = getBidProgress(listing);
   const product = listing?.product;
 
+  const handleBidClick = useCallback(() => {
+    onBidClick?.(listing), [onBidClick, listing];
+  });
+  const handleBuyNowClick = useCallback(() => onBuyNowClick?.(listing), [onBuyNowClick, listing]);
+
   if (!listing || !product) return null;
 
   if (isLoading) return <ListingCardSkeleton />;
@@ -68,7 +73,7 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
 
       <div className="p-3 flex-grow flex flex-col">
         <div className="mb-1">
-          <h3 className="font-medium text-sm line-clamp-1">{product.name}</h3>
+          <h3 className="font-extrabold text-md line-clamp-1">{product.name}</h3>
           <div className="flex justify-between items-center mt-1">
             <CategoryBadges category={product.category} brand={product.brand} />
           </div>
@@ -79,8 +84,8 @@ const ListingCard = ({ listing, onBidClick, onBuyNowClick, isLoading = false, cl
           isExpired={isExpired}
           isSold={isSold}
           listing={listing}
-          onBidClick={onBidClick}
-          onBuyNowClick={onBuyNowClick}
+          onBidClick={handleBidClick}
+          onBuyNowClick={handleBuyNowClick}
           status={status}
           timeRemaining={timeRemaining}
           progressPercentage={progressPercentage}

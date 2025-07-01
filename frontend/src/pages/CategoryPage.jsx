@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { ListingGrid } from '@/components/listing/ListingGrid';
 import useListings from '@/hooks/listings/useListings';
 import useListingsSocket from '@/hooks/sockets/useListingsSocket';
-import useListingPaymentHandler from '@/hooks/payments/useListingPaymentHandler';
+import { useListingActionHandlers } from '@/hooks/payments/useListingActionHandlers';
+import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
 import BidModal from '@/components/modals/BidModal';
 import PaymentModal from '@/components/modals/PaymentModal';
+import AddressSelectionModal from '@/components/modals/AddressSelectionModal';
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
@@ -24,48 +26,65 @@ const CategoryPage = () => {
   useListingsSocket(filteredListings, setFilteredListings);
 
   const {
-    listings,
-    isPaymentModalOpen,
-    pendingBidAmount,
-    activeListingId,
-    selectedListing,
-    isBidModalOpen,
-    handleBidClick,
-    handleBuyNowClick,
+    currentStep,
+    paymentDetails,
+    startPaymentFlow,
+    handleAddressSelection,
     handleBidConfirm,
-    handlePaymentSuccess,
-    handlePaymentCancel,
-    closeBidModal,
-  } = useListingPaymentHandler(filteredListings);
+    resetFlow,
+  } = usePaymentFlow(false);
+
+  const { handleBuyNowClick, handleBidClick, handlePaymentSuccess } = useListingActionHandlers({
+    setListings: setFilteredListings,
+    startPaymentFlow,
+    resetFlow,
+    paymentDetails,
+  });
+
+  const selectedListing = useMemo(
+    () => filteredListings.find((l) => l._id === paymentDetails.listingId),
+    [filteredListings, paymentDetails.listingId]
+  );
+
+  const isBidModalOpen = currentStep === PAYMENT_STEPS.AMOUNT_ENTRY;
+  const isPaymentModalOpen = currentStep === PAYMENT_STEPS.PAYMENT;
+  const isAddressSelectionModalOpen = currentStep === PAYMENT_STEPS.ADDRESS_SELECTION;
 
   return (
     <>
       <ListingGrid
-        listings={listings}
+        listings={filteredListings}
         title={categoryName}
         onBuyNowClick={handleBuyNowClick}
         onBidClick={handleBidClick}
         isLoading={isLoading}
       />
 
-      {selectedListing && (
+      {isBidModalOpen && (
         <BidModal
           isOpen={isBidModalOpen}
-          onClose={closeBidModal}
-          currentBidAmount={selectedListing.currentBid?.amount || selectedListing.startingBid || 0}
+          onClose={resetFlow}
+          currentBidAmount={paymentDetails?.amount}
           onConfirm={handleBidConfirm}
         />
       )}
 
-      {pendingBidAmount && (
+      {isAddressSelectionModalOpen && (
+        <AddressSelectionModal
+          isOpen={true}
+          onConfirm={handleAddressSelection}
+          onClose={resetFlow}
+        />
+      )}
+
+      {isPaymentModalOpen && (
         <PaymentModal
           isOpen={isPaymentModalOpen}
-          amount={pendingBidAmount}
-          listingId={activeListingId}
+          amount={paymentDetails.amount}
+          listingId={paymentDetails.listingId}
           listing={selectedListing}
           onSuccess={handlePaymentSuccess}
-          onCancel={handlePaymentCancel}
-          onClose={handlePaymentCancel}
+          onClose={resetFlow}
         />
       )}
     </>

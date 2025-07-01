@@ -8,11 +8,9 @@ import { ROUTES } from '@/routes/routes_consts';
 import useRequireAuth from '@/hooks/auth/useRequireAuth';
 import { deleteAddress } from '@/services/addressService';
 import { toast } from 'sonner';
-import { useAuth } from '@/context/AuthContext';
 
 const AddressesPage = () => {
   const navigate = useNavigate();
-  const { refreshDefaultAddress } = useAuth();
   const { addresses, setAddresses, isLoading, error } = useAddresses();
   const isAllowed = useRequireAuth();
 
@@ -24,7 +22,6 @@ const AddressesPage = () => {
   const handleDelete = async (addressId) => {
     try {
       await deleteAddress(addressId);
-      await refreshDefaultAddress();
       setAddresses((prev) => prev.filter((a) => a._id !== addressId));
       toast.success('Address deleted');
     } catch (err) {
@@ -33,7 +30,9 @@ const AddressesPage = () => {
   };
 
   const handleAddNew = () => {
-    navigate(ROUTES.NEW_ADDRESS);
+    navigate(ROUTES.NEW_ADDRESS, {
+      state: { isFirstAddress: addresses.length === 0 },
+    });
   };
 
   if (!isAllowed) return null;

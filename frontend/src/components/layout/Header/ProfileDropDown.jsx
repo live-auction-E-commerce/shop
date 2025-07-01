@@ -6,19 +6,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import {
-  User,
-  Package,
-  MapPin,
-  CreditCard,
-  Lock,
-  ShoppingBag,
-  Upload,
-  Settings,
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { User, Package, MapPin, Lock, ShoppingBag, Upload, Settings } from 'lucide-react';
+import { Link, Routes } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
+import { ROUTES } from '@/routes/routes_consts';
 
 const ProfileDropdown = () => {
   const { user, logout } = useAuth();
@@ -39,19 +31,25 @@ const ProfileDropdown = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuItem asChild>
-          <Link to="/orders" className="flex items-center">
+          <Link to={ROUTES.ORDERS} className="flex items-center">
             <Package className="mr-2 h-4 w-4" />
             Your Orders
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/addresses" className="flex items-center">
+          <Link to={ROUTES.YOUR_BIDS} className="flex items-center">
+            <Package className="mr-2 h-4 w-4" />
+            Your Bids
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to={ROUTES.ADDRESSES} className="flex items-center">
             <MapPin className="mr-2 h-4 w-4" />
             Your Addresses
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/change-password" className="flex items-center">
+          <Link to={ROUTES.CHANGE_PASSWORD} className="flex items-center">
             <Lock className="mr-2 h-4 w-4" />
             Change Password
           </Link>
@@ -64,19 +62,19 @@ const ProfileDropdown = () => {
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link to="/sales" className="flex items-center">
+              <Link to={ROUTES.SALES} className="flex items-center">
                 <ShoppingBag className="mr-2 h-4 w-4" />
                 Your Sales
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/new-product" className="flex items-center">
+              <Link to={ROUTES.NEW_PRODUCT} className="flex items-center">
                 <Upload className="mr-2 h-4 w-4" />
                 Upload Product
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/manage-listings" className="flex items-center">
+              <Link to={ROUTES.MANAGE_LISTINGS} className="flex items-center">
                 <Settings className="mr-2 h-4 w-4" />
                 Manage Listings
               </Link>

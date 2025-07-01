@@ -6,6 +6,8 @@ import PaymentIntent from '../models/PaymentIntent.js';
 import User from '../models/User.js';
 // eslint-disable-next-line no-unused-vars
 import Bid from '../models/Bid.js';
+// eslint-disable-next-line no-unused-vars
+import Product from '../models/Product.js';
 import { validateObjectId } from '../lib/validations.js';
 
 /* 
@@ -18,13 +20,17 @@ TODO:
 export const finishAuction = async (listingId) => {
   validateObjectId(listingId);
 
-  const listing = await Listing.findById(listingId).populate({
-    path: 'currentBid',
-    populate: {
-      path: 'userId',
-      model: 'User',
-    },
-  });
+  const listing = await Listing.findById(listingId)
+    .populate({
+      path: 'currentBid',
+      populate: {
+        path: 'userId',
+        model: 'User',
+        select: '_id email',
+      },
+    })
+    .populate('sellerId', '_id email')
+    .populate('productId');
   if (!listing) {
     throw new Error('Listing not found');
   }
@@ -36,17 +42,16 @@ export const finishAuction = async (listingId) => {
 
   const buyerId = currentBid.userId._id;
   const buyerEmail = currentBid.userId.email;
-  const sellerId = listing.sellerId;
+  const sellerId = listing.sellerId._id;
+  const sellerEmail = listing.sellerId.email;
   const price = currentBid.amount || listing.startingBid;
 
-  // I currently set the default address to the buyer's default address.
-  const defaultAddress = await Address.findOne({
-    userId: buyerId,
-    isDefault: true,
-  }).exec();
+  const bidAddress =
+    currentBid.addressId &&
+    (await Address.findOne({ _id: currentBid.addressId }));
 
-  if (!defaultAddress) {
-    throw new Error('Buyer has no default address');
+  if (!bidAddress) {
+    throw new Error('No valid address associated with the winning bid.');
   }
 
   const paymentIntent = await PaymentIntent.findById(
@@ -60,7 +65,7 @@ export const finishAuction = async (listingId) => {
     buyerId,
     sellerId,
     listingId,
-    addressId: defaultAddress._id,
+    addressId: bidAddress._id,
     price,
   });
 
@@ -70,10 +75,11 @@ export const finishAuction = async (listingId) => {
   await listing.save();
 
   return {
-    listingId,
     winnerData: {
+      productName: listing.productId.name,
       buyerId,
       buyerEmail,
+      sellerEmail,
       price,
       listingId,
       paymentIntentId: paymentIntent.stripePaymentIntentId,

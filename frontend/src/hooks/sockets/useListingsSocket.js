@@ -10,7 +10,7 @@ import {
 const useListingsSocket = (listings, setListings) => {
   // Join/leave rooms when listings change
   useEffect(() => {
-    if (!listings.length) return;
+    if (!listings?.length) return;
 
     listings.forEach((listing) => {
       emitJoinListing(listing._id);
