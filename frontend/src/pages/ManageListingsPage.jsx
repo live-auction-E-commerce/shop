@@ -37,6 +37,17 @@ import useSellerLiveListings from '@/hooks/listings/useSellerLiveListings';
 import { getListingStatus, formatDate, formatCurrency, getTimeRemaining } from '@/lib/utils';
 import { toast } from 'sonner';
 import { deleteListing } from '@/services/listingService';
+import { useState } from 'react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 export default function ManageLiveListings() {
   const {
@@ -52,6 +63,9 @@ export default function ManageLiveListings() {
     loading,
     error,
   } = useSellerLiveListings();
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [listingToDelete, setListingToDelete] = useState(null);
 
   const navigate = useNavigate();
 
@@ -97,7 +111,7 @@ export default function ManageLiveListings() {
     navigate(editRoute);
   };
 
-  const handleDeleteClick = async (listing) => {
+  const handleDeleteClick = (listing) => {
     if (!canEditListing(listing)) {
       toast.error('Cannot delete auction listings with active bids', {
         description: 'Deletion is disabled once bidding has started to protect bidders.',
@@ -105,19 +119,28 @@ export default function ManageLiveListings() {
       return;
     }
 
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete the listing for "${listing.productId.name}"? This action cannot be undone.`
-    );
+    setListingToDelete(listing);
+    setDeleteDialogOpen(true);
+  };
 
-    if (!confirmDelete) return;
+  const confirmDelete = async () => {
+    if (!listingToDelete) return;
 
     try {
-      await deleteListing(listing._id);
+      await deleteListing(listingToDelete._id);
       toast.success('Listing deleted successfully');
-      setListings((prev) => prev.filter((l) => l._id !== listing._id));
+      setListings((prev) => prev.filter((l) => l._id !== listingToDelete._id));
     } catch (err) {
       toast.error(`Failed to delete listing: ${err.message}`);
+    } finally {
+      setDeleteDialogOpen(false);
+      setListingToDelete(null);
     }
+  };
+
+  const handleViewDetails = (listing) => {
+    // Navigate to listing details or analytics page
+    console.log('View details for:', listing._id);
   };
 
   if (loading) {
@@ -370,22 +393,30 @@ export default function ManageLiveListings() {
                         <>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <div className="flex-1">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="w-full opacity-60 cursor-not-allowed bg-transparent"
-                                  disabled
-                                >
-                                  <AlertCircle className="h-4 w-4 mr-2" />
-                                  Cannot Edit
-                                </Button>
-                              </div>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex-1 opacity-60 cursor-not-allowed bg-transparent"
+                                disabled
+                              >
+                                <AlertCircle className="h-4 w-4 mr-2" />
+                                Cannot Edit
+                              </Button>
                             </TooltipTrigger>
                             <TooltipContent>
                               <p>Editing is disabled once bidding has started</p>
                             </TooltipContent>
                           </Tooltip>
+
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1 bg-transparent"
+                            onClick={() => handleViewDetails(listing)}
+                          >
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Details
+                          </Button>
                         </>
                       )}
                     </div>
@@ -396,6 +427,39 @@ export default function ManageLiveListings() {
           </div>
         )}
       </div>
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent className="sm:max-w-[425px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+              <Trash2 className="h-5 w-5" />
+              Delete Listing
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-left space-y-2">
+              <p>
+                Are you sure you want to delete the listing for{' '}
+                <span className="font-semibold text-foreground">
+                  "{listingToDelete?.productId?.name}"
+                </span>
+                ?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                This action cannot be undone. The listing will be permanently removed from your
+                account.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2 sm:gap-2">
+            <AlertDialogCancel className="mt-0">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              <span className="font-medium">Delete Listing</span>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </TooltipProvider>
   );
 }
