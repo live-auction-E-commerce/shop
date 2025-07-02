@@ -8,6 +8,8 @@ import useListings from '@/hooks/listings/useListings';
 import useListingsSocket from '@/hooks/sockets/useListingsSocket';
 import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
 import { useListingActionHandlers } from '@/hooks/payments/useListingActionHandlers';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 
 const Home = () => {
   const { listings: initialListings, isLoading } = useListings();
@@ -49,7 +51,13 @@ const Home = () => {
 
   return (
     <section className="flex flex-col">
-      <HeroSection />
+      <motion.div
+        initial={{ opacity: 0, y: 40, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 1.2, ease: 'easeOut' }}
+      >
+        <HeroSection />
+      </motion.div>
 
       <ListingCarrousel
         title="Hot Now!"

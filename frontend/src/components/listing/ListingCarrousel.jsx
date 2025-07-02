@@ -4,6 +4,8 @@ import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/common/useMobile';
 import { Button } from '@/components/ui/button';
 import { ListingCard, ListingCardSkeleton } from '@/components/listing/ListingCard';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 
 const ListingCarrousel = ({
   title,
@@ -97,20 +99,25 @@ const ListingCarrousel = ({
           }}
         >
           {itemsToRender.map((item, i) => (
-            <div
+            <motion.div
               key={isLoading ? `skeleton-${i}` : item._id}
               className="flex-shrink-0"
               style={{
                 width: `${100 / totalItems}%`,
                 padding: '0 8px',
               }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              layout
             >
               {isLoading ? (
                 <ListingCardSkeleton />
               ) : (
                 <ListingCard listing={item} onBidClick={onBidClick} onBuyNowClick={onBuyNowClick} />
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
