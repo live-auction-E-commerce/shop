@@ -7,6 +7,8 @@ import useBidsForListing from '@/hooks/bids/useBidsForListing';
 import useSingleBidSocket from '@/hooks/sockets/useSingleBidSocket';
 import { useBidContext } from '@/context/BidContext';
 import BidItem from '@/components/bid/BidItem';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 
 const BidChatbox = ({ listingId, className = '' }) => {
   const { bids: initialBids, isLoading, error } = useBidsForListing(listingId);
@@ -92,7 +94,15 @@ const BidChatbox = ({ listingId, className = '' }) => {
           ) : (
             <div className="space-y-3">
               {bids.map((bid, index) => (
-                <BidItem key={bid._id || `bid-${index}`} bid={bid} isHighest={index === 0} />
+                <motion.div
+                  key={bid._id || `bid-${index}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.001 }}
+                  transition={{ delay: 0.8 + Math.sqrt(index) * 0.1, duration: 0.5 }}
+                >
+                  <BidItem bid={bid} isHighest={index === 0} />
+                </motion.div>
               ))}
             </div>
           )}

@@ -13,7 +13,7 @@ const NavigationMenu = ({ className, children, viewport = true, ...props }) => {
         data-viewport={viewport}
         initial={{ x: '-100%', opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 50, damping: 25, duration: 1 }}
+        transition={{ delay: 0.5, type: 'spring', stiffness: 50, damping: 25, duration: 1 }}
         className={cn(
           'group/navigation-menu relative flex max-w-max flex-1 items-center justify-center',
           className

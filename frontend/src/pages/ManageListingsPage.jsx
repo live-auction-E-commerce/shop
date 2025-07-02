@@ -179,7 +179,19 @@ export default function ManageLiveListings() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <motion.div
+          initial={{ opacity: 0, x: -200, scale: 0.9 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          transition={{
+            type: 'spring',
+            stiffness: 80,
+            damping: 14,
+            mass: 1,
+            bounce: 0.4,
+            duration: 1.5,
+          }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
+        >
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center">
@@ -221,7 +233,7 @@ export default function ManageLiveListings() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
 
         {/* Filters and Search */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
