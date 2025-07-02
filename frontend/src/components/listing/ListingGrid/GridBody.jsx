@@ -1,5 +1,7 @@
 import { ListingCard, ListingCardSkeleton } from '@/components/listing/ListingCard';
 import { cn } from '@/lib/utils';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 
 const GridBody = ({
   isLoading,
@@ -26,13 +28,21 @@ const GridBody = ({
   if (sortedListings.length > 0) {
     return (
       <div className={cn('grid gap-4', gridClass, gridClassName)}>
-        {sortedListings.map((listing) => (
-          <ListingCard
+        {sortedListings.map((listing, i) => (
+          <motion.div
             key={listing._id}
-            listing={listing}
-            onBidClick={onBidClick}
-            onBuyNowClick={onBuyNowClick}
-          />
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.01 }}
+            transition={{ duration: 0.4, delay: i * 0.2 }}
+          >
+            <ListingCard
+              key={listing._id}
+              listing={listing}
+              onBidClick={onBidClick}
+              onBuyNowClick={onBuyNowClick}
+            />
+          </motion.div>
         ))}
       </div>
     );

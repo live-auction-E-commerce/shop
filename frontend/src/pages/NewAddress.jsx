@@ -15,6 +15,8 @@ import { useLocation } from 'react-router-dom';
 import { createAddress, updateAddress, getAddressById } from '@/services/addressService';
 import { toast } from 'sonner';
 import { ROUTES } from '@/routes/routes_consts';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 
 const NewAddress = () => {
   const navigate = useNavigate();
@@ -89,7 +91,12 @@ const NewAddress = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 max-w-3xl">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="container mx-auto py-8 max-w-3xl"
+    >
       <Button
         variant="ghost"
         onClick={() => navigate(ROUTES.ADDRESSES)}
@@ -117,7 +124,7 @@ const NewAddress = () => {
           </form>
         </Form>
       )}
-    </div>
+    </motion.div>
   );
 };
 

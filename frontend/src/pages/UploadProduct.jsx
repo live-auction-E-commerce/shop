@@ -20,6 +20,8 @@ import { ROUTES } from '@/routes/routes_consts';
 import { Loader2 } from 'lucide-react';
 import { useUploadProductForm } from '@/hooks/listings/useUploadProductForm';
 import useRequireVerifiedUser from '@/hooks/auth/useVerifiedUser';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 
 const UploadProduct = () => {
   const isAllowed = useRequireVerifiedUser();
@@ -45,7 +47,12 @@ const UploadProduct = () => {
   if (!isAllowed) return null;
 
   return (
-    <div className="container mx-auto py-10">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="container mx-auto py-10"
+    >
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
           <CardTitle>Upload Product</CardTitle>
@@ -81,7 +88,7 @@ const UploadProduct = () => {
           </Form>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 };
 

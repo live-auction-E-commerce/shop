@@ -17,6 +17,8 @@ import ProductForm from '@/components/forms/ProductForm';
 import BuyNowForm from '@/components/forms/BuyNowForm';
 import { ROUTES } from '@/routes/routes_consts';
 import { useEditProductForm } from '@/hooks/listings/useEditProductForm';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 
 const EditListingPage = () => {
   const { id: listingId } = useParams();
@@ -44,7 +46,12 @@ const EditListingPage = () => {
   console.log('Validation errors:', form.formState.errors);
 
   return (
-    <div className="container mx-auto py-10">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      className="container mx-auto py-10"
+    >
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
           <CardTitle>Edit Listing</CardTitle>
@@ -58,7 +65,14 @@ const EditListingPage = () => {
 
               {saleType === 'now' && <BuyNowForm form={form} />}
 
-              <CardFooter className="flex justify-end px-0">
+              <CardFooter className="flex justify-end px-0 gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => navigate(ROUTES.MANAGE_LISTINGS)}
+                >
+                  Cancel
+                </Button>
                 <Button type="submit" disabled={submitting}>
                   {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Update Listing
@@ -68,7 +82,7 @@ const EditListingPage = () => {
           </Form>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 };
 export default EditListingPage;

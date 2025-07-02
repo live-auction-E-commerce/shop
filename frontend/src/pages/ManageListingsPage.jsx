@@ -49,6 +49,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import useRequireSeller from '@/hooks/auth/useVerifiedUser';
+// eslint-disable-next-line no-unused-vars
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function ManageLiveListings() {
   const {
@@ -177,7 +179,19 @@ export default function ManageLiveListings() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <motion.div
+          initial={{ opacity: 0, x: -200, scale: 0.9 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          transition={{
+            type: 'spring',
+            stiffness: 80,
+            damping: 14,
+            mass: 1,
+            bounce: 0.4,
+            duration: 1.5,
+          }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
+        >
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center">
@@ -219,7 +233,7 @@ export default function ManageLiveListings() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
 
         {/* Filters and Search */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -274,147 +288,157 @@ export default function ManageLiveListings() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {listings.map((listing) => {
-              const isEditable = canEditListing(listing);
-              const activity = getListingActivity(listing);
+            <AnimatePresence>
+              {listings.map((listing, index) => {
+                const isEditable = canEditListing(listing);
+                const activity = getListingActivity(listing);
 
-              return (
-                <Card
-                  key={listing._id}
-                  className="overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                  <div className="relative">
-                    <img
-                      src={listing.productId.images[0] || '/placeholder.svg'}
-                      alt={listing.productId?.name}
-                      className="w-full h-48 object-cover"
-                    />
-                    <Badge className="absolute top-3 right-3">
-                      {listing.saleType === 'auction' ? 'Auction' : 'Buy Now'}
-                    </Badge>
+                return (
+                  <motion.div
+                    key={listing._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }} // animate out by fading and moving up
+                    transition={{ delay: index * 0.2, duration: 0.6 }}
+                    layout // optional, for smooth layout changes
+                  >
+                    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                      <div className="relative">
+                        <img
+                          src={listing.productId.images[0] || '/placeholder.svg'}
+                          alt={listing.productId?.name}
+                          className="w-full h-48 object-cover"
+                        />
+                        <Badge className="absolute top-3 right-3">
+                          {listing.saleType === 'auction' ? 'Auction' : 'Buy Now'}
+                        </Badge>
 
-                    {listing.saleType === 'auction' && (
-                      <Badge className="absolute top-3 left-3 bg-red-100 text-red-800">
-                        {getTimeRemaining(
-                          listing.expiredAt,
-                          getListingStatus(listing) === 'expired'
+                        {listing.saleType === 'auction' && (
+                          <Badge className="absolute top-3 left-3 bg-red-100 text-red-800">
+                            {getTimeRemaining(
+                              listing.expiredAt,
+                              getListingStatus(listing) === 'expired'
+                            )}
+                          </Badge>
                         )}
-                      </Badge>
-                    )}
 
-                    {/* Activity indicator instead of "Locked" */}
-                    {activity && (
-                      <div
-                        className={`absolute bottom-3 left-3 flex items-center px-2 py-1 rounded-full text-xs font-medium ${activity.bgColor} ${activity.color}`}
-                      >
-                        <activity.icon className="h-3 w-3 mr-1" />
-                        {activity.message}
-                      </div>
-                    )}
-                  </div>
-
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg line-clamp-1">{listing.productId.name}</CardTitle>
-                    <CardDescription className="line-clamp-2">
-                      {listing.productId.description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="pb-3">
-                    <div className="space-y-2 h-32">
-                      <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span className="capitalize">
-                          {listing.productId.brand} • {listing.productId.category}
-                        </span>
-                        <span className="capitalize">{listing.productId.condition}</span>
+                        {/* Activity indicator instead of "Locked" */}
+                        {activity && (
+                          <div
+                            className={`absolute bottom-3 left-3 flex items-center px-2 py-1 rounded-full text-xs font-medium ${activity.bgColor} ${activity.color}`}
+                          >
+                            <activity.icon className="h-3 w-3 mr-1" />
+                            {activity.message}
+                          </div>
+                        )}
                       </div>
 
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        Listed on {formatDate(listing.createdAt)}
-                      </div>
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-lg line-clamp-1">
+                          {listing.productId.name}
+                        </CardTitle>
+                        <CardDescription className="line-clamp-2">
+                          {listing.productId.description}
+                        </CardDescription>
+                      </CardHeader>
 
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-col">
-                          <span className="text-xs text-muted-foreground">
-                            {listing.saleType === 'auction'
-                              ? listing.currentBid?.amount != null
-                                ? 'Current Bid'
-                                : 'Starting Bid'
-                              : 'Price'}
-                          </span>
-                          <div className="flex items-center text-lg font-bold text-primary">
-                            {formatCurrency(
-                              listing.saleType === 'auction'
-                                ? (listing.currentBid?.amount ?? listing.startingBid)
-                                : listing.price
+                      <CardContent className="pb-3">
+                        <div className="space-y-2 h-32">
+                          <div className="flex items-center justify-between text-sm text-muted-foreground">
+                            <span className="capitalize">
+                              {listing.productId.brand} • {listing.productId.category}
+                            </span>
+                            <span className="capitalize">{listing.productId.condition}</span>
+                          </div>
+
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            Listed on {formatDate(listing.createdAt)}
+                          </div>
+
+                          <div className="flex items-center justify-between">
+                            <div className="flex flex-col">
+                              <span className="text-xs text-muted-foreground">
+                                {listing.saleType === 'auction'
+                                  ? listing.currentBid?.amount != null
+                                    ? 'Current Bid'
+                                    : 'Starting Bid'
+                                  : 'Price'}
+                              </span>
+                              <div className="flex items-center text-lg font-bold text-primary">
+                                {formatCurrency(
+                                  listing.saleType === 'auction'
+                                    ? (listing.currentBid?.amount ?? listing.startingBid)
+                                    : listing.price
+                                )}
+                              </div>
+                            </div>
+
+                            {listing.productId.size && (
+                              <div className="text-sm text-muted-foreground">
+                                Size: {listing.productId.size}
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="h-5 flex items-center text-sm text-muted-foreground">
+                            {listing.saleType === 'auction' && listing.expiredAt && (
+                              <>Ends: {formatDate(listing.expiredAt)}</>
                             )}
                           </div>
                         </div>
+                      </CardContent>
 
-                        {listing.productId.size && (
-                          <div className="text-sm text-muted-foreground">
-                            Size: {listing.productId.size}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="h-5 flex items-center text-sm text-muted-foreground">
-                        {listing.saleType === 'auction' && listing.expiredAt && (
-                          <>Ends: {formatDate(listing.expiredAt)}</>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-
-                  <CardFooter className="pt-3 border-t">
-                    <div className="flex gap-2 w-full">
-                      {isEditable ? (
-                        <>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="flex-1 bg-transparent"
-                            onClick={() => handleEditClick(listing)}
-                          >
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="flex-1 text-destructive hover:text-destructive hover:bg-destructive/10 bg-transparent"
-                            onClick={() => handleDeleteClick(listing)}
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
+                      <CardFooter className="pt-3 border-t">
+                        <div className="flex gap-2 w-full">
+                          {isEditable ? (
+                            <>
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="flex-1 opacity-60 cursor-not-allowed bg-transparent"
-                                disabled
+                                className="flex-1 bg-transparent"
+                                onClick={() => handleEditClick(listing)}
                               >
-                                <AlertCircle className="h-4 w-4 mr-2" />
-                                Cannot Edit
+                                <Edit className="h-4 w-4 mr-2" />
+                                Edit
                               </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Editing is disabled once bidding has started</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </>
-                      )}
-                    </div>
-                  </CardFooter>
-                </Card>
-              );
-            })}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex-1 text-destructive hover:text-destructive hover:bg-destructive/10 bg-transparent"
+                                onClick={() => handleDeleteClick(listing)}
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex-1 opacity-60 cursor-not-allowed bg-transparent"
+                                    disabled
+                                  >
+                                    <AlertCircle className="h-4 w-4 mr-2" />
+                                    Cannot Edit
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Editing is disabled once bidding has started</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </>
+                          )}
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
           </div>
         )}
       </div>

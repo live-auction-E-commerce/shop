@@ -39,9 +39,15 @@ export const useListingValidations = () => {
 
   const validateBidAmount = useCallback((listing, bidAmount) => {
     const currentBidAmount = listing?.currentBid?.amount || listing?.startingBid;
+    console.log(currentBidAmount);
 
     if (bidAmount <= currentBidAmount) {
       toast.error('Bid must be greater than current bid');
+      return false;
+    }
+
+    if (bidAmount - 1 < currentBidAmount) {
+      toast.error('The bet must be at least a dollar higher');
       return false;
     }
 

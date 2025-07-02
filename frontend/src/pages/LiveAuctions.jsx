@@ -7,6 +7,7 @@ import useListingsSocket from '@/hooks/sockets/useListingsSocket';
 import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
 import { useListingActionHandlers } from '@/hooks/payments/useListingActionHandlers';
 import AddressSelectionModal from '@/components/modals/AddressSelectionModal';
+import { useListingValidations } from '@/hooks/listings/useListingValidations';
 
 const LiveAuctions = () => {
   const { listings: allListings, isLoading } = useListings();
@@ -40,6 +41,8 @@ const LiveAuctions = () => {
     [filteredListings, paymentDetails.listingId]
   );
 
+  const { validateBidAmount } = useListingValidations();
+
   const isBidModalOpen = currentStep === PAYMENT_STEPS.AMOUNT_ENTRY;
   const isPaymentModalOpen = currentStep === PAYMENT_STEPS.PAYMENT;
 
@@ -59,7 +62,15 @@ const LiveAuctions = () => {
           isOpen={isBidModalOpen}
           currentBidAmount={paymentDetails?.amount || 0}
           onClose={resetFlow}
-          onConfirm={handleBidConfirm}
+          onConfirm={(amount) => {
+            const listing = filteredListings.find((l) => l._id === paymentDetails.listingId);
+            try {
+              if (!validateBidAmount(listing, amount)) {
+                return;
+              }
+              handleBidConfirm(amount);
+            } catch (err) {}
+          }}
         />
       )}
 
