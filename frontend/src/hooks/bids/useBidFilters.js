@@ -36,8 +36,6 @@ const useBidFilters = (bids) => {
     filtered.sort((a, b) => {
       let comparison = 0;
 
-      console.log(a);
-
       switch (filters.sortBy) {
         case 'date':
           comparison = new Date(a.bid.createdAt).getTime() - new Date(b.bid.createdAt).getTime();
