@@ -44,6 +44,34 @@ const Home = () => {
     () => listings.find((l) => l._id === paymentDetails.listingId),
     [listings, paymentDetails.listingId]
   );
+  const hotAuctions = useMemo(
+    () =>
+      listings
+        .filter((l) => l.saleType === 'auction' && l.currentBid)
+        .sort((a, b) => b.currentBid.amount - a.currentBid.amount)
+        .slice(0, 10),
+    [listings]
+  );
+  const endingSoonAuctions = useMemo(
+    () =>
+      listings
+        .filter((l) => l.saleType === 'auction' && new Date(l.expiredAt) > new Date())
+        .sort((a, b) => new Date(a.expiredAt) - new Date(b.expiredAt))
+        .slice(0, 10),
+    [listings]
+  );
+  const buyNowListings = useMemo(
+    () =>
+      listings
+        .filter((l) => l.saleType === 'now')
+        .sort((a, b) => a.price - b.price)
+        .slice(0, 10),
+    [listings]
+  );
+  const justListed = useMemo(
+    () => [...listings].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 10),
+    [listings]
+  );
 
   const isBidModalOpen = currentStep === PAYMENT_STEPS.AMOUNT_ENTRY;
   const isPaymentModalOpen = currentStep === PAYMENT_STEPS.PAYMENT;
@@ -60,8 +88,8 @@ const Home = () => {
       </motion.div>
 
       <ListingCarrousel
-        title="Hot Now!"
-        listings={listings}
+        title="Hot Auctions!"
+        listings={hotAuctions}
         onBidClick={handleBidClick}
         onBuyNowClick={handleBuyNowClick}
         isLoading={isLoading}
@@ -71,8 +99,8 @@ const Home = () => {
       />
 
       <ListingCarrousel
-        title="Trending Auctions"
-        listings={listings}
+        title="Ending Soon!"
+        listings={endingSoonAuctions}
         onBidClick={handleBidClick}
         onBuyNowClick={handleBuyNowClick}
         isLoading={isLoading}
@@ -82,8 +110,19 @@ const Home = () => {
       />
 
       <ListingCarrousel
-        title="Ending Soon"
-        listings={listings}
+        title="Buy Now Deals"
+        listings={buyNowListings}
+        onBidClick={handleBidClick}
+        onBuyNowClick={handleBuyNowClick}
+        isLoading={isLoading}
+        isPaused={
+          currentStep === PAYMENT_STEPS.PAYMENT || currentStep === PAYMENT_STEPS.AMOUNT_ENTRY
+        }
+      />
+
+      <ListingCarrousel
+        title="Just Listed"
+        listings={justListed}
         onBidClick={handleBidClick}
         onBuyNowClick={handleBuyNowClick}
         isLoading={isLoading}

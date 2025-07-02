@@ -54,7 +54,7 @@ const CategoryPage = () => {
     <>
       <ListingGrid
         listings={filteredListings}
-        title={categoryName}
+        title={categoryName.charAt(0).toUpperCase() + categoryName.slice(1).toLowerCase()}
         onBuyNowClick={handleBuyNowClick}
         onBidClick={handleBidClick}
         isLoading={isLoading}
