@@ -1,4 +1,5 @@
 import Listing from '../models/Listing.js';
+import Product from '../models/Product.js';
 import { SaleTypes } from '../constants/enum.js';
 import {
   validateEnum,
@@ -71,7 +72,7 @@ export const createListing = async (req) => {
       await auctionQueue.add(
         'endAuction',
         { listingId: savedListing._id.toString() },
-        { delay },
+        { delay, jobId: savedListing._id.toString() },
       );
       console.log(`📦 Auction end job scheduled in ${delay} ms`);
     } else {
@@ -90,34 +91,48 @@ export const editListing = async (listingId, updates) => {
     throw new Error(`Could not find listing with id: ${listingId}`);
   }
 
-  const updatesKeys = Object.keys(updates);
-  const saleType = listing.saleType;
-
-  const saleTypeRules = {
-    auction: ['currentBid', 'expiredAt', 'isSold'],
-    now: ['price', 'isSold'],
-  };
-
-  const allowedUpdates = saleTypeRules[saleType];
-  // Ensure updated keys are updateable
-  for (const key of updatesKeys) {
-    if (!allowedUpdates.includes(key)) {
-      throw new Error(`Field '${key}' cannot be updated`);
+  const productUpdates = {};
+  const productFields = [
+    'name',
+    'description',
+    'brand',
+    'category',
+    'condition',
+    'size',
+    'images',
+  ];
+  for (const key of productFields) {
+    if (updates[key] !== undefined) {
+      productUpdates[key] = updates[key];
     }
   }
 
-  // Validate Logic per sale type
-  if (saleType === 'auction') {
-    validateAuctionUpdates(listing, updates);
-  } else if (saleType === 'now') {
-    validateBuyNowUpdates(listing, updates);
+  const listingUpdates = {};
+  const allowedListingFields =
+    listing.saleType === 'auction'
+      ? ['currentBid', 'expiredAt', 'isSold', 'startingBid']
+      : ['price', 'isSold'];
+
+  for (const key of allowedListingFields) {
+    if (updates[key] !== undefined) {
+      listingUpdates[key] = updates[key];
+    }
   }
 
-  updatesKeys.forEach((key) => {
-    listing[key] = updates[key];
-  });
+  if (listing.saleType === 'auction') {
+    validateAuctionUpdates(listing, listingUpdates);
+  } else if (listing.saleType === 'now') {
+    validateBuyNowUpdates(listing, listingUpdates);
+  }
 
+  Object.assign(listing, listingUpdates);
   await listing.save();
+
+  if (Object.keys(productUpdates).length > 0) {
+    Object.assign(listing.productId, productUpdates);
+    await listing.productId.save();
+  }
+
   return listing;
 };
 
@@ -131,10 +146,21 @@ export const deleteListing = async (listingId) => {
   if (listing.isSold) {
     throw new Error('Cannot delete a sold listing');
   }
+  const productId = listing.productId?._id;
+
+  const jobId = listingId.toString();
+  const job = await auctionQueue.getJob(jobId);
+  if (job) {
+    await job.remove();
+    console.log(`Removed job for listing ${listingId} from auction queue`);
+  }
 
   await Listing.findByIdAndDelete(listingId);
+  if (productId) {
+    await Product.findByIdAndDelete(productId);
+  }
 
-  return { message: 'Listing deleted successfully' };
+  return { message: 'Listing and associated product deleted successfully' };
 };
 
 export const getListingById = async (listingId) => {
@@ -181,4 +207,27 @@ export const markListingAsSold = async ({ listingId, amount }) => {
   await listing.save();
 
   return listing;
+};
+
+export const getAllLiveListingsBySeller = async (sellerId) => {
+  validateObjectId(sellerId);
+
+  const now = new Date();
+
+  const listings = await Listing.find({
+    sellerId,
+    isSold: { $ne: true },
+    $or: [{ saleType: { $ne: 'auction' } }, { expiredAt: { $gt: now } }],
+  })
+    .populate({
+      path: 'productId',
+      model: 'Product',
+    })
+    .populate({
+      path: 'currentBid',
+      model: 'Bid',
+    })
+    .sort({ createdAt: -1 });
+
+  return listings.map(attachImageUrlsToListing);
 };

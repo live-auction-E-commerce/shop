@@ -18,12 +18,14 @@ const AuthSection = () => {
       ) : (
         <>
           <Link to={ROUTES.LOGIN}>
-            <Button variant="ghost" className="text-rose-600 hover:bg-rose-50 hover:text-rose-700">
+            <Button variant="ghost" className="cursor-pointer">
               Login
             </Button>
           </Link>
           <Link to={ROUTES.REGISTER}>
-            <Button className="bg-teal-600 hover:bg-teal-700 text-white">Register</Button>
+            <Button variant="default" className="cursor-pointer">
+              Register
+            </Button>
           </Link>
         </>
       )}

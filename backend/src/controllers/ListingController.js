@@ -1,5 +1,6 @@
 import * as ListingLogic from '../logic/ListingLogic.js';
 import { StatusCodes } from 'http-status-codes';
+import { buildS3Url } from '../lib/image.js';
 
 export const createListing = async (req, res) => {
   try {
@@ -12,9 +13,22 @@ export const createListing = async (req, res) => {
 
 export const editListing = async (req, res) => {
   try {
+    const newImageKeys = req.files?.map((file) => file.key) || [];
+    const existingImageKeys = JSON.parse(req.body.existingImages || '[]');
+    const finalImageKeys = [...existingImageKeys, ...newImageKeys];
+    const finalImageUrls = finalImageKeys.map((key) =>
+      key.startsWith('http') ? key : buildS3Url(key),
+    );
+
+    const updates = {
+      ...req.body,
+      images: finalImageUrls,
+    };
+    console.log(updates);
+
     const editedListing = await ListingLogic.editListing(
       req.params.id,
-      req.body,
+      updates,
     );
     res.status(StatusCodes.OK).json(editedListing);
   } catch (error) {
@@ -65,5 +79,18 @@ export const markListingAsSold = async (req, res) => {
     console.error('markListingAsSold error:', error);
 
     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+  }
+};
+
+export const getAllLiveListingsBySeller = async (req, res) => {
+  try {
+    const listings = await ListingLogic.getAllLiveListingsBySeller(
+      req.params.id,
+    );
+    res.status(StatusCodes.OK).json(listings);
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
   }
 };

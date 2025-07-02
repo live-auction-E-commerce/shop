@@ -4,6 +4,8 @@ import SaleCard from '@/components/sales/SaleCard';
 import SalesSummary from '@/components/sales/SalesSummary';
 import EmptyState from '@/components/sales/EmptyState';
 import useRequireSeller from '@/hooks/auth/useVerifiedUser';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 
 const SalesPage = () => {
   const { sales, searchTerm, setSearchTerm, sortBy, setSortBy, salesStats, loading } = useSales();
@@ -40,7 +42,18 @@ const SalesPage = () => {
         {sales.length === 0 ? (
           <EmptyState hasSearchTerm={!!searchTerm} />
         ) : (
-          sales.map((sale) => <SaleCard key={sale._id} sale={sale} />)
+          sales.map((sale, index) => (
+            <motion.div
+              key={sale._id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ delay: index * 0.1, duration: 0.6 }}
+              className="mb-10"
+            >
+              <SaleCard sale={sale} />
+            </motion.div>
+          ))
         )}
       </div>
 

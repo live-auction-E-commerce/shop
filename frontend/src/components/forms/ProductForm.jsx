@@ -85,7 +85,7 @@ const ProductForm = ({ form }) => {
                 </FormControl>
                 <SelectContent>
                   {categories.map((category) => (
-                    <SelectItem key={category.title} value={category.title}>
+                    <SelectItem key={category.title} value={category.title.toLowerCase()}>
                       {category.title}
                     </SelectItem>
                   ))}
@@ -110,7 +110,7 @@ const ProductForm = ({ form }) => {
                 </FormControl>
                 <SelectContent>
                   {CONDITIONS.map((condition) => (
-                    <SelectItem key={condition} value={condition}>
+                    <SelectItem key={condition} value={condition.toLowerCase()}>
                       {condition}
                     </SelectItem>
                   ))}

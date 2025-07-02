@@ -11,8 +11,10 @@ import BuyNowPage from '@/pages/BuyNowPage';
 import ListingPage from '@/pages/ListingPage';
 import YourBidsPage from '@/pages/YourBidsPage';
 import UploadProduct from '@/pages/UploadProduct';
+import EditListingPage from '@/pages/EditListingPage';
 import OrdersPage from '@/pages/OrdersPage';
 import SalesPage from '@/pages/SalesPage';
+import ManageLiveListings from '@/pages/ManageListingsPage';
 import ChangePasswordPage from '@/pages/ChangePasswordPage';
 import VerifySellerEmail from '@/pages/VerifySellerEmail';
 import NotFound from '@/pages/NotFound';
@@ -39,6 +41,8 @@ const router = createBrowserRouter([
       { path: ROUTES.ORDERS, element: <OrdersPage /> },
       { path: ROUTES.YOUR_BIDS, element: <YourBidsPage /> },
       { path: ROUTES.SALES, element: <SalesPage /> },
+      { path: ROUTES.MANAGE_LISTINGS, element: <ManageLiveListings /> },
+      { path: ROUTES.EDIT_LISTING, element: <EditListingPage /> },
       { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     ],
   },

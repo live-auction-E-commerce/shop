@@ -10,6 +10,8 @@ import LoadingSkeleton from '../components/bid/BidsGrid/LoadingSkeleton';
 import EmptyState from '../components/bid/BidsGrid/EmptyState';
 import { ROUTES } from '@/routes/routes_consts';
 import { useCallback } from 'react';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 
 const YourBidsPage = () => {
   const { bids, loading, error } = useBids();
@@ -86,8 +88,16 @@ const YourBidsPage = () => {
         <EmptyState hasSearchOrFilters={hasActiveFilters} onClearFilters={clearFilters} />
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredAndSortedBids.map((bid) => (
-            <BidCard key={bid._id} bid={bid.bid} onViewDetails={handleViewDetails} />
+          {filteredAndSortedBids.map((bid, index) => (
+            <motion.div
+              key={bid._id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
+            >
+              <BidCard key={bid._id} bid={bid.bid} onViewDetails={handleViewDetails} />
+            </motion.div>
           ))}
         </div>
       )}

@@ -64,7 +64,7 @@ export function ImageUpload({ images = [], setImages }) {
               className="relative group aspect-square rounded-md overflow-hidden border"
             >
               <img
-                src={URL.createObjectURL(file)}
+                src={typeof file === 'string' ? file : URL.createObjectURL(file)}
                 alt={`Product image ${index + 1}`}
                 className="object-cover w-full h-full"
               />

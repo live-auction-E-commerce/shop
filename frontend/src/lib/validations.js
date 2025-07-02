@@ -1,12 +1,38 @@
 import * as z from 'zod';
 
 export const productSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  description: z.string().optional(),
-  category: z.string().min(1, 'Category is required'),
+  name: z.string().min(1, 'Name is required').max(100, 'Name must be under 100 characters'),
+
+  description: z.string().max(2000, 'Description must be under 2000 characters').optional(),
+
+  category: z
+    .string()
+    .min(1, 'Category is required')
+    .max(50, 'Category must be under 50 characters'),
+
+  brand: z.string().min(1, 'Brand is required').max(50, 'Brand must be under 50 characters'),
+
+  condition: z
+    .string()
+    .min(1, 'Condition is required')
+    .max(30, 'Condition must be under 30 characters'),
+
+  size: z.string().min(1, 'Size is required').max(20, 'Size must be under 20 characters'),
+});
+
+export const editListingSchema = z.object({
+  name: z.string().min(1, 'Product name is required'),
+  description: z.string().min(10, 'Description must be at least 10 characters'),
   brand: z.string().min(1, 'Brand is required'),
+  category: z.string().min(1, 'Category is required'),
   condition: z.string().min(1, 'Condition is required'),
-  size: z.string().min(1, 'Size is required'),
+  size: z.string().optional(),
+  images: z.array(z.string()).min(1, 'At least one image is required'),
+  listing: z.object({
+    price: z.number().optional(),
+    startingBid: z.number().optional(),
+    expiredAt: z.date().optional(),
+  }),
 });
 
 export const auctionSchema = z.object({
@@ -89,3 +115,25 @@ export const changePasswordSchema = z
     path: ['confirmNewPassword'],
     message: 'Passwords do not match',
   });
+
+const editAuctionSchema = z.object({
+  startingBid: z
+    .number({ invalid_type_error: 'Starting bid is required' })
+    .min(1, 'Starting bid must be at least 1'),
+  expiredAt: z.date().optional(), // <- make optional
+});
+
+const editAuctionFormSchema = productSchema.extend({
+  saleType: z.literal('auction'),
+  listing: editAuctionSchema,
+});
+
+const editBuyNowFormSchema = productSchema.extend({
+  saleType: z.literal('now'),
+  listing: buyNowSchema,
+});
+
+export const editFormSchema = z.discriminatedUnion('saleType', [
+  editAuctionFormSchema,
+  editBuyNowFormSchema,
+]);
