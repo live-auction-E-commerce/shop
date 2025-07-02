@@ -8,6 +8,7 @@ import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
 import BidModal from '@/components/modals/BidModal';
 import PaymentModal from '@/components/modals/PaymentModal';
 import AddressSelectionModal from '@/components/modals/AddressSelectionModal';
+import { useListingValidations } from '@/hooks/listings/useListingValidations';
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
@@ -41,6 +42,8 @@ const CategoryPage = () => {
     paymentDetails,
   });
 
+  const { validateBidAmount } = useListingValidations();
+
   const selectedListing = useMemo(
     () => filteredListings.find((l) => l._id === paymentDetails.listingId),
     [filteredListings, paymentDetails.listingId]
@@ -65,7 +68,11 @@ const CategoryPage = () => {
           isOpen={isBidModalOpen}
           onClose={resetFlow}
           currentBidAmount={paymentDetails?.amount}
-          onConfirm={handleBidConfirm}
+          onConfirm={(amount) => {
+            const listing = filteredListings.find((l) => l._id === paymentDetails.listingId);
+            if (!validateBidAmount(listing, amount)) return;
+            handleBidConfirm(amount);
+          }}
         />
       )}
 

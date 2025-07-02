@@ -10,6 +10,7 @@ import { usePaymentFlow, PAYMENT_STEPS } from '@/hooks/payments/usePaymentFlow';
 import { useListingActionHandlers } from '@/hooks/payments/useListingActionHandlers';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
+import { useListingValidations } from '@/hooks/listings/useListingValidations';
 
 const Home = () => {
   const { listings: initialListings, isLoading } = useListings();
@@ -23,6 +24,8 @@ const Home = () => {
       setListings(initialListings);
     }
   }, [initialListings]);
+
+  const { validateBidAmount } = useListingValidations();
 
   const {
     currentStep,
@@ -136,7 +139,13 @@ const Home = () => {
           isOpen={true}
           onClose={resetFlow}
           currentBidAmount={paymentDetails?.amount}
-          onConfirm={handleBidConfirm}
+          onConfirm={(amount) => {
+            const listing = listings.find((l) => l._id === paymentDetails.listingId);
+            if (!validateBidAmount(listing, amount)) {
+              return;
+            }
+            handleBidConfirm(amount);
+          }}
         />
       )}
 
